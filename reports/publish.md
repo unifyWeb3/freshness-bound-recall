@@ -17,10 +17,10 @@ Walrus write, or signed transaction. The observer and the live proof page were *
 | **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> |
 | Deployment-specific URL (same bytes) | <https://freshness-bound-recall-bt2cpyhp3-oxunify.vercel.app> |
 
-**Final published commit:** `3488fcd` (the state verified below). This report is committed **on top of
-it**, so `git log -1` on `main` shows the report commit one ahead — the content it describes is
-`3488fcd`. The earlier hashes cited throughout the repo (`f9832ac`, `6811932`, `97b10aa`, `f9ddd66`)
-are **unchanged on GitHub** (verified, §4).
+**Final published commit:** the state verified below is `3488fcd` (the audit-rule change, the last commit
+that changes behaviour). **This report is carried by commit `79b3401`**, and `main` is one
+documentation-only commit ahead of that. Every hash named here — `3488fcd`, `79b3401`, and the earlier
+`f9832ac`, `6811932`, `97b10aa`, `f9ddd66` — resolves on GitHub (verified unauthenticated, §4).
 
 **The hosted page is a cached snapshot, not a live service.** Its banner reads
 `STATIC EXPORT · 2026-11-05 14:38:32.408Z · network off · ids & stamps from a labelled snapshot`. It is
