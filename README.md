@@ -300,6 +300,22 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 
 ## 8. Known limits (stated, not hidden)
 
+### The five limits a judge should read first
+
+1. The policy memory blob `Zne2mnjA…` (`fc-policy-SLOW-v2`) contains one malformed auxiliary field,
+   `policy.evidence_count=undefined`. A Walrus blob is immutable, so this cannot be edited in place.
+   The evidence list itself is intact inside the record body, and the policy engine does not read that
+   field.
+2. The observer later learned a SLOW window of **40000**. That value was never persisted as a memory,
+   so the SLOW policy stored on chain is **20000**.
+3. The Docker path is **UNKNOWN** because it was never executed: the build environment had no Docker
+   binary and no Docker socket. The same command sequence was verified natively instead.
+4. Walrus blob retention beyond the relayer default is **UNKNOWN**. The relayer's documented mainnet
+   default is 2 epochs (about 4 weeks), but the exact `end_epoch` of these blobs could not be read with
+   any tool available here.
+5. No real user has validated the persona. It is a hypothesis, and the product is deliberately
+   domain-agnostic.
+
 * **Memory has no delete/update** — revision is by `supersedes` lineage and `epoch` semantics. Judges
   can recover older generations by blob id, which is by design.
 * **22 mainnet memories** (8 test seeds · 7 observer observations · 4 corrections · 2 policy records ·
