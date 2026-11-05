@@ -16,7 +16,7 @@ gate onto the answer path and make the tolerance a memory."*
 | t | Screen / action | Voice-over |
 |---|---|---|
 | 0:00 | proof page (offline badge visible) | “This is FRESHNESS-BOUND RECALL. It answers real Sui mainnet questions, but it will not answer from a memory it cannot re-verify.” |
-| 0:10 | scroll the 20 memories list; point at blob id + checkpoint stamp | “Every record here — twenty blobs on Walrus Memory — carries a checkpoint stamp at write time: sequence, digest, object version.” |
+| 0:10 | scroll the 22 memories list; point at blob id + checkpoint stamp | “Every record here — twenty-two blobs on Walrus Memory — carries a checkpoint stamp at write time: sequence, digest, object version.” |
 | 0:22 | point at policy card `fc-policy-FAST-v1` window 25 | “This window is not a constant. It is a memory — `fc-policy-FAST-v1`. The system tightened it from 50 to 25 after three live MISSED-CHANGE decisions on the Sui Clock.” |
 | 0:35 | terminal: `npm run demo` | “Live now — nothing staged, nothing scripted around me.” |
 | 0:40 | demo output steps 1–3 | “First the startup self-test: chain id, relayer health, and on-chain proof that my account id is the MemWalAccount object, not my wallet — that mistake cost me four hours.” |

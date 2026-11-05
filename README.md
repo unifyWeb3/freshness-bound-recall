@@ -79,7 +79,7 @@ npm run freeze               # timestamped evidence bundle for the video / submi
 7. **Ablation over the recorded decision ledger** — memory-off vs memory-on vs memory-on-with-gate.
 8. **Lineage** — correction memories vs the observations/claims they supersede.
 
-The **proof page** (`npm run proof`, `--offline` twin) shows for every one of the **20 mainnet
+The **proof page** (`npm run proof`, `--offline` twin) shows for every one of the **22 mainnet
 memories**: blob id, claim, class/state, checkpoint + object version pins at write, recorded decisions,
 the Tatum request log with the plan header **and an `x-api-key` badge on every row**, and the policy
 state. It renders with the network down from `data/cache/proof-snapshot.json` and says so
@@ -136,16 +136,16 @@ question
 
 ## 5. Mainnet evidence (this workspace)
 
-### The 20 memories in namespace `freshness-recall`
+### The 22 memories in namespace `freshness-recall`
 
 | Group | Count | What they are | Blob ids |
 |---|---|---|---|
-| **Test seeds** (`state=live`, claim `smoke-seed-*`) | 6 | round-trip seeds written by the opt-in live test suite (`RUN_MAINNET=1`); 2 per test run × 3 runs | `wYNZE__…`, `SwnqFF…`, `DL6hLB…`, `q1vX8syn…`, `6InMSm3…`, `8xyFMV-…` |
+| **Test seeds** (`state=live`, claim `smoke-seed-*`) | 8 | round-trip seeds written by the opt-in live test suite (`RUN_MAINNET=1`); 2 per test run × 4 runs | `wYNZE__…`, `SwnqFF…`, `DL6hLB…`, `q1vX8syn…`, `6InMSm3…`, `8xyFMV-…`, `xMy45mc7…`, `fsFeUrbx…` |
 | **Observer observations** (`state=observation`, claim `obs-*`) | 7 | what the observer saw on chain, each stamped with checkpoint + object version/digest at read time | `EXLTJp9…`, `Pk3CAi9…`, `BZ8iuoO…`, `WJv-iK2…`, `FMBYgz…`, `goZjQJ3…`, `zAji1w8…` |
 | **Corrections** (`state=live`, claim `cor-*`, `supersedes=…`) | 4 | the superseding memory written when the FAST subject changed | `5ndF6Q5q…`, `_RswBPgo…`, `1JJVQ71R…`, `mjxZQ1X2…` |
 | **Policy records** (`state=policy`, predicate `policy_window`) | 2 | the learned windows — **the only memories the answer path reads as policy** | `19ZE9y-zWt1…` (`fc-policy-FAST-v1`), `Zne2mnjAy6u…` (`fc-policy-SLOW-v2`) |
 | **Adversarial** (`state=adversarial`, claim `adv-not-stale-*`) | 1 | old-but-true memory used to test that a still-true claim is not automatically stale | `MNQZ0eE0…` |
-| **Total** | **20** | `listMemories` on the namespace: 20 memories, 0 deleted, `must_resync=false` | full list in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
+| **Total** | **22** | `listMemories` on the namespace: 22 memories, 0 deleted, `must_resync=false` | full list in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 
 * Decision ledger: **≥306 checkpoint-stamped stale/fresh decisions** at freeze
   `freeze-2026-11-05T115517263Z` (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED). It grows every
@@ -233,10 +233,16 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 |---|---|---|---|
 | GraphQL requests in the `npm run credits --calls=20` run | **21** (30 attempted, 9 absorbed by the 1 s checkpoint cache) | VERIFIED | `npm run credits` |
 | Requests carrying `x-api-key` | **21 / 21** | VERIFIED | `npm run credits`; `TatumClient.apiKeyProof()`; `test/tatum.test.mjs` |
-| Requests carrying `x-api-key` in the live proof-page snapshot | **291 / 291** | VERIFIED | `docs/evidence/proof-snapshot.json` → `tatum_api_key_proof` |
+| Requests carrying `x-api-key` in the live proof-page snapshot | **7 / 7** (final snapshot; a longer earlier page run logged **2,208 / 2,208**) | VERIFIED | `docs/evidence/proof-snapshot.json` → `tatum_api_key_proof` |
 | Plan header on every response | `free;ratelimit=3;strategy=shared` | VERIFIED | same |
 | **Credits consumed per call** | **UNKNOWN** — Tatum returns no credit header | UNKNOWN | compare the 21 requests with the dashboard |
 | Steady-state observer (`--interval=300 --budget=0`) | 3 requests / 5 min ≈ 864 / day | VERIFIED (arithmetic) | `scripts/observer.mjs` |
+
+> **Dashboard comparison note (2026-11-05).** The dashboard will show **more than 21 requests** for
+> today: besides the 21-request measurement run, the observer read 3 requests every 5 minutes while it
+> ran (it stopped at 09:29 UTC), and a long-running live proof-page instance logged 2,208 requests
+> before it was stopped. **The 21 is the number to compare against for a controlled measurement**
+> (`npm run credits` prints exactly what it did); the rest is the running agent's own traffic.
 
 > **Dashboard screenshot — placeholder (to be pasted by the author):**
 > `![Tatum dashboard usage — 21 requests from the npm run credits run](docs/tatum-dashboard.png)`
@@ -257,7 +263,7 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 | The persisted SLOW policy changes a gate verdict (live reads) | VERIFIED (live, constructed claim) | `scripts/show-policy-effect.mjs` part C: live checkpoint + live pin |
 | A later SLOW window (40000) was learned live but is **not** persisted | VERIFIED (disclosed) | `fc-policy-SLOW-v2` body; ledger 2026-11-05 02:25:24 UTC |
 | One policy memory per change (when the budget allows) | VERIFIED | `test/answer.test.mjs` |
-| `x-api-key` was sent on every Tatum request | VERIFIED | `TatumClient.apiKeyProof()` → 21/21 in the credits run, 291/291 in the proof snapshot; `test/tatum.test.mjs` |
+| `x-api-key` was sent on every Tatum request | VERIFIED | `TatumClient.apiKeyProof()` → 21/21 in the credits run, 7/7 in the final proof snapshot (2,208/2,208 in a longer earlier page run); `test/tatum.test.mjs` |
 | Sui mainnet checkpoint advances ~243 cps/min (measurement window) | VERIFIED | `data/claim-class-measurement.json` |
 | Sui Clock ~2.78 changes/min; MemWal AccountRegistry ~0.09 changes/min | VERIFIED | `data/claim-class-measurement.json` |
 | Adversarial not-stale memory answered FRESH at its snapshot epoch | VERIFIED (snapshot) | `adv-not-stale-341741224`; offline demo/proof shows FRESH at snapshot time |
@@ -292,7 +298,7 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 
 * **Memory has no delete/update** — revision is by `supersedes` lineage and `epoch` semantics. Judges
   can recover older generations by blob id, which is by design.
-* **20 mainnet memories** (6 test seeds · 7 observer observations · 4 corrections · 2 policy records ·
+* **22 mainnet memories** (8 test seeds · 7 observer observations · 4 corrections · 2 policy records ·
   1 adversarial). “Over 10+ writes” satisfied by blob count.
 * **Learning stability** — the tightened FAST window (25 checkpoints ≈ 6 s) is below the observer
   sampling cadence, so FAST is effectively frozen at v1 in the live loop; the SLOW widen was learned
@@ -318,7 +324,7 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 | Product + demo | `scripts/demo.mjs`, `src/answer.mjs` | works (live & offline) |
 | Proof page | `scripts/proof-page.mjs` (`npm run proof[:offline]`) | live & offline verified |
 | Static export | `npm run export` → `./site` | verified (labelled snapshot, env-scan clean) |
-| Observed mainnet memories | namespace `freshness-recall` (20) | ids in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
+| Observed mainnet memories | namespace `freshness-recall` (22) | ids in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 | Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥306 entries |
 | Learned-policy memories | `fc-policy-FAST-v1` (`19ZE9y-zWt1…`), `fc-policy-SLOW-v2` (`Zne2mnjAy6u…`) | both persisted live |
 | Policy read-back + gate effect | `scripts/show-policy-effect.mjs` | verified (live read-back, replay + live verdict flip) |

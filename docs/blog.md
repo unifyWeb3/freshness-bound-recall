@@ -63,8 +63,8 @@ Three honest caveats:
 
 ## What Walrus Memory is used for — concretely
 
-* **The only memory store.** 20 mainnet blobs in `freshness-recall` — 7 observer observations,
-  4 corrections, 2 learned-policy memories, 1 adversarial not-stale record, 6 test seeds (3 live-test
+* **The only memory store.** 22 mainnet blobs in `freshness-recall` — 7 observer observations,
+  4 corrections, 2 learned-policy memories, 1 adversarial not-stale record, 8 test seeds (4 live-test
   runs × 2 seeds).
 * **Lineage, not deletion.** The production SDK (0.1.13) exposes no delete/update, so revision is by
   `supersedes=<blob_id>`; the proof page renders the lineage chain.
@@ -80,7 +80,8 @@ Three honest caveats:
   ≤2 Tatum reads per answer; exponential backoff + retry on 429/timeout (one observed 429 retry, three
   observed transient network failures — all retried into 200).
 * **Every request carries `x-api-key`**, and the request log proves it without printing the key:
-  21/21 requests in the `npm run credits` run, 291/291 in the live proof-page snapshot.
+  21/21 requests in the `npm run credits` run, 7/7 in the final live proof-page snapshot
+  (2,208/2,208 in a longer earlier page run that was then stopped).
 * **No credit card, no gRPC, no JSON-RPC.** The whole product works on the **free shared** plan.
 
 ## What the demo shows
@@ -95,7 +96,7 @@ Every number and blob id is in the repo; every correctness claim maps to a comma
 ## Honest limits (all disclosed, not hidden)
 
 * **Walrus retention** — epochs are ~2 weeks on mainnet; the relayer’s upload path defaults to
-  **2 epochs (~4 weeks)** unless overridden. **The exact `end_epoch` of these 20 blobs is UNKNOWN from
+  **2 epochs (~4 weeks)** unless overridden. **The exact `end_epoch` of these 22 blobs is UNKNOWN from
   the tools available** — expiry before judging cannot be ruled out; the demo and proof page degrade to a
   labelled cached mode with no network. Options and costs are listed in `reports/pre-submit.md` §1.
 * **Tatum credits per call** — no credit header is returned; `npm run credits` prints the request count

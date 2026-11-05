@@ -13,12 +13,22 @@ the task authorised: `fc-policy-SLOW-v2` (§1).
 |---|---|
 | `npm test` (offline) | **65 pass · 0 fail · 2 skipped** (the 2 live opt-in tests skip without `RUN_MAINNET=1`) |
 | `RUN_MAINNET=1 node --test test/live/` | **2 pass** — wrote `6InMSm3…` (cp 341894684) and `8xyFMV-…` (cp 341894821) |
-| namespace `freshness-recall` | **20 memories**, 0 deleted, `must_resync=false` |
+| namespace `freshness-recall` | **22 memories**, 0 deleted, `must_resync=false` |
 | `npm run audit:secrets` (working tree) | **AUDIT: PASS** |
 | `node scripts/audit-history.mjs` (all git refs) | **AUDIT: PASS** |
 | `npm run freeze` | `freeze/freeze-2026-11-05T115517263Z.json` — 20 memories · 306 ledger entries (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED) |
 | `npm run credits` | 21 actual GraphQL requests, **21/21 carried `x-api-key`**, plan `free;ratelimit=3;strategy=shared` |
 | Docker path | **UNKNOWN** — no Docker daemon in the build environment (§6) |
+
+**Two operational facts the author should know (both found and fixed/handled in this phase):**
+
+1. **A stray live proof page was stopped.** An instance left running from an earlier step kept
+   auto-refreshing every 15 s and logged **2,208 Tatum requests** before it was killed at ~15:30 UTC.
+   No proof page is running now. The dashboard will show that traffic in addition to the 21-request
+   measurement — the 21 is the controlled number to compare.
+2. **The observer is no longer running.** The `--interval=300 --budget=0` instance (PID 56574) wrote its
+   last ledger entry at **2026-11-05T09:29:07 UTC** and is gone; the ledger is frozen at 306 decisions.
+   The agent did **not** restart it (out of scope for this task) — see decision 7 in §8.
 
 ---
 
@@ -149,7 +159,7 @@ And *Manage Your Memory*: “A memory persists on Walrus for the number of epoch
 about 2 weeks on Mainnet … **When the epochs run out, Walrus drops the blob and the memory disappears** …
 Renew before the expiry epoch, not after.”
 
-### Whether these 20 blobs expire before 2026-11-17 (judging) — honest answer
+### Whether these 22 blobs expire before 2026-11-17 (judging) — honest answer
 
 **UNKNOWN, and — with the tools available here — unfalsifiable.** What was tried:
 
@@ -262,7 +272,7 @@ No thresholds were changed and no events were forced in this phase.
 ```
 
 * `./site/index.html` is a single self-contained page: no CDN, no fetches, **STATIC EXPORT** banner with
-  timestamp + “network off · ids & stamps from a labelled snapshot”; it contains all 20 blobs and their
+  timestamp + “network off · ids & stamps from a labelled snapshot”; it contains all 22 blobs and their
   checkpoint stamps; the decision ledger, the ablation table and the Tatum request log with the
   `x-api-key` badge per row.
 * The HTML is asserted against **every value in `.env`** (length ≥ 8) plus secret-shaped patterns before
@@ -308,10 +318,10 @@ the **event-rules acceptance checkbox** listed as required, with an explicit not
 ticks it — you do**. No track selector exists; the description carries `Track 02 — Smart Agents for Real
 Life`. Field copy labels match the B2 row verbatim.
 
-**README claim → evidence map:** 20 memories everywhere (6 seeds / 7 observations / 4 corrections /
+**README claim → evidence map:** 22 memories everywhere (8 seeds / 7 observations / 4 corrections /
 2 policy records / 1 adversarial); the learning claims are split into live+persisted / unpersisted-40000 /
 replay; the credits row shows 21 actual requests (credits-per-call UNKNOWN); a new **§5b “Tatum usage”**
-section carries the `npm run credits` output, the 21/21 and 291/291 `x-api-key` proofs and a
+section carries the `npm run credits` output, the 21/21, 7/7 and 2,208/2,208 `x-api-key` proofs and a
 **dashboard-screenshot placeholder**; retention stays UNKNOWN with the relayer default quoted.
 
 ---
@@ -330,7 +340,10 @@ section carries the `npm run credits` output, the 21/21 and 291/291 `x-api-key` 
 5. **Recording cadence** — record the video now against the current tree, or after the retention choice?
    The script is unchanged either way (`docs/video-script.md`, ≤2:30).
 6. **Bonus posts** — post on X and/or LinkedIn (your accounts), or leave `socialPosts=none`.
-7. **Observer** — leave it running at `--interval=300 --budget=0`, or stop it for the judging window?
+7. **Observer** — it is **not running** (last ledger entry 09:29:07 UTC): leave it stopped for the
+   judging window (0 Tatum calls, the frozen ledger + cached proof page carry the evidence), or restart
+   it at `--interval=300 --budget=0` (~864 calls/day, zero writes). The agent does not touch it without
+   your word.
 8. **Submission timing** — Nov 10 morning UTC (12 h headroom), or another slot you prefer.
 
 **Hard deadline in this plan:** nothing is submitted until you say so.
@@ -366,8 +379,8 @@ per-phase build reports (`reports/build-phase1.md` … `build-phase4.md`) remain
   install with `ENOTSUP Required: {"node":">=26.13.0"}`.
 * **Artifacts from that pass** (still valid, superseded by the newer bundle): freeze manifests
   `freeze-2026-11-05T021132543Z.json` and `freeze-2026-11-05T022330578Z.json`; the committed evidence
-  snapshot `docs/evidence/proof-snapshot.json` (regenerated in this phase with 20 memories and the
+  snapshot `docs/evidence/proof-snapshot.json` (regenerated in this phase with 22 memories and the
   `x-api-key` proof); `scripts/export-site.mjs`, `scripts/freeze.mjs`, `scripts/audit-history.mjs`.
-* **Numbers superseded by this phase:** 17 → **20** mainnet memories; 150 → **306** ledger entries;
+* **Numbers superseded by this phase:** 17 → **22** mainnet memories; 150 → **306** ledger entries;
   59 FRESH / 87 STALE → **72 FRESH / 230 STALE**; the SLOW policy from “learned live, not persisted” →
   **persisted as `fc-policy-SLOW-v2`**; the Docker path → **UNKNOWN** (no daemon in this environment).

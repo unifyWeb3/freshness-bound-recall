@@ -32,8 +32,8 @@ live tests 2 pass; secrets audit PASS (working tree) and PASS (full git history)
 | demoVideoUrl | `[upload the 60–90 s recording, then paste]` | you |
 | repoUrl | **decision point** — host the repo yourself (public or private repo) and paste; or paste the submission portal's link option if allowed. Agent will not create a remote. | you |
 | additionalDocs | `reports/build-phase1.md` … `build-phase4.md` (if repo public) or a link to the docs/ folder | you/agent |
-| walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 20 memories written in namespace `freshness-recall`; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
-| tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` on every request (proven 21/21 and 291/291 from the request log) + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
+| walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 22 memories written in namespace `freshness-recall`; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
+| tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` on every request (proven from the request log: 21/21 in the controlled measurement run, 7/7 in the final proof snapshot, 2,208/2,208 in a longer page run) + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
 | walrusFriction | "Production SDK (0.1.13) has no delete/update; semantic recall needed substring matching to hit exact claims; index lag after writes; blob retention is not verified in a disposable namespace (availability vs epochs); 5 s default preflight timeout and ~18 s write latency needed explicit timeouts/retries/queueing." | agent-drafted |
 | socialPosts | `[X/LinkedIn posts you publish for the bonus, or “none”]` | you |
 | event-rules checkbox | **Required by the form** (must accept the event rules / terms) — you click it; the agent never accepts legal terms on your behalf | you |
@@ -50,8 +50,8 @@ live tests 2 pass; secrets audit PASS (working tree) and PASS (full git history)
 > a per-class policy memory (`fc-policy-FAST-v1`, `fc-policy-SLOW-v2`) — is rewritten by the system
 > from observed decay (FALSE-STALE widens, MISSED-CHANGE tightens; one policy memory per change).
 >
-> Evidence: 20 mainnet Walrus blobs in namespace `freshness-recall` (7 observer observations, 4
-> corrections, 2 learned-policy memories, 1 adversarial not-stale record, 6 live round-trip test
+> Evidence: 22 mainnet Walrus blobs in namespace `freshness-recall` (7 observer observations, 4
+> corrections, 2 learned-policy memories, 1 adversarial not-stale record, 8 live round-trip test
 > memories); 306 recorded stale/fresh decisions with checkpoint stamps; an ablation table on the
 > built-in proof page; both learning directions persisted as memories and read back before every
 > answer; everything pinned (Node v26.13.0), zero LLM in the answer path, `.env`-only secrets with a
