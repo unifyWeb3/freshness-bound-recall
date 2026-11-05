@@ -88,11 +88,33 @@ for (const artifact of ["data/ledger.jsonl", "data/policy-mirror.json", "data/ca
   }
 }
 
-// ---------------- 5. no git remotes (nothing pushed)
+// ---------------- 5. git remotes: only the authorized public repo, and no secrets in the pushed tree
+// (before publication this asserted "no remote at all"; the repo is now published, so the check
+//  became: the ONLY remote is the authorized public repo, and the pushed tree carries no secret
+//  or runtime artifact.)
+const AUTHORIZED_REMOTE = "github.com/unifyWeb3/freshness-bound-recall";
 let remotes = "";
 try { remotes = execSync("git remote -v", { cwd: ROOT, encoding: "utf8" }).trim(); } catch { remotes = ""; }
-if (!remotes) ok("no git remotes configured");
-else fail("no git remotes configured", "a remote exists — check that nothing was pushed");
+if (!remotes) {
+  ok("no git remotes configured (nothing pushed)");
+} else {
+  const urls = [...new Set(remotes.split("\n").map((l) => l.split(/\s+/)[1]).filter(Boolean))];
+  const unexpected = urls.filter((u) => !u.includes(AUTHORIZED_REMOTE));
+  if (unexpected.length === 0) ok(`every remote points at the authorized public repo (${AUTHORIZED_REMOTE})`);
+  else fail("every remote points at the authorized public repo", `unexpected remote(s): ${unexpected.join(", ")}`);
+
+  // what is actually published: prefer the remote-tracking ref, fall back to HEAD
+  let pushedTree = "";
+  for (const ref of ["origin/main", "HEAD"]) {
+    try { pushedTree = execSync(`git ls-tree -r --name-only ${ref}`, { cwd: ROOT, encoding: "utf8" }); break; } catch {}
+  }
+  const pushedPaths = pushedTree.split("\n").map((s) => s.trim()).filter(Boolean);
+  const mustNotBePublished = pushedPaths.filter(
+    (p) => p === ".env" || p === "data/ledger.jsonl" || p === "data/policy-mirror.json" || p.startsWith("data/cache/") || p.startsWith("site/") || p.startsWith("freeze/")
+  );
+  if (mustNotBePublished.length === 0) ok("the published tree contains no .env and no runtime artifact");
+  else fail("the published tree contains no .env and no runtime artifact", `present: ${mustNotBePublished.join(", ")}`);
+}
 
 // ---------------- report
 const summary = { tracked_files: tracked.length, secret_value_fingerprints: secretValues.length, passes: passes.length, failures: failures.length };
