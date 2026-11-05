@@ -11,8 +11,9 @@
 
 import { createServer } from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { resolve } from "node:path";
-import { createRuntime, CACHE_DIR, LEDGER_PATH } from "../src/runtime.mjs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { createRuntime, CACHE_DIR, LEDGER_PATH, ROOT } from "../src/runtime.mjs";
 import { credentialSelfTest } from "../src/mainnet.mjs";
 import { SUBJECTS } from "../src/subjects.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
@@ -29,6 +30,11 @@ const offline = has("offline");
 const port = Number(getArg("port", "8787"));
 const refreshSeconds = Math.max(5, Number(getArg("refresh", "15")));
 const SNAPSHOT = resolve(CACHE_DIR, "proof-snapshot.json");
+
+/** Snapshot candidates, newest first: live-generated cache, then the committed evidence snapshot. */
+export function snapshotCandidates() {
+  return [SNAPSHOT, resolve(ROOT, "docs/evidence/proof-snapshot.json")];
+}
 
 // ---------------------------------------------------------------- data
 async function collectLive(rt) {
@@ -124,16 +130,17 @@ async function collectLive(rt) {
   };
 }
 
-function collectOffline() {
-  if (!existsSync(SNAPSHOT)) {
-    throw new Error(`no snapshot at ${SNAPSHOT} - run the live page once first`);
+export function collectOffline() {
+  const candidate = snapshotCandidates().find((p) => existsSync(p));
+  if (!candidate) {
+    throw new Error(`no snapshot found in: ${snapshotCandidates().join(", ")} - run the live page once first`);
   }
-  const snap = JSON.parse(readFileSync(SNAPSHOT, "utf8"));
-  return { ...snap, mode: "offline", served_at: new Date().toISOString() };
+  const snap = JSON.parse(readFileSync(candidate, "utf8"));
+  return { ...snap, mode: "offline", served_at: new Date().toISOString(), snapshot_path: candidate };
 }
 
 // ---------------------------------------------------------------- aggregate
-function summarize(snapshot) {
+export function summarize(snapshot) {
   const led = snapshot.ledger || [];
   const decisions = led.filter((e) => e.verdict);
   const count = (v) => decisions.filter((e) => e.verdict === v).length;
@@ -234,13 +241,17 @@ function lineageSvg(memories) {
   </svg>`;
 }
 
-function page(snapshot) {
+export function page(snapshot) {
   const s = summarize(snapshot);
   const live = snapshot.mode === "live";
   const cp = snapshot.checkpoint || {};
-  const badge = live
-    ? `<span class="badge live">LIVE · fetched ${esc(fmtTime(snapshot.generated_at))}</span>`
-    : `<span class="badge cached">CACHED SNAPSHOT · ${esc(fmtTime(snapshot.generated_at))} (network off)</span>`;
+  const badge = snapshot.live_error
+    ? `<span class="badge cached">REFRESH FAILED (live) · showing last good fetch from ${esc(fmtTime(snapshot.generated_at))}</span><div class="reason" style="margin-top:6px;border-color:#7f1d1d">${esc(snapshot.live_error)}</div>`
+    : snapshot.exported_at
+    ? `<span class="badge cached">STATIC EXPORT · ${esc(fmtTime(snapshot.exported_at))} · network off · ids &amp; stamps from a labelled snapshot</span>`
+    : live
+      ? `<span class="badge live">LIVE · fetched ${esc(fmtTime(snapshot.generated_at))}</span>`
+      : `<span class="badge cached">CACHED SNAPSHOT · ${esc(fmtTime(snapshot.generated_at))} (network off)</span>`;
   const age = cp.read_at ? Math.max(0, Math.round((Date.now() - Date.parse(cp.read_at)) / 1000)) : null;
 
   const decisionRows = (snapshot.ledger || []).filter((e) => e.verdict).slice(-40).reverse().map((e) => `
@@ -410,6 +421,7 @@ function page(snapshot) {
 }
 
 // ---------------------------------------------------------------- serve
+const IS_MAIN = !!process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 let latest = null;
 let latestError = null;
 let rt = null;
@@ -432,33 +444,37 @@ async function refresh() {
   }
 }
 
-if (offline) {
-  await refresh();
-  console.log(`[proof] offline mode: serving ${SNAPSHOT}`);
-} else {
-  rt = createRuntime({ live: true, logger: () => {} });
-  const self = await credentialSelfTest({ client: rt.client, tatum: rt.tatum, env: rt.env, namespace: rt.namespace });
-  for (const c of self.checks) console.log(`[proof] self-test ${c.ok ? "PASS" : "FAIL"} ${c.name}${c.detail ? ` - ${c.detail}` : ""}`);
-  rt.relayer = self.relayer;
-  await refresh();
-  setInterval(refresh, refreshSeconds * 1000);
+if (IS_MAIN) {
+  if (offline) {
+    await refresh();
+    const snapPath = snapshotCandidates().find((p) => existsSync(p));
+    console.log(`[proof] offline mode: serving ${snapPath || SNAPSHOT}`);
+  } else {
+    rt = createRuntime({ live: true, logger: () => {} });
+    const self = await credentialSelfTest({ client: rt.client, tatum: rt.tatum, env: rt.env, namespace: rt.namespace });
+    for (const c of self.checks) console.log(`[proof] self-test ${c.ok ? "PASS" : "FAIL"} ${c.name}${c.detail ? ` - ${c.detail}` : ""}`);
+    rt.relayer = self.relayer;
+    await refresh();
+    setInterval(refresh, refreshSeconds * 1000);
+  }
+
+  const server = createServer((req, res) => {
+    if (req.url === "/healthz") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ ok: !latestError, error: latestError, mode: offline ? "offline" : "live" }));
+      return;
+    }
+    if (!latest) {
+      res.writeHead(503, { "Content-Type": "text/html" });
+      res.end(`<h1>no data yet</h1><p>${esc(latestError || "collecting…")}</p>`);
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+    const view = latestError ? { ...latest, live_error: latestError } : latest;
+    res.end(page(view));
+  });
+
+  server.listen(port, "127.0.0.1", () => {
+    console.log(`[proof] ${offline ? "OFFLINE (cached)" : "LIVE"} page on http://127.0.0.1:${port}`);
+  });
 }
-
-const server = createServer((req, res) => {
-  if (req.url === "/healthz") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ ok: !latestError, error: latestError, mode: offline ? "offline" : "live" }));
-    return;
-  }
-  if (!latest) {
-    res.writeHead(503, { "Content-Type": "text/html" });
-    res.end(`<h1>no data yet</h1><p>${esc(latestError || "collecting…")}</p>`);
-    return;
-  }
-  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-  res.end(page(latest));
-});
-
-server.listen(port, "127.0.0.1", () => {
-  console.log(`[proof] ${offline ? "OFFLINE (cached)" : "LIVE"} page on http://127.0.0.1:${port}`);
-});

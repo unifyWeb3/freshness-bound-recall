@@ -9,7 +9,7 @@
 // during the build campaign (see reports/build-phase2.md). Reads per answer: at
 // most 1 cached checkpoint + 1 subject pin. No LLM anywhere in the answer path.
 
-import { createRuntime, CACHE_DIR, LEDGER_PATH } from "../src/runtime.mjs";
+import { createRuntime, CACHE_DIR, LEDGER_PATH, ROOT } from "../src/runtime.mjs";
 import { credentialSelfTest } from "../src/mainnet.mjs";
 import { answer } from "../src/answer.mjs";
 import { evaluateGate, VERDICT } from "../src/gate.mjs";
@@ -37,12 +37,14 @@ const SLOW_ADDR = "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9c
 // ---------------- offline: read the cached snapshot (network off)
 let snapshot = null;
 if (offline) {
-  const snap = resolve(CACHE_DIR, "proof-snapshot.json");
-  if (!existsSync(snap)) {
-    console.error(`no snapshot at ${snap} - run the live proof page once first`);
+  const candidates = [resolve(CACHE_DIR, "proof-snapshot.json"), resolve(ROOT, "docs/evidence/proof-snapshot.json")];
+  const snap = candidates.find((p) => existsSync(p));
+  if (!snap) {
+    console.error(`no snapshot found in: ${candidates.join(", ")}`);
     process.exit(1);
   }
   snapshot = JSON.parse(readFileSync(snap, "utf8"));
+  snapshot.snapshot_path = snap;
 }
 
 /** Rebuild the flat FR-v1 record the gate expects from a snapshot memory entry. */
@@ -100,7 +102,7 @@ line();
 emit("h", "1) credentials & relayer");
 if (offline) {
   emit("ok", `offline mode: skipping live self-test; serving cached checkpoint ${snapshot?.checkpoint?.checkpointSeq ?? "?"} read at ${snapshot?.checkpoint?.readAt ?? "?"}`);
-  emit("ok", `snapshot generated ${snapshot?.generated_at} mode=${snapshot?.mode}`);
+  emit("ok", `snapshot generated ${snapshot?.generated_at} mode=${snapshot?.mode} source=${snapshot?.snapshot_path}`);
 } else {
   const self = await credentialSelfTest({ client: rt.client, tatum: rt.tatum, env: rt.env, namespace: rt.namespace });
   for (const c of self.checks) emit(c.ok ? "ok" : "fail", `self-test ${c.ok ? "PASS" : "FAIL"} ${c.name}${c.detail ? ` - ${c.detail}` : ""}`);

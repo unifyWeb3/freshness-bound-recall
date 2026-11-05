@@ -21,7 +21,9 @@
     "measure": "node scripts/measure-claim-classes.mjs",
     "credits": "node scripts/measure-credits.mjs",
     "prewarm": "node scripts/prewarm.mjs",
-    "audit:secrets": "node scripts/audit-secrets.mjs"
+    "audit:secrets": "node scripts/audit-secrets.mjs",
+    "freeze": "node scripts/freeze.mjs",
+    "export": "node scripts/export-site.mjs"
   },
   "dependencies": {
     "@mysten-incubation/memwal": "0.1.13",

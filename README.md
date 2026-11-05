@@ -39,10 +39,13 @@ already built. The factual differences here are:
 ```sh
 node --version         # requires >= 26.13.0 (pinned; recorded in engines + README)
 npm install --ignore-scripts   # deterministic install; never runs lifecycle scripts
-npm test                     # 64 tests, offline, no network needed
+npm test                     # offline suite, no network
 npm run demo:offline         # cached-snapshot demo (no network)
 npm run proof:offline        # proof page over cached snapshot: http://127.0.0.1:8787
+npm run export               # or a fully static copy of the proof page at ./site
 ```
+
+**Judges**: see `docs/judge-60s.md` for the 60-second path (fresh clone → tests → demo → proof page).
 
 Live demo (requires `.env` for **Tatum** `TATUM_API_KEY` and a **Walrus Memory** account pair):
 
@@ -69,7 +72,7 @@ npm run credits              # made-to-count Tatum calls; compare with your dash
 7. **Ablation over the recorded decision ledger** — memory-off vs memory-on vs memory-on-with-gate.
 8. **Lineage** — correction memories vs the observations/claims they supersede.
 
-The **proof page** (`npm run proof`, `--offline` twin) shows for every one of the **15 mainnet
+The **proof page** (`npm run proof`, `--offline` twin) shows for every one of the **17 mainnet
 memories**: blob id, claim, class/state, checkpoint + object version pins at write, recorded decisions,
 the Tatum request log with the plan header, and the policy state. It renders with the network down from
 `data/cache/proof-snapshot.json` and says so (`CACHED SNAPSHOT`).
@@ -103,19 +106,37 @@ question
 
 ## 5. Mainnet evidence (this workspace)
 
-* Two opt-in live tests (`RUN_MAINNET=1`) wrote the two seed claims and parsed them back.
+* Live opt-in tests (`RUN_MAINNET=1`) wrote the phase-2 seed claims (`wYNZE__…`, `SwnqFF…`), and were
+  **re-run for the pre-submission verification**, writing **2 more** (`DL6hLB…`, `q1vX8syn…`).
 * **13 observer-authored mainnet memories** in namespace `freshness-recall` (7 observations,
-  4 corrections, 1 learned policy, 1 adversarial not-stale) + the 2 seeds = **15**.
-* Decision ledger: **≥90 recorded stale/fresh decisions** with checkpoint stamps
-  (`data/ledger.jsonl`; git-ignored). Latest verdict counts from the ledger (Nov 5): ~40 fresh ·
-  ~46 stale · 4 withheld — grows while the observer runs.
-* Environment: Node v26.13.0 (SDK floor documented in stage2 report), npm 11.20.0, plan header
+  4 corrections, 1 learned policy, 1 adversarial not-stale) + the 4 test seeds = **17**.
+* Decision ledger: **≥146 checkpoint-stamped stale/fresh decisions** at freeze
+  `freeze-2026-11-05T021132543Z` (59 FRESH · 83 STALE · 4 WITHHELD_UNVERIFIED). It grows every
+  minute the observer runs (`--budget=0`: it *reads and logs* only, never writes).
+* Environment: Node v26.13.0 (SDK floor documented in the stage2 report), npm 11.20.0, plan header
   `free;ratelimit=3;strategy=shared`.
 
-> **Retention caveat (UNKNOWN → being verified):** Walrus mainnet epochs are ~2 weeks each and a blob
-> expires when its epochs run out. Expiry behaviour of relayer-managed blobs is **not verified in this
-> workspace**. Phase 4 re-tests recall of the earliest seed claim before submission. Nothing in the demo
-> assumes blobs are permanent.
+### Learning — what is demonstrated, honestly
+
+| Direction | Live | Persisted as a memory | Where |
+|---|---|---|---|
+| tighten (FAST window 50→25) | **YES** — 3 consecutive `MISSED-CHANGE` on the Sui Clock | **YES** — `fc-policy-FAST-v1` (`19ZE9y-zWt1…`) | live demo step 3 |
+| widen (SLOW window 5000→10000→20000) | **YES** — 6 live `FALSE-STALE` samples; learning ran 01:00–01:34 UTC | **NO** — the observer ran with `--budget=0`, so no `fc-policy-SLOW-*` was written; it lives in the local mirror (`data/policy-mirror.json`, git-ignored) and reverts to 5000 on restart | `data/policy-mirror.json`, observer log |
+| both directions, persisted end-to-end | replay only | **replay only** | `test/replay.test.mjs` |
+
+Per-class totals in the recorded ledger: **FAST** — MISSED-CHANGE 5, FALSE-STALE 0, CONSISTENT 60
+(67 samples) · **SLOW** — FALSE-STALE 7, MISSED-CHANGE 0, CONSISTENT 58 (67 samples). Forcing no
+samples and changing no thresholds were required to see it.
+
+> **Retention — open unknown.** Walrus mainnet epochs are ~2 weeks each. The Walrus Memory relayer's
+> own upload path defaults to **2 epochs on mainnet (~4 weeks)** unless overridden
+> (docs → reference → environment-variables: “`POST /walrus/upload` … `2` on mainnet (about 4 weeks)”).
+> If the relayer is default-configured, a blob written 2026-11-05 expires around **2026-12-03** — but
+> **the exact `end_epoch` is not readable with any tool available in this workspace** (three routes tried;
+> see `reports/pre-submit.md`), so expiry **before 2026-11-17 cannot be ruled out**.
+> The earliest seed blob was recalled OK on 2026-11-05 01:29 UTC. Options with cost: (a) accept the risk
+> and use the cached proof page (0 cost); (b) renew 17 blobs on the Walrus dashboard before judging
+> (your action, WAL + gas); (c) the submission carries this caveat, with the ledger as evidence.
 
 ## 6. Labelled correctness claims
 
@@ -124,18 +145,19 @@ question
 | FR-v1 schema parse/serialize round-trips and rejects malformed records | VERIFIED | `test/schema.test.mjs` |
 | Gate: window ∧ pin, wall-clock backstop, fail closed | VERIFIED | `test/gate.test.mjs`, `test/answer.test.mjs` |
 | Never more than 2 Tatum reads per answer; 1 s checkpoint cache | VERIFIED | `test/tatum.test.mjs` |
-| Same query → different verdict after the policy memory changed | VERIFIED | `test/replay.test.mjs` (offline replay) |
-| One policy memory per change | VERIFIED | `test/answer.test.mjs` |
+| Same query → different verdict after the policy memory changed (persisted) | VERIFIED (offline replay) | `test/replay.test.mjs` + `fixtures/event-log.json` |
+| Learned FAST window 50→25 from 3 live MISSED-CHANGE samples, persisted | VERIFIED (live, on mainnet) | `fc-policy-FAST-v1` blob `19ZE9y-zWt1…` |
+| SLOW window widen live (5000→10000→20000) learned by the observer | **LEARNED LIVE, NOT PERSISTED** | ledger + `data/policy-mirror.json` (reverts on restart) |
+| One policy memory per change (when the budget allows) | VERIFIED | `test/answer.test.mjs` |
 | Sui mainnet checkpoint advances ~243 cps/min (measurement window) | VERIFIED | `data/claim-class-measurement.json` |
 | Sui Clock ~2.78 changes/min; MemWal AccountRegistry ~0.09 changes/min | VERIFIED | `data/claim-class-measurement.json` |
-| Learned FAST window 50→25 from 3 live MISSED-CHANGE samples | VERIFIED (live) | `fc-policy-FAST-v1` |
-| Adversarial not-stale memory: old but true, answered FRESH at its write time | VERIFIED (snapshot) | `adv-not-stale-341741224`; offline proof page shows FRESH at snapshot |
+| Adversarial not-stale memory answered FRESH at its snapshot epoch | VERIFIED (snapshot) | `adv-not-stale-341741224`; offline demo/proof shows FRESH at snapshot time |
 | Live demo answers are pulled from current chain state, not from memory | VERIFIED | `npm run demo` output step 4 |
-| Product survives relayer/Tatum failure without answering stale | VERIFIED (offline tests) + INFERRED (live) | `test/mainnet.test.mjs`-class strict checks |
+| Product survives relayer/Tatum failure without answering stale | VERIFIED (offline tests) + INFERRED (live) | gate fails closed on live-read failure in `src/gate.mjs` / offline tests |
 | A real user persona works | HYPOTHESIS | no user confirmed |
-| “The judge will see 21 distinct calls in the dashboard” | UNKNOWN | no credit header from Tatum; `npm run credits` prints the request count |
-| Blob retention of this namespace | UNKNOWN | Walrus epoch bound; re-tested at end of Phase 4 |
-| Competitor X has a stale-memory gate | UNKNOWN | ~33 entries; only ~9 read in full |
+| “The judge will see 21 distinct calls in the dashboard” | UNKNOWN | no credit header from Tatum; `npm run credits` prints the request count (21 for the 20-step run after 9 cache-absorbed reads) |
+| Blob retention of this namespace | UNKNOWN | `end_epoch` not readable; relayer mainnet default ~2 epochs (~4 weeks) from docs; see `reports/pre-submit.md` |
+| Competitor X has a stale-memory gate | UNKNOWN | ~33 entries; ~9 read in full; no global negation claimed anywhere |
 
 ## 7. Repository layout
 
@@ -144,10 +166,12 @@ src/          FR-v1 schema, gate, policy, Tatum client, store (mock + mainnet),
               answer path, ledger, replay/ablation, redaction, runtime assembly,
               mainnet credentials & self-test, subject registry
 scripts/      answer.mjs prewarm.mjs observer.mjs demo.mjs proof-page.mjs
-              measure-credits.mjs measure-claim-classes.mjs audit-secrets.mjs
+              export-site.mjs freeze.mjs measure-credits.mjs measure-claim-classes.mjs
+              audit-secrets.mjs audit-history.mjs
 test/         64 offline tests + test/live (2 opt-in mainnet tests)
 fixtures/     recorded event log used by the replay/ablation test
-reports/      build-phase1.md build-phase2.md build-phase3.md (+ stage2 baseline)
+docs/         blog.md, video-script.md, submission.md, judge-60s.md, evidence snapshot
+reports/      build-phase1.md … build-phase4.md, pre-submit.md
 data/         measurement evidence (committed); ledger/cache/mirror (git-ignored)
 ```
 
@@ -155,13 +179,21 @@ data/         measurement evidence (committed); ledger/cache/mirror (git-ignored
 
 * **Memory has no delete/update** — revision is by `supersedes` lineage and `epoch` semantics. Judges
   can recover older generations by blob id, which is by design.
-* **15 mainnet memories** (13 observer + 2 seeds). “Over 10+ writes” satisfied by blob count.
+* **17 mainnet memories** (13 observer + 4 test seeds — the pre-submission test re-run added 2 more).
+  “Over 10+ writes” satisfied by blob count.
 * **Learning stability** — the tightened FAST window (25 cps ≈ 6 s) is below the observer sampling
-  cadence; a stale anchor froze within-budget and closed learning at v1. The honest fix is a
-  window floor ≥ sampling interval or heartbeat observations; it is documented in `reports/build-phase2.md` §4.
+  cadence; the anchor froze on budget exhaustion and stopped moving (FAST stays at v1). SLOW learned
+  live (FALSE-STALE ×6) but the observer had `--budget=0`, so that learning is **not persisted as a
+  memory** (mirror only; resets on restart). The honest fix is a window floor ≥ sampling interval or
+  heartbeat observations — see `reports/build-phase2.md` §4.
 * **No user** — HYPOTHESIS persona; product is domain-agnostic.
-* **Tatum credits per call = UNKNOWN** — dashboard comparison required (`npm run credits` prints the count).
-* **Retention UNVERIFIED** — see §5.
+* **Tatum credits per call = UNKNOWN** — dashboard comparison required (`npm run credits` prints the
+  request count: 21 actual GraphQL requests from the 20-attempt × 1.5 measurement run).
+* **Retention UNVERIFIED** — see §5. Expiry before the judging window cannot be ruled out by tooling
+  available here; mitigations are listed in §5 (cached/offline proof page is the free one).
+* **`--budget=0` means** the observer reads with 3 Tatum calls every 60 s and **writes nothing**; the
+  steepest unseen cost is the live proof page (≈15 s auto-refresh): run it only on demand, never as a
+  background service.
 
 ## 9. Hackathon deliverables map
 
@@ -169,10 +201,15 @@ data/         measurement evidence (committed); ledger/cache/mirror (git-ignored
 |---|---|---|
 | Product + demo | `scripts/demo.mjs`, `src/answer.mjs` | works (live & offline) |
 | Proof page | `scripts/proof-page.mjs` (`npm run proof[:offline]`) | live & offline verified |
-| Observed mainnet memories | namespace `freshness-recall` (15) | ids in `reports/build-phase2.md` §2 |
-| Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥90 entries |
-| Learned-policy memory | `fc-policy-FAST-v1` blob `19ZE9y-zWt1…` | seeded live |
-| Report series | `reports/build-phase1.md`, `-phase2.md`, `-phase3.md` | phase reports committed (phase 4 pending) |
+| Static export | `npm run export` → `./site` | verified (labelled snapshot, env-scan clean) |
+| Observed mainnet memories | namespace `freshness-recall` (17) | ids in `reports/build-phase2.md` §2 + phase 4 |
+| Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥146 entries |
+| Learned-policy memory | `fc-policy-FAST-v1` blob `19ZE9y-zWt1…` | persisted live |
+| Judge 60 s | `docs/judge-60s.md` | fresh-clone verified |
+| Videos + submission | `docs/video-script.md`, `docs/submission.md` | user records/sends |
+| Freeze for video/submission | `npm run freeze` → `./freeze/` | verified live |
+| Secrets audits (tree + history) | `npm run audit:secrets`, `scripts/audit-history.mjs` | both PASS |
+| Report series | `reports/build-phase1.md` … `pre-submit.md` | committed |
 | Blog post | `docs/blog.md` | see §10 of submission |
 | Video | `docs/video-script.md` (user to record) | script provided, no upload by agent |
 | Submission text | `docs/submission.md` | fields mapped to B2 form |

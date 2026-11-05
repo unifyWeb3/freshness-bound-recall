@@ -5,3 +5,5 @@ node_modules/
 data/cache/
 data/ledger.jsonl
 data/policy-mirror.json
+site/
+freeze/

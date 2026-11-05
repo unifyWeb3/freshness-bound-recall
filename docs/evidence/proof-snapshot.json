@@ -1,0 +1,6354 @@
+{
+ "generated_at": "2026-11-05T02:05:42.991Z",
+ "mode": "live",
+ "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
+ "checkpoint": {
+  "checkpointSeq": 341759265,
+  "checkpointDigest": "BZphjTmK5YMRBmkY4J1FcKeuuKm6i4zXe8wD7dTDYbvD",
+  "checkpointTimestamp": "2026-11-05T02:05:37.360Z",
+  "readAt": "2026-11-05T02:05:38.665Z",
+  "source": "live",
+  "cache_age_ms": 0
+ },
+ "plan": "free;ratelimit=3;strategy=shared",
+ "tatum_log": [
+  {
+   "label": "objectType(0x71eb2f…)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 762,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:15.304Z"
+  },
+  {
+   "label": "checkpoints(last:1)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 160,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:17.430Z"
+  },
+  {
+   "label": "object(0x000000…)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 180,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:17.613Z"
+  },
+  {
+   "label": "object(0x8bf82c…)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 171,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:17.789Z"
+  },
+  {
+   "label": "checkpoints(last:1)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 432,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:38.665Z"
+  },
+  {
+   "label": "object(0x000000…)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 155,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:38.824Z"
+  },
+  {
+   "label": "object(0x8bf82c…)",
+   "attempt": 1,
+   "status": 200,
+   "latency_ms": 155,
+   "plan": "free;ratelimit=3;strategy=shared",
+   "at": "2026-11-05T02:05:38.981Z"
+  }
+ ],
+ "tatum_call_count": 7,
+ "subjects": {
+  "FAST": {
+   "subject": {
+    "id": "sui-clock",
+    "class": "FAST",
+    "label": "Sui Clock (shared object, 0x6)",
+    "address": "0x0000000000000000000000000000000000000000000000000000000000000006",
+    "predicate": "object_version"
+   },
+   "pin": {
+    "version": "1018857680",
+    "digest": "28gn4MN2izcSHNmDZrA88yot2eaJ1uGXmTyShPR2gcjS",
+    "address": "0x0000000000000000000000000000000000000000000000000000000000000006",
+    "readAt": "2026-11-05T02:05:38.824Z",
+    "source": "live"
+   }
+  },
+  "SLOW": {
+   "subject": {
+    "id": "memwal-registry",
+    "class": "SLOW",
+    "label": "MemWal AccountRegistry (mainnet)",
+    "address": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+    "predicate": "object_version"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "address": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+    "readAt": "2026-11-05T02:05:38.981Z",
+    "source": "live"
+   }
+  }
+ },
+ "memories": [
+  {
+   "blob_id": "q1vX8synwjZ0tFpdpl9fAdKWIxvtGj9r7G3eBYGVIcw",
+   "claim": "smoke-seed-slow-341759010",
+   "class": "SLOW",
+   "state": "live",
+   "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+   "predicate": "object_version",
+   "value_at_write": "version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+   "body": "Seed claim for the SLOW class: the MemWal AccountRegistry was observed at version 1062994379 digest 84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4 at checkpoint 341759010.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341759010,
+    "checkpoint_digest": "9zpAPzNPxiNPWgFh46odYxyLnxFtk6EeLnzF6Mh3cckY",
+    "object_version": "1062994379",
+    "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T02:04:36.078Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T02:04:36.078Z",
+   "distance": 0.49891805775526044,
+   "created_at": "2026-11-05T02:05:00.749368Z"
+  },
+  {
+   "blob_id": "DL6hLBNQd2fDxRnNM8R0MCekw9QcR583dEuK2YUSRW4",
+   "claim": "smoke-seed-fast-341758897",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018856297 digest=9dBnZYdKEajbVdQXXj18HhWLvhhBcmXXNMnxT2cjgQRG",
+   "body": "Seed claim for the FAST class: the Sui Clock was observed at version 1018856297 digest 9dBnZYdKEajbVdQXXj18HhWLvhhBcmXXNMnxT2cjgQRG at checkpoint 341758897.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341758897,
+    "checkpoint_digest": "BYjDDXd2ieTPdkYoFabqTpKUkM5GHCf7MMyrU4J7yV7t",
+    "object_version": "1018856297",
+    "object_digest": "9dBnZYdKEajbVdQXXj18HhWLvhhBcmXXNMnxT2cjgQRG",
+    "read_at": "2026-11-05T02:04:08.712Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T02:04:08.712Z",
+   "distance": 0.4755398795596524,
+   "created_at": "2026-11-05T02:04:27.398110Z"
+  },
+  {
+   "blob_id": "19ZE9y-zWt1fuR3lryI3AZiqM-v-cloWw7_oXHGOU4o",
+   "claim": "fc-policy-FAST-v1",
+   "class": "FAST",
+   "state": "policy",
+   "subject": "class:FAST",
+   "predicate": "policy_window",
+   "value_at_write": "25",
+   "body": "Learned policy for claim class FAST: trust a memory for 25 checkpoints. FALSE-STALE=0, MISSED-CHANGE=3, samples=4. MISSED-CHANGE 3 > FALSE-STALE 0: tighten 50 -> 25.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341742503,
+    "checkpoint_digest": "5iNLmL11YMA1dMMNngc4qYLNpCDsJUHzgjzCEjgGGkEe",
+    "object_version": null,
+    "object_digest": null,
+    "read_at": "2026-11-05T00:57:55.895Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": {
+    "class": "FAST",
+    "window": 25,
+    "min": 10,
+    "max": 200000,
+    "false_stale": 0,
+    "missed_change": 3,
+    "samples": 4,
+    "version": 1,
+    "reason": "MISSED-CHANGE 3 > FALSE-STALE 0: tighten 50 -> 25"
+   },
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:55.895Z",
+   "distance": 0.37125429195510284,
+   "created_at": "2026-11-05T01:00:03.230057Z"
+  },
+  {
+   "blob_id": "mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY",
+   "claim": "cor-sui-clock-341742463",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797298 digest=4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+   "body": "Correction for Sui Clock (shared object, 0x6): at checkpoint 341742463 the subject is version=1018797298 digest=4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM. This supersedes obs-sui-clock-341742424 (unknown blob), which was STALE - subject changed (version 1018797179->1018797298, digest changed).",
+   "supersedes": "obs-sui-clock-341742424",
+   "proof": {
+    "checkpoint_seq": 341742463,
+    "checkpoint_digest": "7vNTGtQfL4vfWu1nFg73e89j9WUxGxFaGepCHqyG6oko",
+    "object_version": "1018797298",
+    "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+    "read_at": "2026-11-05T00:57:47.704Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:47.704Z",
+   "distance": 0.4477234527719206,
+   "created_at": "2026-11-05T00:59:44.946146Z",
+   "supersedes_ref": "goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY"
+  },
+  {
+   "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+   "claim": "obs-sui-clock-341742463",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797298 digest=4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341742463: version=1018797298 digest=4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM, previous version=undefined (changed), 39 checkpoints and 9s since the previous observation. Gate verdict against the previous observation: STALE (subject changed (version 1018797179->1018797298, digest changed)). Observed change rate so far: 2/3 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341742463,
+    "checkpoint_digest": "7vNTGtQfL4vfWu1nFg73e89j9WUxGxFaGepCHqyG6oko",
+    "object_version": "1018797298",
+    "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+    "read_at": "2026-11-05T00:57:47.704Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:47.704Z",
+   "distance": 0.4496059975129316,
+   "created_at": "2026-11-05T00:59:24.463428Z"
+  },
+  {
+   "blob_id": "1JJVQ71R1t6lnnmbWRXfZVOpDshsDsgZ9ME-KV4EL-k",
+   "claim": "cor-sui-clock-341742424",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797179 digest=GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+   "body": "Correction for Sui Clock (shared object, 0x6): at checkpoint 341742424 the subject is version=1018797179 digest=GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF. This supersedes obs-sui-clock-341742383 (unknown blob), which was STALE - subject changed (version 1018797042->1018797179, digest changed).",
+   "supersedes": "obs-sui-clock-341742383",
+   "proof": {
+    "checkpoint_seq": 341742424,
+    "checkpoint_digest": "8tLpCWFUR9YmPKgFK2uMq98hmSvw5xY8yuFn45CpKH2E",
+    "object_version": "1018797179",
+    "object_digest": "GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+    "read_at": "2026-11-05T00:57:38.893Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:38.894Z",
+   "distance": 0.44660476665774085,
+   "created_at": "2026-11-05T00:59:02.248438Z",
+   "supersedes_ref": "FMBYgzs4O6_Z5YKCZlA5DCYHrzc4h5yVTtHeGcWpavY"
+  },
+  {
+   "blob_id": "goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY",
+   "claim": "obs-sui-clock-341742424",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797179 digest=GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341742424: version=1018797179 digest=GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF, previous version=undefined (changed), 41 checkpoints and 9s since the previous observation. Gate verdict against the previous observation: STALE (subject changed (version 1018797042->1018797179, digest changed)). Observed change rate so far: 1/2 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341742424,
+    "checkpoint_digest": "8tLpCWFUR9YmPKgFK2uMq98hmSvw5xY8yuFn45CpKH2E",
+    "object_version": "1018797179",
+    "object_digest": "GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+    "read_at": "2026-11-05T00:57:38.893Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:38.893Z",
+   "distance": 0.45048975342062436,
+   "created_at": "2026-11-05T00:58:40.292820Z",
+   "superseded_by": [
+    "mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY"
+   ]
+  },
+  {
+   "blob_id": "_RswBPgo7eksTyWBiqLv0xDdqMY3nYbmOiUIGecnrXI",
+   "claim": "cor-sui-clock-341742383",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797042 digest=5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+   "body": "Correction for Sui Clock (shared object, 0x6): at checkpoint 341742383 the subject is version=1018797042 digest=5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb. This supersedes obs-sui-clock-341741527 (WJv-iK212eA_SD23DNLjmmJsYRrxnfx4PxV_EeyeUAQ), which was STALE - subject changed (version 1018794223->1018797042, digest changed).",
+   "supersedes": "WJv-iK212eA_SD23DNLjmmJsYRrxnfx4PxV_EeyeUAQ",
+   "proof": {
+    "checkpoint_seq": 341742383,
+    "checkpoint_digest": "4KWRyM4ACNcD4v5NjCBRdRv7KdgdVwxJrGZfBfn8GBbU",
+    "object_version": "1018797042",
+    "object_digest": "5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+    "read_at": "2026-11-05T00:57:29.752Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:29.769Z",
+   "distance": 0.44626582819703364,
+   "created_at": "2026-11-05T00:58:08.408068Z",
+   "supersedes_ref": "WJv-iK212eA_SD23DNLjmmJsYRrxnfx4PxV_EeyeUAQ"
+  },
+  {
+   "blob_id": "FMBYgzs4O6_Z5YKCZlA5DCYHrzc4h5yVTtHeGcWpavY",
+   "claim": "obs-sui-clock-341742383",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018797042 digest=5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341742383: version=1018797042 digest=5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb, previous version=undefined (changed), 856 checkpoints and 0s since the previous observation. Gate verdict against the previous observation: STALE (subject changed (version 1018794223->1018797042, digest changed)). Observed change rate so far: 0/1 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341742383,
+    "checkpoint_digest": "4KWRyM4ACNcD4v5NjCBRdRv7KdgdVwxJrGZfBfn8GBbU",
+    "object_version": "1018797042",
+    "object_digest": "5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+    "read_at": "2026-11-05T00:57:29.752Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:57:29.767Z",
+   "distance": 0.44545875842240523,
+   "created_at": "2026-11-05T00:57:47.427090Z",
+   "superseded_by": [
+    "1JJVQ71R1t6lnnmbWRXfZVOpDshsDsgZ9ME-KV4EL-k"
+   ]
+  },
+  {
+   "blob_id": "WJv-iK212eA_SD23DNLjmmJsYRrxnfx4PxV_EeyeUAQ",
+   "claim": "obs-sui-clock-341741527",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018794223 digest=CWsc7dS3tA2nD72av78vBj5EX2sPh8Ch8h1DTDHsUGnA",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341741527: version=1018794223 digest=CWsc7dS3tA2nD72av78vBj5EX2sPh8Ch8h1DTDHsUGnA, previous version=undefined (changed), 303 checkpoints and 69s since the previous observation. Gate verdict against the previous observation: STALE (subject changed (version 1018793230->1018794223, digest changed)). Observed change rate so far: 2/3 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341741527,
+    "checkpoint_digest": "222tjVoHLYqieoG5VjxFNd2UwaMHSNRLQ8LMGa5gswnk",
+    "object_version": "1018794223",
+    "object_digest": "CWsc7dS3tA2nD72av78vBj5EX2sPh8Ch8h1DTDHsUGnA",
+    "read_at": "2026-11-05T00:54:11.253Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:54:11.253Z",
+   "distance": 0.4423453685558727,
+   "created_at": "2026-11-05T00:54:32.647461Z",
+   "superseded_by": [
+    "_RswBPgo7eksTyWBiqLv0xDdqMY3nYbmOiUIGecnrXI"
+   ]
+  },
+  {
+   "blob_id": "MNQZ0eE0CWLo_fpW4eklbs8-hWzdPlxt04Z51nAAeWo",
+   "claim": "adv-not-stale-341741224",
+   "class": "SLOW",
+   "state": "adversarial",
+   "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+   "predicate": "object_version",
+   "value_at_write": "version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+   "body": "Adversarial not-stale record. At checkpoint 341741224 this memory is 194 checkpoints old - more than the FAST window of 50 - but its subject (MemWal AccountRegistry (mainnet)) still has version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4, unchanged since the memory was written. The gate answered FRESH, so it withholds stale memories, not old-but-true ones.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341741224,
+    "checkpoint_digest": "ExFzdH9b3ZQ5MG5uZr7q1nRp73uS9WduBfvdquf2Be5K",
+    "object_version": "1062994379",
+    "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:53:41.551Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": {
+    "age_checkpoints": "194",
+    "fast_window": "50",
+    "verdict": "FRESH"
+   },
+   "recorded_at": "2026-11-05T00:53:41.551Z",
+   "distance": 0.3904618447494309,
+   "created_at": "2026-11-05T00:53:58.400903Z"
+  },
+  {
+   "blob_id": "5ndF6Q5qRoye0cuk5rhqsM7BltGzW_amYN9NVPb_BM4",
+   "claim": "cor-sui-clock-341741224",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018793230 digest=5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC",
+   "body": "Correction for Sui Clock (shared object, 0x6): at checkpoint 341741224 the subject is version=1018793230 digest=5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC. This supersedes obs-sui-clock-341741030 (EXLTJp9bcDtWTRyVdVJZEt0Oztx7v-f08BKuP74szsE), which was STALE - subject changed (version 1018792575->1018793230, digest changed).",
+   "supersedes": "EXLTJp9bcDtWTRyVdVJZEt0Oztx7v-f08BKuP74szsE",
+   "proof": {
+    "checkpoint_seq": 341741224,
+    "checkpoint_digest": "ExFzdH9b3ZQ5MG5uZr7q1nRp73uS9WduBfvdquf2Be5K",
+    "object_version": "1018793230",
+    "object_digest": "5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC",
+    "read_at": "2026-11-05T00:53:01.942Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:53:23.598Z",
+   "distance": 0.44860140668727977,
+   "created_at": "2026-11-05T00:53:40.434621Z",
+   "supersedes_ref": "EXLTJp9bcDtWTRyVdVJZEt0Oztx7v-f08BKuP74szsE"
+  },
+  {
+   "blob_id": "BZ8iuoOxLSGBAfxR_cqRanRm6_tT2bJUr9Y9nmPo4NE",
+   "claim": "obs-sui-clock-341741224",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018793230 digest=5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341741224: version=1018793230 digest=5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC, previous version=undefined (changed), 194 checkpoints and 45s since the previous observation. Gate verdict against the previous observation: STALE (subject changed (version 1018792575->1018793230, digest changed)). Observed change rate so far: 1/2 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341741224,
+    "checkpoint_digest": "ExFzdH9b3ZQ5MG5uZr7q1nRp73uS9WduBfvdquf2Be5K",
+    "object_version": "1018793230",
+    "object_digest": "5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC",
+    "read_at": "2026-11-05T00:53:01.942Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:53:01.947Z",
+   "distance": 0.4418362977879552,
+   "created_at": "2026-11-05T00:53:19.973517Z"
+  },
+  {
+   "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+   "claim": "obs-memwal-registry-341741030",
+   "class": "SLOW",
+   "state": "observation",
+   "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+   "predicate": "object_version",
+   "value_at_write": "version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+   "body": "Observation of MemWal AccountRegistry (mainnet) at checkpoint 341741030: version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4, first observation, 0 checkpoints and 0s since the previous observation. Gate verdict against the previous observation: WITHHELD_UNVERIFIED (no anchor observation yet). Observed change rate so far: 0/1 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341741030,
+    "checkpoint_digest": "919rA5zX6yTSkpzpSDHAPBFVmDjD9aFgffKYqW9GPcRK",
+    "object_version": "1062994379",
+    "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:52:37.307Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:52:37.307Z",
+   "distance": 0.44052601908042455,
+   "created_at": "2026-11-05T00:52:52.734225Z"
+  },
+  {
+   "blob_id": "EXLTJp9bcDtWTRyVdVJZEt0Oztx7v-f08BKuP74szsE",
+   "claim": "obs-sui-clock-341741030",
+   "class": "FAST",
+   "state": "observation",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018792575 digest=CJSdVa4nZz6HGqkctMVi6fdAZgLFycTHWeQzQZjZXbee",
+   "body": "Observation of Sui Clock (shared object, 0x6) at checkpoint 341741030: version=1018792575 digest=CJSdVa4nZz6HGqkctMVi6fdAZgLFycTHWeQzQZjZXbee, first observation, 0 checkpoints and 0s since the previous observation. Gate verdict against the previous observation: WITHHELD_UNVERIFIED (no anchor observation yet). Observed change rate so far: 0/1 rounds changed.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341741030,
+    "checkpoint_digest": "919rA5zX6yTSkpzpSDHAPBFVmDjD9aFgffKYqW9GPcRK",
+    "object_version": "1018792575",
+    "object_digest": "CJSdVa4nZz6HGqkctMVi6fdAZgLFycTHWeQzQZjZXbee",
+    "read_at": "2026-11-05T00:52:17.294Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:52:17.303Z",
+   "distance": 0.45432565139039816,
+   "created_at": "2026-11-05T00:52:32.916626Z",
+   "superseded_by": [
+    "5ndF6Q5qRoye0cuk5rhqsM7BltGzW_amYN9NVPb_BM4"
+   ]
+  },
+  {
+   "blob_id": "SwnqFFWWerBq7ssI_OXUcFhvMSaUxC85KeMLGjGMvRI",
+   "claim": "smoke-seed-slow-341740265",
+   "class": "SLOW",
+   "state": "live",
+   "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+   "predicate": "object_version",
+   "value_at_write": "version=1062994379 digest=84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+   "body": "Seed claim for the SLOW class: the MemWal AccountRegistry was observed at version 1062994379 digest 84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4 at checkpoint 341740265.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341740265,
+    "checkpoint_digest": "Fyu94BTc6YYzLymeFmNqX6zb3gjXBSPfqQNnXoLNu6bR",
+    "object_version": "1062994379",
+    "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:49:17.730Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:49:17.730Z",
+   "distance": 0.49950473377902227,
+   "created_at": "2026-11-05T00:49:36.238651Z"
+  },
+  {
+   "blob_id": "wYNZE__Q3HkeRZIYf0BljMRa92DnZ0S5yt08xjLEIdE",
+   "claim": "smoke-seed-fast-341740155",
+   "class": "FAST",
+   "state": "live",
+   "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+   "predicate": "object_version",
+   "value_at_write": "version=1018789643 digest=2fbjtujmv3xiyhGkX8ebEWVcjYfmgFv4dVYtThtDkCCX",
+   "body": "Seed claim for the FAST class: the Sui Clock was observed at version 1018789643 digest 2fbjtujmv3xiyhGkX8ebEWVcjYfmgFv4dVYtThtDkCCX at checkpoint 341740155.",
+   "supersedes": null,
+   "proof": {
+    "checkpoint_seq": 341740155,
+    "checkpoint_digest": "6iW4iPp6ddRY8vR5H4N38VcY4vR4v4oVHzY9DyeJENVs",
+    "object_version": "1018789643",
+    "object_digest": "2fbjtujmv3xiyhGkX8ebEWVcjYfmgFv4dVYtThtDkCCX",
+    "read_at": "2026-11-05T00:48:51.368Z",
+    "transport": "tatum-sui-mainnet/graphql",
+    "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S"
+   },
+   "policy": null,
+   "adversarial": null,
+   "recorded_at": "2026-11-05T00:48:51.368Z",
+   "distance": 0.47677727336179676,
+   "created_at": "2026-11-05T00:49:11.481297Z"
+  }
+ ],
+ "ledger": [
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:50:47.343Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "WITHHELD_UNVERIFIED",
+   "reason": "no anchor observation yet",
+   "signal": "UNVERIFIED",
+   "live": {
+    "checkpoint_seq": 341740651,
+    "checkpoint_digest": "6ZLhCznRAHQcFm8Z9RcRvSVNgYEYzLki1MekhJxsD2SL",
+    "read_at": "2026-11-05T00:50:47.176Z"
+   },
+   "pin": {
+    "version": "1018791295",
+    "digest": "7Eb2UK6m34uCJRE4pQckNuxsFRkNFYwXQ7pb46CYJLcB",
+    "read_at": "2026-11-05T00:50:47.341Z"
+   },
+   "memory": null,
+   "policy": null,
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:50:47.541Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "WITHHELD_UNVERIFIED",
+   "reason": "no anchor observation yet",
+   "signal": "UNVERIFIED",
+   "live": {
+    "checkpoint_seq": 341740651,
+    "checkpoint_digest": "6ZLhCznRAHQcFm8Z9RcRvSVNgYEYzLki1MekhJxsD2SL",
+    "read_at": "2026-11-05T00:50:47.176Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:50:47.536Z"
+   },
+   "memory": null,
+   "policy": null,
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:50:56.194Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018791295->1018791419, digest changed)",
+   "signal": "MISSED-CHANGE",
+   "live": {
+    "checkpoint_seq": 341740691,
+    "checkpoint_digest": "3YDW1mkKU559fhECaATfbeQ9V4Upg3DUpqqepfurXgJt",
+    "read_at": "2026-11-05T00:50:56.016Z"
+   },
+   "pin": {
+    "version": "1018791419",
+    "digest": "F4kNM7BZDNkMjvqstzCdqxZSccv6PNaW4BXeY8RYUhQc",
+    "read_at": "2026-11-05T00:50:56.192Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341740651",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341740651,
+     "object_version": "1018791295",
+     "object_digest": "7Eb2UK6m34uCJRE4pQckNuxsFRkNFYwXQ7pb46CYJLcB",
+     "read_at": "2026-11-05T00:50:47.341Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:50:56.521Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 40 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341740691,
+    "checkpoint_digest": "3YDW1mkKU559fhECaATfbeQ9V4Upg3DUpqqepfurXgJt",
+    "read_at": "2026-11-05T00:50:56.016Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:50:56.521Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341740651",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341740651,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:50:47.536Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T00:51:05.852Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018791419->1018791551, digest changed)",
+   "signal": "MISSED-CHANGE",
+   "live": {
+    "checkpoint_seq": 341740731,
+    "checkpoint_digest": "5cZZGvsCZres4sriregQ8bViabZQhow3YeUfEEN7uGSG",
+    "read_at": "2026-11-05T00:51:05.573Z"
+   },
+   "pin": {
+    "version": "1018791551",
+    "digest": "98kzVaVR5X55ff6aV6CDCfKRMHTsZtpfNhK4pFE9KEmG",
+    "read_at": "2026-11-05T00:51:05.851Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341740691",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341740691,
+     "object_version": "1018791419",
+     "object_digest": "F4kNM7BZDNkMjvqstzCdqxZSccv6PNaW4BXeY8RYUhQc",
+     "read_at": "2026-11-05T00:50:56.192Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T00:51:06.131Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 80 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341740731,
+    "checkpoint_digest": "5cZZGvsCZres4sriregQ8bViabZQhow3YeUfEEN7uGSG",
+    "read_at": "2026-11-05T00:51:05.573Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:51:06.130Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341740651",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341740651,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:50:47.536Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:52:36.408Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "WITHHELD_UNVERIFIED",
+   "reason": "no anchor observation yet",
+   "signal": "UNVERIFIED",
+   "live": {
+    "checkpoint_seq": 341741030,
+    "checkpoint_digest": "919rA5zX6yTSkpzpSDHAPBFVmDjD9aFgffKYqW9GPcRK",
+    "read_at": "2026-11-05T00:52:17.029Z"
+   },
+   "pin": {
+    "version": "1018792575",
+    "digest": "CJSdVa4nZz6HGqkctMVi6fdAZgLFycTHWeQzQZjZXbee",
+    "read_at": "2026-11-05T00:52:17.294Z"
+   },
+   "memory": null,
+   "policy": null,
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:52:52.691Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "WITHHELD_UNVERIFIED",
+   "reason": "no anchor observation yet",
+   "signal": "UNVERIFIED",
+   "live": {
+    "checkpoint_seq": 341741030,
+    "checkpoint_digest": "919rA5zX6yTSkpzpSDHAPBFVmDjD9aFgffKYqW9GPcRK",
+    "read_at": "2026-11-05T00:52:17.029Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:52:37.307Z"
+   },
+   "memory": null,
+   "policy": null,
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:53:40.800Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018792575->1018793230, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341741224,
+    "checkpoint_digest": "ExFzdH9b3ZQ5MG5uZr7q1nRp73uS9WduBfvdquf2Be5K",
+    "read_at": "2026-11-05T00:53:01.584Z"
+   },
+   "pin": {
+    "version": "1018793230",
+    "digest": "5DyuDxNtE9SXC4wdW8fzm9XEb3WPaChEqmus1DeNyEQC",
+    "read_at": "2026-11-05T00:53:01.942Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341741030",
+    "blob_id": "EXLTJp9bcDtWTRyVdVJZEt0Oztx7v-f08BKuP74szsE",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1018792575",
+     "object_digest": "CJSdVa4nZz6HGqkctMVi6fdAZgLFycTHWeQzQZjZXbee",
+     "read_at": "2026-11-05T00:52:17.294Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:54:02.014Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 194 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341741224,
+    "checkpoint_digest": "ExFzdH9b3ZQ5MG5uZr7q1nRp73uS9WduBfvdquf2Be5K",
+    "read_at": "2026-11-05T00:53:01.584Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:53:41.551Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:57:29.770Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018794223->1018797042, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742383,
+    "checkpoint_digest": "4KWRyM4ACNcD4v5NjCBRdRv7KdgdVwxJrGZfBfn8GBbU",
+    "read_at": "2026-11-05T00:57:29.563Z"
+   },
+   "pin": {
+    "version": "1018797042",
+    "digest": "5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+    "read_at": "2026-11-05T00:57:29.752Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341741527",
+    "blob_id": "WJv-iK212eA_SD23DNLjmmJsYRrxnfx4PxV_EeyeUAQ",
+    "proof_at_write": {
+     "checkpoint_seq": 341741527,
+     "object_version": "1018794223",
+     "object_digest": "CWsc7dS3tA2nD72av78vBj5EX2sPh8Ch8h1DTDHsUGnA",
+     "read_at": "2026-11-05T00:54:11.253Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T00:57:30.168Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1353 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742383,
+    "checkpoint_digest": "4KWRyM4ACNcD4v5NjCBRdRv7KdgdVwxJrGZfBfn8GBbU",
+    "read_at": "2026-11-05T00:57:29.563Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:57:30.167Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:57:38.894Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797042->1018797179, digest changed)",
+   "signal": "MISSED-CHANGE",
+   "live": {
+    "checkpoint_seq": 341742424,
+    "checkpoint_digest": "8tLpCWFUR9YmPKgFK2uMq98hmSvw5xY8yuFn45CpKH2E",
+    "read_at": "2026-11-05T00:57:38.685Z"
+   },
+   "pin": {
+    "version": "1018797179",
+    "digest": "GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+    "read_at": "2026-11-05T00:57:38.893Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742383",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742383,
+     "object_version": "1018797042",
+     "object_digest": "5SVTLTiRruYuYEnXgkfYbmzkWqczEzuJuniACmDrXjHb",
+     "read_at": "2026-11-05T00:57:29.752Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T00:57:39.085Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1394 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742424,
+    "checkpoint_digest": "8tLpCWFUR9YmPKgFK2uMq98hmSvw5xY8yuFn45CpKH2E",
+    "read_at": "2026-11-05T00:57:38.685Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:57:39.085Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T00:57:47.704Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797179->1018797298, digest changed)",
+   "signal": "MISSED-CHANGE",
+   "live": {
+    "checkpoint_seq": 341742463,
+    "checkpoint_digest": "7vNTGtQfL4vfWu1nFg73e89j9WUxGxFaGepCHqyG6oko",
+    "read_at": "2026-11-05T00:57:47.550Z"
+   },
+   "pin": {
+    "version": "1018797298",
+    "digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+    "read_at": "2026-11-05T00:57:47.704Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742424",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742424,
+     "object_version": "1018797179",
+     "object_digest": "GB3EDSHRi9G5AvckWAXVhDdvYRrU7e4BjxFKKpsTGAtF",
+     "read_at": "2026-11-05T00:57:38.893Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 50,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T00:57:47.886Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1433 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742463,
+    "checkpoint_digest": "7vNTGtQfL4vfWu1nFg73e89j9WUxGxFaGepCHqyG6oko",
+    "read_at": "2026-11-05T00:57:47.550Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:57:47.886Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 4,
+   "at": "2026-11-05T00:57:56.649Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018797428, digest changed)",
+   "signal": "MISSED-CHANGE",
+   "live": {
+    "checkpoint_seq": 341742503,
+    "checkpoint_digest": "5iNLmL11YMA1dMMNngc4qYLNpCDsJUHzgjzCEjgGGkEe",
+    "read_at": "2026-11-05T00:57:56.391Z"
+   },
+   "pin": {
+    "version": "1018797428",
+    "digest": "DKyBo7KnWaPJbg4heMEgqpxPWqP2DPzFpknysyiiEqQP",
+    "read_at": "2026-11-05T00:57:56.648Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 50,
+    "after_window": 25,
+    "changed": true,
+    "reason": "MISSED-CHANGE 3 > FALSE-STALE 0: tighten 50 -> 25"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 4,
+   "at": "2026-11-05T00:57:56.844Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1473 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742503,
+    "checkpoint_digest": "5iNLmL11YMA1dMMNngc4qYLNpCDsJUHzgjzCEjgGGkEe",
+    "read_at": "2026-11-05T00:57:56.391Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:57:56.844Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T00:58:05.603Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018797552, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742541,
+    "checkpoint_digest": "H3XXB6rYSYvQadksHX4gZyS8snR2QTcg6cDCHKVZv39G",
+    "read_at": "2026-11-05T00:58:05.406Z"
+   },
+   "pin": {
+    "version": "1018797552",
+    "digest": "FwEG8hoRaW1VTVXKt6B2rd4hmF5ZbQN3eYn3iBs1aubQ",
+    "read_at": "2026-11-05T00:58:05.598Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T00:58:05.800Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1511 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742541,
+    "checkpoint_digest": "H3XXB6rYSYvQadksHX4gZyS8snR2QTcg6cDCHKVZv39G",
+    "read_at": "2026-11-05T00:58:05.406Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:05.800Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T00:58:14.749Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018797676, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742580,
+    "checkpoint_digest": "FSD34LJbiXEMGcBt87cFAaV5KshJJjE17kD7kFeFGB7M",
+    "read_at": "2026-11-05T00:58:14.572Z"
+   },
+   "pin": {
+    "version": "1018797676",
+    "digest": "HYCRLgWT1pSWZ9erMgsLn6QsmonAeEMCUJ9Tq7Ap8uWi",
+    "read_at": "2026-11-05T00:58:14.748Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T00:58:14.928Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1550 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742580,
+    "checkpoint_digest": "FSD34LJbiXEMGcBt87cFAaV5KshJJjE17kD7kFeFGB7M",
+    "read_at": "2026-11-05T00:58:14.572Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:14.928Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 7,
+   "at": "2026-11-05T00:58:23.711Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018797805, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742621,
+    "checkpoint_digest": "6YrbTH2i7MkPcu9HubsKqkkuGoed4fSqcqZJU3iQUo52",
+    "read_at": "2026-11-05T00:58:23.500Z"
+   },
+   "pin": {
+    "version": "1018797805",
+    "digest": "CWby1ZiatUt1vUALii8kNrbhuRt9LHkPtPyuYx3EUYhc",
+    "read_at": "2026-11-05T00:58:23.711Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 7,
+   "at": "2026-11-05T00:58:23.920Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1591 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742621,
+    "checkpoint_digest": "6YrbTH2i7MkPcu9HubsKqkkuGoed4fSqcqZJU3iQUo52",
+    "read_at": "2026-11-05T00:58:23.500Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:23.918Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 8,
+   "at": "2026-11-05T00:58:32.626Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018797932, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742658,
+    "checkpoint_digest": "94xq1BDsq79DDFogfoxzKBQaBDXRZ9jG7wKDMJrPgjVH",
+    "read_at": "2026-11-05T00:58:32.438Z"
+   },
+   "pin": {
+    "version": "1018797932",
+    "digest": "ERFxq4Spy7YNQZqpVPTG18EKwQnRmUMDxWDLDb6fhWcs",
+    "read_at": "2026-11-05T00:58:32.626Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 8,
+   "at": "2026-11-05T00:58:32.852Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1628 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742658,
+    "checkpoint_digest": "94xq1BDsq79DDFogfoxzKBQaBDXRZ9jG7wKDMJrPgjVH",
+    "read_at": "2026-11-05T00:58:32.438Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:32.852Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 9,
+   "at": "2026-11-05T00:58:41.928Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798071, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742699,
+    "checkpoint_digest": "Erv8AXUSPkyTV5pCbn379faWaDBL99wFi12FXVsTRfQz",
+    "read_at": "2026-11-05T00:58:41.616Z"
+   },
+   "pin": {
+    "version": "1018798071",
+    "digest": "B9fQV4S97HcKRpGFMNTWQy7m75U2iiySFbTx1TG71uUb",
+    "read_at": "2026-11-05T00:58:41.928Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 9,
+   "at": "2026-11-05T00:58:42.274Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1669 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742699,
+    "checkpoint_digest": "Erv8AXUSPkyTV5pCbn379faWaDBL99wFi12FXVsTRfQz",
+    "read_at": "2026-11-05T00:58:41.616Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:42.274Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 10,
+   "at": "2026-11-05T00:58:51.444Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798208, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742739,
+    "checkpoint_digest": "21VBUUZN422suRq69YwLCdzwZyMbqCKbQtnwtDw5QCgK",
+    "read_at": "2026-11-05T00:58:51.225Z"
+   },
+   "pin": {
+    "version": "1018798208",
+    "digest": "GmpiqLHzXZhKiJZ4Q6c2LNpAjCAf7TDfX4n8TDFYkiJA",
+    "read_at": "2026-11-05T00:58:51.439Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 10,
+   "at": "2026-11-05T00:58:51.651Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1709 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742739,
+    "checkpoint_digest": "21VBUUZN422suRq69YwLCdzwZyMbqCKbQtnwtDw5QCgK",
+    "read_at": "2026-11-05T00:58:51.225Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:58:51.651Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 11,
+   "at": "2026-11-05T00:59:00.753Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798348, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742777,
+    "checkpoint_digest": "4LM3UNy4psvb5iWokfCCPYF54ByvjZgq6k1SXEuktVVC",
+    "read_at": "2026-11-05T00:59:00.312Z"
+   },
+   "pin": {
+    "version": "1018798348",
+    "digest": "Hnb77nTcvN5YRJbneQ7TPpEfhYG58kH57cav7SeDLScJ",
+    "read_at": "2026-11-05T00:59:00.753Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 11,
+   "at": "2026-11-05T00:59:00.978Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1747 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742777,
+    "checkpoint_digest": "4LM3UNy4psvb5iWokfCCPYF54ByvjZgq6k1SXEuktVVC",
+    "read_at": "2026-11-05T00:59:00.312Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:00.978Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 12,
+   "at": "2026-11-05T00:59:10.097Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798486, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742816,
+    "checkpoint_digest": "G7orXhm3N6x93kMiihrwhhSDRrDHc9iYgPUoQeibXtUu",
+    "read_at": "2026-11-05T00:59:09.664Z"
+   },
+   "pin": {
+    "version": "1018798486",
+    "digest": "2VueDPBi1FgwZUZGEWZBwb9vqU6Sm4UNRHTaDYoUGFsh",
+    "read_at": "2026-11-05T00:59:10.097Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 12,
+   "at": "2026-11-05T00:59:10.338Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1786 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742816,
+    "checkpoint_digest": "G7orXhm3N6x93kMiihrwhhSDRrDHc9iYgPUoQeibXtUu",
+    "read_at": "2026-11-05T00:59:09.664Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:10.338Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 13,
+   "at": "2026-11-05T00:59:19.523Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798620, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742856,
+    "checkpoint_digest": "DnuKqHupXpgEU5jpoRXuXWn65dAdWJipM91EDFoVp82d",
+    "read_at": "2026-11-05T00:59:19.322Z"
+   },
+   "pin": {
+    "version": "1018798620",
+    "digest": "5VAbwSaKFFje7yz9AgLWSxDTd2jvkNXoRQ9zpQr2HgRz",
+    "read_at": "2026-11-05T00:59:19.523Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": null,
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 13,
+   "at": "2026-11-05T00:59:19.754Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1826 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742856,
+    "checkpoint_digest": "DnuKqHupXpgEU5jpoRXuXWn65dAdWJipM91EDFoVp82d",
+    "read_at": "2026-11-05T00:59:19.322Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:19.754Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 14,
+   "at": "2026-11-05T00:59:28.473Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798744, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742895,
+    "checkpoint_digest": "ByKgyMc14VzBExJTD6RFzxLNYHtKNEMQyDcjeFa6gcxM",
+    "read_at": "2026-11-05T00:59:28.277Z"
+   },
+   "pin": {
+    "version": "1018798744",
+    "digest": "HMkQUaxnUin85gWVxK2fWrLucPQKkmZXLEscuQZA2Vhb",
+    "read_at": "2026-11-05T00:59:28.473Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 14,
+   "at": "2026-11-05T00:59:28.802Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1865 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742895,
+    "checkpoint_digest": "ByKgyMc14VzBExJTD6RFzxLNYHtKNEMQyDcjeFa6gcxM",
+    "read_at": "2026-11-05T00:59:28.277Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:28.802Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 15,
+   "at": "2026-11-05T00:59:37.443Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018798872, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742935,
+    "checkpoint_digest": "8ghvqrhnsGmyT7yBn48ZJv1TexbX1FgreY1FFPa4KkGH",
+    "read_at": "2026-11-05T00:59:37.268Z"
+   },
+   "pin": {
+    "version": "1018798872",
+    "digest": "4PHdeQ3iiCuaaxS3ZrstEqrX4mWt9YV4b6N9TA1wruWm",
+    "read_at": "2026-11-05T00:59:37.443Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 15,
+   "at": "2026-11-05T00:59:37.651Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1905 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742935,
+    "checkpoint_digest": "8ghvqrhnsGmyT7yBn48ZJv1TexbX1FgreY1FFPa4KkGH",
+    "read_at": "2026-11-05T00:59:37.268Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:37.651Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 16,
+   "at": "2026-11-05T00:59:46.327Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799005, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742971,
+    "checkpoint_digest": "HhrwVAGzHo9qyh4JvURXvnjQoVaS3yAMQZE9KvoFkWD1",
+    "read_at": "2026-11-05T00:59:46.158Z"
+   },
+   "pin": {
+    "version": "1018799005",
+    "digest": "GHg5JvRK5MBtcPbjUx7tFhx12eCLGH131sYPpP97zprR",
+    "read_at": "2026-11-05T00:59:46.327Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 16,
+   "at": "2026-11-05T00:59:46.509Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1941 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341742971,
+    "checkpoint_digest": "HhrwVAGzHo9qyh4JvURXvnjQoVaS3yAMQZE9KvoFkWD1",
+    "read_at": "2026-11-05T00:59:46.158Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:46.509Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 17,
+   "at": "2026-11-05T00:59:55.718Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799138, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743011,
+    "checkpoint_digest": "7HqpMV5AH1ZLgtrdtJJkTR3VkUQ9ejrDmdbWRf17NhF4",
+    "read_at": "2026-11-05T00:59:55.521Z"
+   },
+   "pin": {
+    "version": "1018799138",
+    "digest": "A6xh1oEEvpnAp1XNPNZEjWcFkWMSzuxXJW7axhvqdzeA",
+    "read_at": "2026-11-05T00:59:55.715Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 17,
+   "at": "2026-11-05T00:59:55.971Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 1981 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743011,
+    "checkpoint_digest": "7HqpMV5AH1ZLgtrdtJJkTR3VkUQ9ejrDmdbWRf17NhF4",
+    "read_at": "2026-11-05T00:59:55.521Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T00:59:55.971Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 18,
+   "at": "2026-11-05T01:00:04.695Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799264, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743050,
+    "checkpoint_digest": "LKhh6kyvaRQzhqWLZDwcijzpCEFHuXLSBHDRbSmf42J",
+    "read_at": "2026-11-05T01:00:04.487Z"
+   },
+   "pin": {
+    "version": "1018799264",
+    "digest": "D9kYj2K8L9NFdQT3YQZ2gvXDWyTjPa6Cgpuce2J7g1Ux",
+    "read_at": "2026-11-05T01:00:04.695Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 18,
+   "at": "2026-11-05T01:00:04.906Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2020 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743050,
+    "checkpoint_digest": "LKhh6kyvaRQzhqWLZDwcijzpCEFHuXLSBHDRbSmf42J",
+    "read_at": "2026-11-05T01:00:04.487Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:04.906Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 19,
+   "at": "2026-11-05T01:00:13.874Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799404, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743089,
+    "checkpoint_digest": "Dp97gYCaVS28hg83R3Yttre5ZJJ2yAknZ53KoM2oHsDe",
+    "read_at": "2026-11-05T01:00:13.612Z"
+   },
+   "pin": {
+    "version": "1018799404",
+    "digest": "91huF1PUCs2iPvzZsBXpz1oULnBrrwJHRG5gqUfEu5RX",
+    "read_at": "2026-11-05T01:00:13.874Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 19,
+   "at": "2026-11-05T01:00:14.154Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2059 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743089,
+    "checkpoint_digest": "Dp97gYCaVS28hg83R3Yttre5ZJJ2yAknZ53KoM2oHsDe",
+    "read_at": "2026-11-05T01:00:13.612Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:14.154Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 20,
+   "at": "2026-11-05T01:00:24.900Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799546, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743135,
+    "checkpoint_digest": "9zdEpU7eGvN8FZ2Ju7c7nEKcHHvtBRK7cNGD3bWWKpgW",
+    "read_at": "2026-11-05T01:00:24.108Z"
+   },
+   "pin": {
+    "version": "1018799546",
+    "digest": "54CcdhoynigYkX1WgCkwiDk24UG9iRak7J5RCSjxG6D2",
+    "read_at": "2026-11-05T01:00:24.900Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 20,
+   "at": "2026-11-05T01:00:25.060Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2105 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743135,
+    "checkpoint_digest": "9zdEpU7eGvN8FZ2Ju7c7nEKcHHvtBRK7cNGD3bWWKpgW",
+    "read_at": "2026-11-05T01:00:24.108Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:25.060Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 21,
+   "at": "2026-11-05T01:00:33.972Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799697, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743177,
+    "checkpoint_digest": "GHm3BGrU2YhrJJo7KrCU5zkbykyQympwNoojxx1xLffN",
+    "read_at": "2026-11-05T01:00:33.724Z"
+   },
+   "pin": {
+    "version": "1018799697",
+    "digest": "5qGrbq7W2AbokQjyaMkrrvQMebXKBfb9bXYGaFkXMLrp",
+    "read_at": "2026-11-05T01:00:33.972Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 21,
+   "at": "2026-11-05T01:00:34.142Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2147 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743177,
+    "checkpoint_digest": "GHm3BGrU2YhrJJo7KrCU5zkbykyQympwNoojxx1xLffN",
+    "read_at": "2026-11-05T01:00:33.724Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:34.142Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 22,
+   "at": "2026-11-05T01:00:43.000Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799824, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743216,
+    "checkpoint_digest": "4bBBSnE89ccUofd3qG7qZxqbcrqb8ANe1YVNdLThWAAP",
+    "read_at": "2026-11-05T01:00:42.799Z"
+   },
+   "pin": {
+    "version": "1018799824",
+    "digest": "DQCoLWvAkC7K8D9vQBvPPfNarJp9P1kUuncjXipVqJ5p",
+    "read_at": "2026-11-05T01:00:42.999Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 22,
+   "at": "2026-11-05T01:00:43.201Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2186 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743216,
+    "checkpoint_digest": "4bBBSnE89ccUofd3qG7qZxqbcrqb8ANe1YVNdLThWAAP",
+    "read_at": "2026-11-05T01:00:42.799Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:43.201Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 23,
+   "at": "2026-11-05T01:00:51.958Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018799963, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743256,
+    "checkpoint_digest": "HsY5JrDFEecom9Ho9cpvk6gpsSi3NNZrBxXvAcb6axx2",
+    "read_at": "2026-11-05T01:00:51.755Z"
+   },
+   "pin": {
+    "version": "1018799963",
+    "digest": "EVssbEdwJjpawZLrCWGtooonZtrxRYihDHGThLyXNuAF",
+    "read_at": "2026-11-05T01:00:51.958Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 23,
+   "at": "2026-11-05T01:00:52.146Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2226 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743256,
+    "checkpoint_digest": "HsY5JrDFEecom9Ho9cpvk6gpsSi3NNZrBxXvAcb6axx2",
+    "read_at": "2026-11-05T01:00:51.755Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:00:52.146Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 24,
+   "at": "2026-11-05T01:01:01.122Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800092, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743294,
+    "checkpoint_digest": "G7rdsucvysugfQACj6pkDrPFWWzRQ5uowSuqzJt8mh3",
+    "read_at": "2026-11-05T01:01:00.951Z"
+   },
+   "pin": {
+    "version": "1018800092",
+    "digest": "7B58XCWjNZmbD8Y7yFnFHCLdsoaqZN5dPpFcYyBpyuKu",
+    "read_at": "2026-11-05T01:01:01.122Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 24,
+   "at": "2026-11-05T01:01:01.312Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2264 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743294,
+    "checkpoint_digest": "G7rdsucvysugfQACj6pkDrPFWWzRQ5uowSuqzJt8mh3",
+    "read_at": "2026-11-05T01:01:00.951Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:01.312Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 25,
+   "at": "2026-11-05T01:01:09.983Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800221, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743331,
+    "checkpoint_digest": "LyqeYFARYfZucgLtPF61viSEhUhDcUK7CVHujWzvxre",
+    "read_at": "2026-11-05T01:01:09.787Z"
+   },
+   "pin": {
+    "version": "1018800221",
+    "digest": "3f6prfkW8KCF4iwXXCj8U62M4wrChpgMDjpaHCNuSu8f",
+    "read_at": "2026-11-05T01:01:09.983Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 25,
+   "at": "2026-11-05T01:01:10.151Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2301 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743331,
+    "checkpoint_digest": "LyqeYFARYfZucgLtPF61viSEhUhDcUK7CVHujWzvxre",
+    "read_at": "2026-11-05T01:01:09.787Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:10.151Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 26,
+   "at": "2026-11-05T01:01:18.783Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800347, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743370,
+    "checkpoint_digest": "3EyoNFiWo4w6cymWLMTugd1zR9wzNAN8tqvjfeJ3HBvD",
+    "read_at": "2026-11-05T01:01:18.599Z"
+   },
+   "pin": {
+    "version": "1018800347",
+    "digest": "AdncGVinAgyoDmYY69cKMobXMVRERbDofuTmH7YJ4Ma",
+    "read_at": "2026-11-05T01:01:18.783Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 26,
+   "at": "2026-11-05T01:01:18.950Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2340 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743370,
+    "checkpoint_digest": "3EyoNFiWo4w6cymWLMTugd1zR9wzNAN8tqvjfeJ3HBvD",
+    "read_at": "2026-11-05T01:01:18.599Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:18.950Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 27,
+   "at": "2026-11-05T01:01:27.937Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800479, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743409,
+    "checkpoint_digest": "9ELQrtFRYSGznhyYeUV7VHUEHMj2GoJP1aQNxh3Ymd83",
+    "read_at": "2026-11-05T01:01:27.693Z"
+   },
+   "pin": {
+    "version": "1018800479",
+    "digest": "H94AECpQUhx5xj3Wb6NeWemyTdHksF25zDLoiRqQkSzZ",
+    "read_at": "2026-11-05T01:01:27.937Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 27,
+   "at": "2026-11-05T01:01:28.189Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2379 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743409,
+    "checkpoint_digest": "9ELQrtFRYSGznhyYeUV7VHUEHMj2GoJP1aQNxh3Ymd83",
+    "read_at": "2026-11-05T01:01:27.693Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:28.189Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 28,
+   "at": "2026-11-05T01:01:37.055Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800611, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743449,
+    "checkpoint_digest": "25djcebHaeNKFx1jVuG6WYcZ9fd9QWdQbbWwxXTBy8Bc",
+    "read_at": "2026-11-05T01:01:36.846Z"
+   },
+   "pin": {
+    "version": "1018800611",
+    "digest": "FaE6NSbTewwR7uGG3x7nTeE11YpsyGM6ebD3hg1inTMZ",
+    "read_at": "2026-11-05T01:01:37.055Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 28,
+   "at": "2026-11-05T01:01:37.292Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2419 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743449,
+    "checkpoint_digest": "25djcebHaeNKFx1jVuG6WYcZ9fd9QWdQbbWwxXTBy8Bc",
+    "read_at": "2026-11-05T01:01:36.846Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:37.291Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 29,
+   "at": "2026-11-05T01:01:45.950Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018800734, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743486,
+    "checkpoint_digest": "ArkQrDG8zkqtHRFu3a9ZkwcktQ2AK82wqu1SMb8w5UaX",
+    "read_at": "2026-11-05T01:01:45.773Z"
+   },
+   "pin": {
+    "version": "1018800734",
+    "digest": "J7qzK99cdd27n3G4zz4oKefbMsoxwEgqgFaq6xjP2iKr",
+    "read_at": "2026-11-05T01:01:45.950Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 29,
+   "at": "2026-11-05T01:01:46.129Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 2456 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341743486,
+    "checkpoint_digest": "ArkQrDG8zkqtHRFu3a9ZkwcktQ2AK82wqu1SMb8w5UaX",
+    "read_at": "2026-11-05T01:01:45.773Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:01:46.129Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T01:06:15.926Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018804644, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341744637,
+    "checkpoint_digest": "3y82pxZrHyJz61yvqvCyAMynhWt21VNMdFQdGQrW95ZM",
+    "read_at": "2026-11-05T01:06:15.657Z"
+   },
+   "pin": {
+    "version": "1018804644",
+    "digest": "3g8SLES8JLpRUxtgovCT1h713dvbppGntjfAAjxtqNd3",
+    "read_at": "2026-11-05T01:06:15.926Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T01:06:16.097Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 3607 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341744637,
+    "checkpoint_digest": "3y82pxZrHyJz61yvqvCyAMynhWt21VNMdFQdGQrW95ZM",
+    "read_at": "2026-11-05T01:06:15.657Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:06:16.097Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T01:07:17.019Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018805576, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341744891,
+    "checkpoint_digest": "SvYPFBCRN3F6zR6HDt5ZZSwVcTYbNY6X3UPRvNBUsst",
+    "read_at": "2026-11-05T01:07:16.826Z"
+   },
+   "pin": {
+    "version": "1018805576",
+    "digest": "3jJKVYRtmCBNiv5s86Ngt9mZf2XN65fYL1agkZb57Ugb",
+    "read_at": "2026-11-05T01:07:17.019Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T01:07:17.192Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 3861 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341744891,
+    "checkpoint_digest": "SvYPFBCRN3F6zR6HDt5ZZSwVcTYbNY6X3UPRvNBUsst",
+    "read_at": "2026-11-05T01:07:16.826Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:07:17.191Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T01:08:21.293Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018806541, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745151,
+    "checkpoint_digest": "5B9DenpEVbHHSZqPLw9Vg562jyZxwedE8bEeoSkRb127",
+    "read_at": "2026-11-05T01:08:21.083Z"
+   },
+   "pin": {
+    "version": "1018806541",
+    "digest": "Em1qYHzHNLBkwiPTxuHH5CCqFkobw594xiTo9D6tM491",
+    "read_at": "2026-11-05T01:08:21.293Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T01:08:21.481Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 4121 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745151,
+    "checkpoint_digest": "5B9DenpEVbHHSZqPLw9Vg562jyZxwedE8bEeoSkRb127",
+    "read_at": "2026-11-05T01:08:21.083Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:08:21.480Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T01:10:37.692Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018808511, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745713,
+    "checkpoint_digest": "HRNdSbXbFLcnpBqUCQJf7tJdrny4XK1z9Gd3AReK1XAL",
+    "read_at": "2026-11-05T01:10:37.493Z"
+   },
+   "pin": {
+    "version": "1018808511",
+    "digest": "9cWUz5dJpQ3A4JU3sgoiisbsDwBakdksXCEhfYitaUPk",
+    "read_at": "2026-11-05T01:10:37.691Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T01:10:38.523Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 4683 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745713,
+    "checkpoint_digest": "HRNdSbXbFLcnpBqUCQJf7tJdrny4XK1z9Gd3AReK1XAL",
+    "read_at": "2026-11-05T01:10:37.493Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:10:38.523Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T01:11:39.505Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018809444, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745971,
+    "checkpoint_digest": "HvkpKcRQNdqwfPLVtVQzMLoWBsGWapmeTsmP5S2yQbBU",
+    "read_at": "2026-11-05T01:11:39.331Z"
+   },
+   "pin": {
+    "version": "1018809444",
+    "digest": "AxmTLWvqRZGmJ4N7RH2p7yoiKyGDJS2pN5GcJWegjoy3",
+    "read_at": "2026-11-05T01:11:39.505Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T01:11:39.763Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 4941 <= 5000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341745971,
+    "checkpoint_digest": "HvkpKcRQNdqwfPLVtVQzMLoWBsGWapmeTsmP5S2yQbBU",
+    "read_at": "2026-11-05T01:11:39.331Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:11:39.762Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 7,
+   "at": "2026-11-05T01:12:40.882Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018810373, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341746225,
+    "checkpoint_digest": "71esi3JthiMSUqfT5aCDuMkCHLzWfzTzneHZEdQrSFib",
+    "read_at": "2026-11-05T01:12:40.724Z"
+   },
+   "pin": {
+    "version": "1018810373",
+    "digest": "J68joEtMJjryZaFxKkWpYswdTNgsFay7VqdDzpPj5aMT",
+    "read_at": "2026-11-05T01:12:40.882Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 7,
+   "at": "2026-11-05T01:12:41.060Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 5195 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341746225,
+    "checkpoint_digest": "71esi3JthiMSUqfT5aCDuMkCHLzWfzTzneHZEdQrSFib",
+    "read_at": "2026-11-05T01:12:40.724Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:12:41.059Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 8,
+   "at": "2026-11-05T01:13:43.081Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018811295, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341746479,
+    "checkpoint_digest": "28zVVnfXswvn2QZKXdpKaiLPseWUaec9oakYyQow2M4h",
+    "read_at": "2026-11-05T01:13:42.668Z"
+   },
+   "pin": {
+    "version": "1018811295",
+    "digest": "85XKbDRVbfNtbkZzvj1XGVZyha3MN1Qg43SMZxozaL1Q",
+    "read_at": "2026-11-05T01:13:43.081Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 8,
+   "at": "2026-11-05T01:13:43.282Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 5449 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341746479,
+    "checkpoint_digest": "28zVVnfXswvn2QZKXdpKaiLPseWUaec9oakYyQow2M4h",
+    "read_at": "2026-11-05T01:13:42.668Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:13:43.281Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 9,
+   "at": "2026-11-05T01:14:44.173Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018812237, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341746730,
+    "checkpoint_digest": "DzXN8hZihDWS7rZkv61qjD373Jscffu4vSBhjhiRZRtR",
+    "read_at": "2026-11-05T01:14:44.008Z"
+   },
+   "pin": {
+    "version": "1018812237",
+    "digest": "DT7bubHWMcYMpJjJnf4xZhd5xr4PNL7wJdzEZV4efSLs",
+    "read_at": "2026-11-05T01:14:44.173Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 9,
+   "at": "2026-11-05T01:14:44.363Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 5700 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341746730,
+    "checkpoint_digest": "DzXN8hZihDWS7rZkv61qjD373Jscffu4vSBhjhiRZRtR",
+    "read_at": "2026-11-05T01:14:44.008Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:14:44.354Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 10000,
+    "changed": true,
+    "reason": "FALSE-STALE 3 > MISSED-CHANGE 0: widen 5000 -> 10000"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 10,
+   "at": "2026-11-05T01:15:45.230Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018813157, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341746980,
+    "checkpoint_digest": "DJHqiQxv1uh7tb7mqiJiDwzxvyQ5RebegFwv8fAFuam",
+    "read_at": "2026-11-05T01:15:45.073Z"
+   },
+   "pin": {
+    "version": "1018813157",
+    "digest": "Dk7Sr8Nx4U1xA2baKu49nMEn1hniUqqmX9DECVPPm8vB",
+    "read_at": "2026-11-05T01:15:45.229Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 10,
+   "at": "2026-11-05T01:15:45.395Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 5950 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341746980,
+    "checkpoint_digest": "DJHqiQxv1uh7tb7mqiJiDwzxvyQ5RebegFwv8fAFuam",
+    "read_at": "2026-11-05T01:15:45.073Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:15:45.395Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 11,
+   "at": "2026-11-05T01:16:47.319Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018814097, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747235,
+    "checkpoint_digest": "9B6ND1tSwQ4suUeWgzRrQ5U8J3WxsHte7ZBK4sRpRXi2",
+    "read_at": "2026-11-05T01:16:46.808Z"
+   },
+   "pin": {
+    "version": "1018814097",
+    "digest": "8CjpQG3HnqXXoN1NoYdmW3GFYQgm7doAVf7AH3g2Qxs5",
+    "read_at": "2026-11-05T01:16:47.319Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 11,
+   "at": "2026-11-05T01:16:47.763Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 6205 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747235,
+    "checkpoint_digest": "9B6ND1tSwQ4suUeWgzRrQ5U8J3WxsHte7ZBK4sRpRXi2",
+    "read_at": "2026-11-05T01:16:46.808Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:16:47.763Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 12,
+   "at": "2026-11-05T01:17:49.721Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018815022, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747491,
+    "checkpoint_digest": "DKpPNDn2tPiiD2CwNnZCBKUuzu5BC7HTC4CBKYVis24y",
+    "read_at": "2026-11-05T01:17:49.345Z"
+   },
+   "pin": {
+    "version": "1018815022",
+    "digest": "7gBW4xAX2xQdUbP46KSegbFQuYJQDtHtyG8UP1CHJdkW",
+    "read_at": "2026-11-05T01:17:49.720Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 12,
+   "at": "2026-11-05T01:17:50.322Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 6461 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747491,
+    "checkpoint_digest": "DKpPNDn2tPiiD2CwNnZCBKUuzu5BC7HTC4CBKYVis24y",
+    "read_at": "2026-11-05T01:17:49.345Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:17:50.322Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 13,
+   "at": "2026-11-05T01:18:51.470Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018815947, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747749,
+    "checkpoint_digest": "54zaTR2Z7fJ7eNDjoBWmtfpoYYWnmHkWfy3Lapuqe1ap",
+    "read_at": "2026-11-05T01:18:51.260Z"
+   },
+   "pin": {
+    "version": "1018815947",
+    "digest": "BUVu4RCvELEwd72RhRTgKNabhtvPMDhH9AggZZPiEisZ",
+    "read_at": "2026-11-05T01:18:51.470Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 13,
+   "at": "2026-11-05T01:18:51.666Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 6719 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341747749,
+    "checkpoint_digest": "54zaTR2Z7fJ7eNDjoBWmtfpoYYWnmHkWfy3Lapuqe1ap",
+    "read_at": "2026-11-05T01:18:51.260Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:18:51.665Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 14,
+   "at": "2026-11-05T01:19:55.571Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018816899, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748011,
+    "checkpoint_digest": "Ff6i5VANjAX1szY8fX8pXUHYGZUY2qPnqhtJRKof6Ryb",
+    "read_at": "2026-11-05T01:19:55.392Z"
+   },
+   "pin": {
+    "version": "1018816899",
+    "digest": "5Ec2iELmjE8Zj8sDFZP1fquxbJYWYBDGjrnwGvqWvoM",
+    "read_at": "2026-11-05T01:19:55.571Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 14,
+   "at": "2026-11-05T01:19:55.765Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 6981 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748011,
+    "checkpoint_digest": "Ff6i5VANjAX1szY8fX8pXUHYGZUY2qPnqhtJRKof6Ryb",
+    "read_at": "2026-11-05T01:19:55.392Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:19:55.765Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 15,
+   "at": "2026-11-05T01:20:59.613Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018817833, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748274,
+    "checkpoint_digest": "3TqNE9YDa2Rv4UdRSCaebWiJVEQyyLwAcCybgdxfakpy",
+    "read_at": "2026-11-05T01:20:59.416Z"
+   },
+   "pin": {
+    "version": "1018817833",
+    "digest": "CQ3XMdhn1dbdsTMQt8nYSZ3frjjWAMKWRagembo1xA19",
+    "read_at": "2026-11-05T01:20:59.613Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 15,
+   "at": "2026-11-05T01:20:59.777Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 7244 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748274,
+    "checkpoint_digest": "3TqNE9YDa2Rv4UdRSCaebWiJVEQyyLwAcCybgdxfakpy",
+    "read_at": "2026-11-05T01:20:59.416Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:20:59.777Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 16,
+   "at": "2026-11-05T01:22:00.730Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018818754, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748523,
+    "checkpoint_digest": "R5Gp2vu9chSDWGHbgMbchmnkye76SxuU96HtmoKzgri",
+    "read_at": "2026-11-05T01:22:00.553Z"
+   },
+   "pin": {
+    "version": "1018818754",
+    "digest": "FmST2DkszMGSgVJDGjszqLwxUMyACqJFs9r7sSR92ttN",
+    "read_at": "2026-11-05T01:22:00.730Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 16,
+   "at": "2026-11-05T01:22:00.964Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 7493 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748523,
+    "checkpoint_digest": "R5Gp2vu9chSDWGHbgMbchmnkye76SxuU96HtmoKzgri",
+    "read_at": "2026-11-05T01:22:00.553Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:22:00.964Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 17,
+   "at": "2026-11-05T01:23:07.333Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018819771, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748792,
+    "checkpoint_digest": "AGWqwt6QXrbZFJ926RqVExbZP2kEV5VaD8N5P6xBBakQ",
+    "read_at": "2026-11-05T01:23:07.104Z"
+   },
+   "pin": {
+    "version": "1018819771",
+    "digest": "4o3PgJPX41UrwV7qo3wPNdY3Y22Gu3wdSske4t2TGJNb",
+    "read_at": "2026-11-05T01:23:07.333Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 17,
+   "at": "2026-11-05T01:23:07.491Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 7762 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341748792,
+    "checkpoint_digest": "AGWqwt6QXrbZFJ926RqVExbZP2kEV5VaD8N5P6xBBakQ",
+    "read_at": "2026-11-05T01:23:07.104Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:23:07.491Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 18,
+   "at": "2026-11-05T01:24:08.352Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018820705, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749044,
+    "checkpoint_digest": "FV1s9Tyg2jCE2YUUBJpRs5fo3J7k1Y6PJXpfagdSkXxZ",
+    "read_at": "2026-11-05T01:24:08.164Z"
+   },
+   "pin": {
+    "version": "1018820705",
+    "digest": "2byBqs3kys5MxxoUK3hxbrEG6zw6o4DYxo5qGpHK3TYn",
+    "read_at": "2026-11-05T01:24:08.352Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 18,
+   "at": "2026-11-05T01:24:08.536Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 8014 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749044,
+    "checkpoint_digest": "FV1s9Tyg2jCE2YUUBJpRs5fo3J7k1Y6PJXpfagdSkXxZ",
+    "read_at": "2026-11-05T01:24:08.164Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:24:08.536Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 19,
+   "at": "2026-11-05T01:25:11.152Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018821632, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749302,
+    "checkpoint_digest": "rxmbz1JXKJZ1E5AwWWiw6Cas3hdDkcN7L6DUPidmF9e",
+    "read_at": "2026-11-05T01:25:10.561Z"
+   },
+   "pin": {
+    "version": "1018821632",
+    "digest": "46sQYQQF8LEkwoEdbkMm7PFS1qsePDJM3Mxx4hEL89iC",
+    "read_at": "2026-11-05T01:25:11.152Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 19,
+   "at": "2026-11-05T01:25:11.317Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 8272 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749302,
+    "checkpoint_digest": "rxmbz1JXKJZ1E5AwWWiw6Cas3hdDkcN7L6DUPidmF9e",
+    "read_at": "2026-11-05T01:25:10.561Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:25:11.317Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 20,
+   "at": "2026-11-05T01:26:12.858Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018822588, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749556,
+    "checkpoint_digest": "BnyMAdksfErHuUpKmHkkpcV7P9ubQLnHe7Ryia94hrSC",
+    "read_at": "2026-11-05T01:26:12.675Z"
+   },
+   "pin": {
+    "version": "1018822588",
+    "digest": "4t74xjbCteM3MKnr8zbgSTUoUdxtb9zdf4Q9TeuE9MFx",
+    "read_at": "2026-11-05T01:26:12.857Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 20,
+   "at": "2026-11-05T01:26:13.036Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 8526 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749556,
+    "checkpoint_digest": "BnyMAdksfErHuUpKmHkkpcV7P9ubQLnHe7Ryia94hrSC",
+    "read_at": "2026-11-05T01:26:12.675Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:26:13.036Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 21,
+   "at": "2026-11-05T01:27:13.982Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018823513, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749809,
+    "checkpoint_digest": "7yXitDaN8QaroyWyUj9LXScoCGii1nopfAxFKf5qR6N9",
+    "read_at": "2026-11-05T01:27:13.804Z"
+   },
+   "pin": {
+    "version": "1018823513",
+    "digest": "FkC3Z21FEkiGUtyY8CRJ3ny4UGjUcaTXBw9BWv8dLCcf",
+    "read_at": "2026-11-05T01:27:13.982Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 21,
+   "at": "2026-11-05T01:27:14.150Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 8779 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341749809,
+    "checkpoint_digest": "7yXitDaN8QaroyWyUj9LXScoCGii1nopfAxFKf5qR6N9",
+    "read_at": "2026-11-05T01:27:13.804Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:27:14.150Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 22,
+   "at": "2026-11-05T01:28:15.117Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018824427, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750055,
+    "checkpoint_digest": "8HMeq9URoWGjfCKn7B1aLyX3E9w677t4prMqss3CrY9b",
+    "read_at": "2026-11-05T01:28:14.930Z"
+   },
+   "pin": {
+    "version": "1018824427",
+    "digest": "4QMZbZqBW96HtBe7YmCwQuCeYcBEpz5YTH6vfQNe9dbq",
+    "read_at": "2026-11-05T01:28:15.117Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 22,
+   "at": "2026-11-05T01:28:15.297Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 9025 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750055,
+    "checkpoint_digest": "8HMeq9URoWGjfCKn7B1aLyX3E9w677t4prMqss3CrY9b",
+    "read_at": "2026-11-05T01:28:14.930Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:28:15.297Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 23,
+   "at": "2026-11-05T01:29:16.137Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018825338, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750306,
+    "checkpoint_digest": "64JDnmuQFhrY1GG7C36jrPZNJUvQoewCmxPEmmQgrAVq",
+    "read_at": "2026-11-05T01:29:15.965Z"
+   },
+   "pin": {
+    "version": "1018825338",
+    "digest": "3JWPrkizPWjqwmVjZxRgPBLBAoNm33fKdgC55hJnfGpb",
+    "read_at": "2026-11-05T01:29:16.137Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 23,
+   "at": "2026-11-05T01:29:16.327Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 9276 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750306,
+    "checkpoint_digest": "64JDnmuQFhrY1GG7C36jrPZNJUvQoewCmxPEmmQgrAVq",
+    "read_at": "2026-11-05T01:29:15.965Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:29:16.327Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 24,
+   "at": "2026-11-05T01:30:17.338Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018826251, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750554,
+    "checkpoint_digest": "3esCoXp42kznsa6sGapmGyZprDtfuacNt7DF6Q5a6VPd",
+    "read_at": "2026-11-05T01:30:17.171Z"
+   },
+   "pin": {
+    "version": "1018826251",
+    "digest": "onDzLbBv4ahomDzgxq8MyETwaULPy3faA4pxBfnaFbe",
+    "read_at": "2026-11-05T01:30:17.338Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 24,
+   "at": "2026-11-05T01:30:17.535Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 9524 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750554,
+    "checkpoint_digest": "3esCoXp42kznsa6sGapmGyZprDtfuacNt7DF6Q5a6VPd",
+    "read_at": "2026-11-05T01:30:17.171Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:30:17.535Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 25,
+   "at": "2026-11-05T01:31:18.472Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018827180, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750804,
+    "checkpoint_digest": "AepKMRhTEPqv4QMDKLdVEvd4gE6eo4u8LkmxdhcuJkhY",
+    "read_at": "2026-11-05T01:31:18.281Z"
+   },
+   "pin": {
+    "version": "1018827180",
+    "digest": "HVmdkFZY9czx1PwoaM9h47YPmuLW16t3XZEz1PRT4AV4",
+    "read_at": "2026-11-05T01:31:18.472Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 25,
+   "at": "2026-11-05T01:31:18.629Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 9774 <= 10000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341750804,
+    "checkpoint_digest": "AepKMRhTEPqv4QMDKLdVEvd4gE6eo4u8LkmxdhcuJkhY",
+    "read_at": "2026-11-05T01:31:18.281Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:31:18.629Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 26,
+   "at": "2026-11-05T01:32:19.586Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018828082, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341751053,
+    "checkpoint_digest": "ZGGeSTdYbnShsgH4kfx7MDAcpZtRAWLL2SbvHpaKvWU",
+    "read_at": "2026-11-05T01:32:19.399Z"
+   },
+   "pin": {
+    "version": "1018828082",
+    "digest": "4ky5C8FfiDq3AJ1zeXYpWmDmz2ncUXPzdFewQHJB1voi",
+    "read_at": "2026-11-05T01:32:19.586Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 26,
+   "at": "2026-11-05T01:32:19.766Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 10023 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341751053,
+    "checkpoint_digest": "ZGGeSTdYbnShsgH4kfx7MDAcpZtRAWLL2SbvHpaKvWU",
+    "read_at": "2026-11-05T01:32:19.399Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:32:19.765Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 27,
+   "at": "2026-11-05T01:33:20.732Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018828984, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341751305,
+    "checkpoint_digest": "EHKmGXJNhZWAXeRLo9h555NrEzwuwY63Lv3FoM5VbYZm",
+    "read_at": "2026-11-05T01:33:20.525Z"
+   },
+   "pin": {
+    "version": "1018828984",
+    "digest": "C2rU7Ss54dKXsRyXqnSa2j2zCvwfJ3JjEo8cFSW5vaV",
+    "read_at": "2026-11-05T01:33:20.732Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 27,
+   "at": "2026-11-05T01:33:20.921Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 10275 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341751305,
+    "checkpoint_digest": "EHKmGXJNhZWAXeRLo9h555NrEzwuwY63Lv3FoM5VbYZm",
+    "read_at": "2026-11-05T01:33:20.525Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:33:20.920Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 28,
+   "at": "2026-11-05T01:34:22.367Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018829904, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341751558,
+    "checkpoint_digest": "3VejR6nkQuXPrT5s3KHHYxp1Lwx1Pyjiyw39hnMKFtUr",
+    "read_at": "2026-11-05T01:34:22.131Z"
+   },
+   "pin": {
+    "version": "1018829904",
+    "digest": "A5ERafbFUBKo9WEdTTe5Cb6aEbHzWB6dsPtEHEiE9qsp",
+    "read_at": "2026-11-05T01:34:22.366Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 28,
+   "at": "2026-11-05T01:34:22.687Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 10528 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341751558,
+    "checkpoint_digest": "3VejR6nkQuXPrT5s3KHHYxp1Lwx1Pyjiyw39hnMKFtUr",
+    "read_at": "2026-11-05T01:34:22.131Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:34:22.671Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 20000,
+    "changed": true,
+    "reason": "FALSE-STALE 3 > MISSED-CHANGE 0: widen 10000 -> 20000"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 29,
+   "at": "2026-11-05T01:35:23.532Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018830837, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341751808,
+    "checkpoint_digest": "29pL3A9CLxCMoPkKMb3jUKzqb3CSJ8BT7PSZ7gif6KYK",
+    "read_at": "2026-11-05T01:35:23.339Z"
+   },
+   "pin": {
+    "version": "1018830837",
+    "digest": "GWV6CF7hA28aXYV2xBkiudYfagwmL29HAfCvrCLqcERM",
+    "read_at": "2026-11-05T01:35:23.532Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 29,
+   "at": "2026-11-05T01:35:23.713Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 10778 <= 20000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341751808,
+    "checkpoint_digest": "29pL3A9CLxCMoPkKMb3jUKzqb3CSJ8BT7PSZ7gif6KYK",
+    "read_at": "2026-11-05T01:35:23.339Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:35:23.713Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 20000,
+    "after_window": 20000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 30,
+   "at": "2026-11-05T01:36:24.676Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018831760, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752057,
+    "checkpoint_digest": "4re8JCwdftzr7kPqz1toJWSeJZkKv6ndtRP1kDMX8oCD",
+    "read_at": "2026-11-05T01:36:24.468Z"
+   },
+   "pin": {
+    "version": "1018831760",
+    "digest": "7QYewJAEcj4ZMEjBxV12SWEk6P2eQ2ATdcjfWgjssTSn",
+    "read_at": "2026-11-05T01:36:24.676Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 30,
+   "at": "2026-11-05T01:36:24.869Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 11027 <= 20000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752057,
+    "checkpoint_digest": "4re8JCwdftzr7kPqz1toJWSeJZkKv6ndtRP1kDMX8oCD",
+    "read_at": "2026-11-05T01:36:24.468Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:36:24.869Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 20000,
+    "after_window": 20000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 31,
+   "at": "2026-11-05T01:37:25.802Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018832687, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752307,
+    "checkpoint_digest": "EViPw3BcAGEheFNnoDVbKQA1B5sgZoTPdLyvYzH4em3k",
+    "read_at": "2026-11-05T01:37:25.585Z"
+   },
+   "pin": {
+    "version": "1018832687",
+    "digest": "Bpf69xpb26SuKSMetTpqDA2U4QKHd6m4D3FRuLSBbD3D",
+    "read_at": "2026-11-05T01:37:25.802Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 31,
+   "at": "2026-11-05T01:37:26.092Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 11277 <= 20000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752307,
+    "checkpoint_digest": "EViPw3BcAGEheFNnoDVbKQA1B5sgZoTPdLyvYzH4em3k",
+    "read_at": "2026-11-05T01:37:25.585Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:37:26.092Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 20000,
+    "after_window": 20000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 32,
+   "at": "2026-11-05T01:38:27.153Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018833589, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752559,
+    "checkpoint_digest": "4APTFhkA2RSgFv6vQLQnfVxTH6LjrAAEuS3FcYnkvrYf",
+    "read_at": "2026-11-05T01:38:26.972Z"
+   },
+   "pin": {
+    "version": "1018833589",
+    "digest": "rEU6ikWFTPLLHFvb7QCes6Gwc6YYbfiaviqdf1Uyq6p",
+    "read_at": "2026-11-05T01:38:27.153Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 32,
+   "at": "2026-11-05T01:38:27.335Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 11529 <= 20000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752559,
+    "checkpoint_digest": "4APTFhkA2RSgFv6vQLQnfVxTH6LjrAAEuS3FcYnkvrYf",
+    "read_at": "2026-11-05T01:38:26.972Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:38:27.335Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 20000,
+    "after_window": 20000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 33,
+   "at": "2026-11-05T01:39:28.369Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018834509, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752808,
+    "checkpoint_digest": "CQegKaqEm4upbh9JKrhwftqiQj5fxbRu6PAtJ3LstbyU",
+    "read_at": "2026-11-05T01:39:28.134Z"
+   },
+   "pin": {
+    "version": "1018834509",
+    "digest": "HobPG5NCxDWLk8MU5oCQMvNbRFbsAsEVqeUwd3UUjwfz",
+    "read_at": "2026-11-05T01:39:28.369Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 33,
+   "at": "2026-11-05T01:39:28.561Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "FRESH",
+   "reason": "fresh (checkpoint delta 11778 <= 20000, subject unchanged)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752808,
+    "checkpoint_digest": "CQegKaqEm4upbh9JKrhwftqiQj5fxbRu6PAtJ3LstbyU",
+    "read_at": "2026-11-05T01:39:28.134Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:39:28.561Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 20000,
+    "after_window": 20000,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T01:40:07.310Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018835048, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341752968,
+    "checkpoint_digest": "8CEyHufofVrbwHuqpfJsyxgafSyVopEF6si5DZpjgwuT",
+    "read_at": "2026-11-05T01:40:07.128Z"
+   },
+   "pin": {
+    "version": "1018835048",
+    "digest": "3B4kYaDnnCFgTphTscGmnx6ADwxEYJs3CJSg71ocQ82z",
+    "read_at": "2026-11-05T01:40:07.308Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 1,
+   "at": "2026-11-05T01:40:07.501Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 11938 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341752968,
+    "checkpoint_digest": "8CEyHufofVrbwHuqpfJsyxgafSyVopEF6si5DZpjgwuT",
+    "read_at": "2026-11-05T01:40:07.128Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:40:07.501Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T01:45:08.567Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018839540, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341754208,
+    "checkpoint_digest": "RpchbyVcNGMQUPpQZaPwhJpL2RSAfDhuiUbt6yyK1Gb",
+    "read_at": "2026-11-05T01:45:08.373Z"
+   },
+   "pin": {
+    "version": "1018839540",
+    "digest": "BcXTUNHsVYquP7ixah81mGWJPC7AR75RcB6XSCvZqYfp",
+    "read_at": "2026-11-05T01:45:08.566Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 2,
+   "at": "2026-11-05T01:45:08.816Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 13178 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341754208,
+    "checkpoint_digest": "RpchbyVcNGMQUPpQZaPwhJpL2RSAfDhuiUbt6yyK1Gb",
+    "read_at": "2026-11-05T01:45:08.373Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:45:08.815Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 5000,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T01:50:10.279Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018843966, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341755439,
+    "checkpoint_digest": "TFzzBsC3y8PFovcvFyCYmzECRsjkyXiC8aM8vJVhPbh",
+    "read_at": "2026-11-05T01:50:09.423Z"
+   },
+   "pin": {
+    "version": "1018843966",
+    "digest": "755bGtbgn9nREH12kHV79Yjq9C73YbWLCmdeUqgzZsk9",
+    "read_at": "2026-11-05T01:50:10.279Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 3,
+   "at": "2026-11-05T01:50:10.489Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 14409 > window 5000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341755439,
+    "checkpoint_digest": "TFzzBsC3y8PFovcvFyCYmzECRsjkyXiC8aM8vJVhPbh",
+    "read_at": "2026-11-05T01:50:09.423Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:50:10.487Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 5000,
+    "after_window": 10000,
+    "changed": true,
+    "reason": "FALSE-STALE 3 > MISSED-CHANGE 0: widen 5000 -> 10000"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 4,
+   "at": "2026-11-05T01:55:11.679Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018848439, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341756679,
+    "checkpoint_digest": "BRJg781JafNjNLqSSMsNdiuTKx8RjocWgqFpc7abYX38",
+    "read_at": "2026-11-05T01:55:11.451Z"
+   },
+   "pin": {
+    "version": "1018848439",
+    "digest": "87Ehh9oeTrPFng2iCrUhi82FAQ5Q2dTkNKrNQVUVs7x5",
+    "read_at": "2026-11-05T01:55:11.679Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 4,
+   "at": "2026-11-05T01:55:11.902Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 15649 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341756679,
+    "checkpoint_digest": "BRJg781JafNjNLqSSMsNdiuTKx8RjocWgqFpc7abYX38",
+    "read_at": "2026-11-05T01:55:11.451Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T01:55:11.902Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "actionable sample 1/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T02:00:17.895Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018852908, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341757935,
+    "checkpoint_digest": "AWwKfe3WVHRwRFAdkHL9uk9WXCg6s8i5PW6H49bEhnbY",
+    "read_at": "2026-11-05T02:00:17.695Z"
+   },
+   "pin": {
+    "version": "1018852908",
+    "digest": "4zwuiCqL7kdoeVKtg1nANtYnfmriSe7wak3V8kbNSVJi",
+    "read_at": "2026-11-05T02:00:17.895Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 5,
+   "at": "2026-11-05T02:00:18.108Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 16905 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341757935,
+    "checkpoint_digest": "AWwKfe3WVHRwRFAdkHL9uk9WXCg6s8i5PW6H49bEhnbY",
+    "read_at": "2026-11-05T02:00:17.695Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T02:00:18.108Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 10000,
+    "changed": false,
+    "reason": "actionable sample 2/3: not enough samples yet"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T02:05:18.885Z",
+   "query": "observe:sui-clock",
+   "class": "FAST",
+   "verdict": "STALE",
+   "reason": "subject changed (version 1018797298->1018857380, digest changed)",
+   "signal": "CONSISTENT",
+   "live": {
+    "checkpoint_seq": 341759185,
+    "checkpoint_digest": "2GDv2rx9pgr5Xnqck8gwb93RteSDbxpWYNCNnJUXTV5o",
+    "read_at": "2026-11-05T02:05:18.693Z"
+   },
+   "pin": {
+    "version": "1018857380",
+    "digest": "Ap9Cme3NtLDdGCGVCjQHPT6pRFcpwYAgamqPjUnvFtFN",
+    "read_at": "2026-11-05T02:05:18.885Z"
+   },
+   "memory": {
+    "claim": "obs-sui-clock-341742463",
+    "blob_id": "zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg",
+    "proof_at_write": {
+     "checkpoint_seq": 341742463,
+     "object_version": "1018797298",
+     "object_digest": "4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM",
+     "read_at": "2026-11-05T00:57:47.704Z"
+    }
+   },
+   "policy": {
+    "before_window": 25,
+    "after_window": 25,
+    "changed": false,
+    "reason": "CONSISTENT: no window change (not an actionable signal)"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  },
+  {
+   "type": "observer",
+   "round": 6,
+   "at": "2026-11-05T02:05:19.054Z",
+   "query": "observe:memwal-registry",
+   "class": "SLOW",
+   "verdict": "STALE",
+   "reason": "checkpoint window exceeded (delta 18155 > window 10000)",
+   "signal": "FALSE-STALE",
+   "live": {
+    "checkpoint_seq": 341759185,
+    "checkpoint_digest": "2GDv2rx9pgr5Xnqck8gwb93RteSDbxpWYNCNnJUXTV5o",
+    "read_at": "2026-11-05T02:05:18.693Z"
+   },
+   "pin": {
+    "version": "1062994379",
+    "digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+    "read_at": "2026-11-05T02:05:19.052Z"
+   },
+   "memory": {
+    "claim": "obs-memwal-registry-341741030",
+    "blob_id": "Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g",
+    "proof_at_write": {
+     "checkpoint_seq": 341741030,
+     "object_version": "1062994379",
+     "object_digest": "84vQc5UnaAs8s4RA4Sd9pnLwWxnqma3TrHzsghwoRWC4",
+     "read_at": "2026-11-05T00:52:37.307Z"
+    }
+   },
+   "policy": {
+    "before_window": 10000,
+    "after_window": 20000,
+    "changed": true,
+    "reason": "FALSE-STALE 3 > MISSED-CHANGE 0: widen 10000 -> 20000"
+   },
+   "reads": {
+    "checkpoint": 1,
+    "pin": 1
+   }
+  }
+ ],
+ "policy": {
+  "FAST": {
+   "class": "FAST",
+   "windowCheckpoints": 25,
+   "minCheckpoints": 10,
+   "maxCheckpoints": 200000,
+   "maxAgeSeconds": 86400,
+   "samples": 4,
+   "actionableSamples": 3,
+   "falseStale": 0,
+   "missedChange": 3,
+   "pendingSamples": 0,
+   "pendingFalseStale": 0,
+   "pendingMissedChange": 0,
+   "version": 1,
+   "updatedAt": "2026-11-05T00:57:55.895Z",
+   "lastReason": "MISSED-CHANGE 3 > FALSE-STALE 0: tighten 50 -> 25"
+  }
+ },
+ "relayer": {
+  "status": "ok",
+  "version": "0.1.0",
+  "mode": "production",
+  "write_ready": true,
+  "build": {
+   "commit": "b01ff93fa720918054e68c0cecbd6ab3bb1b95c6"
+  }
+ },
+ "summary": {
+  "fresh": 58,
+  "stale": 82,
+  "withheld": 4,
+  "total": 144,
+  "ablation": {
+   "rows": [
+    {
+     "name": "memory-off (every answer read live)",
+     "from_memory": 0,
+     "from_live": 144,
+     "withheld": 0,
+     "reads": 144,
+     "stale_answers": 0,
+     "note": "1 Tatum read per answer, no stored context used"
+    },
+    {
+     "name": "memory-on, no gate",
+     "from_memory": 144,
+     "from_live": 0,
+     "withheld": 0,
+     "reads": 0,
+     "stale_answers": 86,
+     "note": "0 reads, but every stale memory would be answered"
+    },
+    {
+     "name": "memory-on, gate + learned policy",
+     "from_memory": 58,
+     "from_live": 86,
+     "withheld": 4,
+     "reads": 288,
+     "stale_answers": 0,
+     "note": "2 reads per answer (checkpoint + pin)"
+    }
+   ],
+   "total_decisions": 144,
+   "stale": 82,
+   "withheld": 4
+  },
+  "byClass": {
+   "SLOW": {
+    "memories": 4,
+    "observations": 1,
+    "policies": 0,
+    "corrections": 0,
+    "adversarial": 1
+   },
+   "FAST": {
+    "memories": 13,
+    "observations": 6,
+    "policies": 1,
+    "corrections": 4,
+    "adversarial": 0
+   }
+  }
+ }
+}

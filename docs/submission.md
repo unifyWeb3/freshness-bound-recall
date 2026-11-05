@@ -29,6 +29,7 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 | tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
 | walrusFriction | "Production SDK (0.1.13) has no delete/update; semantic recall needed substring matching to hit exact claims; index lag after writes; blob retention is not verified in a disposable namespace (availability vs epochs); 5 s default preflight timeout and ~18 s write latency needed explicit timeouts/retries/queueing." | agent-drafted |
 | socialPosts | `[X/LinkedIn posts you publish for the bonus, or “none”]` | you |
+| event-rules checkbox | **Required by the form** (must accept the event rules / terms) — you click it; the agent never accepts legal terms on your behalf | you |
 
 ## Suggested description (Track 02 stated explicitly — the form has no track field)
 
@@ -59,7 +60,7 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 1. Re-verify the submission form field list and this draft (agent reads it at your request — read-only).
 2. Record the demo per `docs/video-script.md`; upload to a venue you control; paste the URL.
 3. Publish or host the repo per your choice; paste the URL.
-4. Fill remaining fields; attach `docs/` if asked; keep the Track 02 line in the description.
+4. Fill remaining fields; tick the **event-rules acceptance checkbox** (you, not the agent); attach `docs/` if asked; keep the Track 02 line in the description.
 5. Submit, then verify the confirmation page; keep the submission id.
 6. Bonus: post X/LinkedIn (your accounts) tagging the event; paste URLs in socialPosts before submitting,
    otherwise leave `none`.
