@@ -4,7 +4,9 @@ Everything below works **without any credentials**. Live paths are optional and 
 
 ## 0. Requirements
 
-- Node **v26.13.0** or newer (`node --version`); npm 11+.
+- Node **v26.13.0** or newer — **check `node --version` first**. If it is older, your `npm test` may
+  fail with a cryptic `Cannot find module …/test`; switch Node (nvm: `nvm install 26.13.0 && nvm use 26.13.0`)
+  and retry. `.npmrc` sets `engine-strict=true`, so an older Node fails at install time with a clear message.
 - No secrets, no network needed for the default path.
 - A terminal with `git`.
 
