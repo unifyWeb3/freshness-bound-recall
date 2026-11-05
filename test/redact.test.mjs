@@ -1,11 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Redactor, loadEnv } from "../src/redact.mjs";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const ENV_PRESENT = existsSync(resolve(ROOT, ".env"));
 
 test("loadEnv parses KEY=value pairs without printing them", () => {
   const env = loadEnv(resolve(ROOT, "test/helpers/fake.env"));
@@ -40,7 +41,7 @@ test("the redactor walks objects and arrays", () => {
   assert.equal(out.b.c, "[REDACTED]");
 });
 
-test("the real .env values are redacted from any output", () => {
+test("the real .env values are redacted from any output", { skip: !ENV_PRESENT }, () => {
   const env = loadEnv(resolve(ROOT, ".env"));
   const r = Redactor.fromEnv(env);
   const sample = [env.TATUM_API_KEY, env.MEMWAL_PRIVATE_KEY, env.MEMWAL_ACCOUNT_ID, env.MEMWAL_AGENT_ID].join(" ");
@@ -50,7 +51,7 @@ test("the real .env values are redacted from any output", () => {
   }
 });
 
-test("the .env file itself contains no stray values on stdout paths", () => {
+test("the .env file itself contains no stray values on stdout paths", { skip: !ENV_PRESENT }, () => {
   const raw = readFileSync(resolve(ROOT, ".env"), "utf8");
   assert.match(raw, /TATUM_API_KEY=/);
   assert.match(raw, /MEMWAL_PRIVATE_KEY=/);
