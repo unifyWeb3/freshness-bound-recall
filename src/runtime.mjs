@@ -4,6 +4,7 @@
 
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 import { loadEnv, Redactor } from "./redact.mjs";
 import { TatumClient } from "./tatum.mjs";
 import { MockStore, MemWalStore } from "./store.mjs";
@@ -35,7 +36,11 @@ export function createRuntime({
   mirrorPath = MIRROR_PATH,
   logger = (m) => console.log(m),
 } = {}) {
-  const env = readEnv();
+  if (live && !existsSync(ENV_PATH)) {
+    throw new Error(`live mode requires ${ENV_PATH} (copy from your notes; never commit it)`);
+  }
+  // Offline mode must not touch secrets at all: a fresh clone runs without .env.
+  const env = existsSync(ENV_PATH) ? readEnv() : {};
   const redactor = Redactor.fromEnv(env);
   const log = (m) => logger(redactor.line(m));
 
