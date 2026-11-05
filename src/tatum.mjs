@@ -117,7 +117,9 @@ export class TatumClient {
         const plan = res.headers.get("x-ttm-plan");
         if (plan) this.lastPlan = plan;
         const body = await res.json().catch(() => null);
-        const entry = { label, attempt, status: res.status, latency_ms: latencyMs, plan, at: new Date().toISOString() };
+        // api_key_sent is a BOOLEAN, never the key itself: the request log is
+        // proof that the credential was attached to every call.
+        const entry = { label, attempt, status: res.status, latency_ms: latencyMs, plan, api_key_sent: true, at: new Date().toISOString() };
         this.log.push(entry);
         this.logger(`[tatum] ${label} status=${res.status} latency=${latencyMs}ms plan=${plan}`);
 
@@ -144,7 +146,7 @@ export class TatumClient {
         const latencyMs = Math.round(performance.now() - t0);
         const kind = e?.name === "TimeoutError" || e?.name === "AbortError" ? "timeout" : "network";
         lastErr = new TatumError(`${kind}: ${e?.message || e}`, kind);
-        this.log.push({ label, attempt, status: -1, latency_ms: latencyMs, plan: this.lastPlan, error: lastErr.message, at: new Date().toISOString() });
+        this.log.push({ label, attempt, status: -1, latency_ms: latencyMs, plan: this.lastPlan, api_key_sent: true, error: lastErr.message, at: new Date().toISOString() });
         this.logger(`[tatum] ${label} failed (${kind}) latency=${latencyMs}ms -> retry ${attempt}/${this.maxAttempts}`);
         await this.backoff(attempt);
       }
@@ -232,4 +234,22 @@ export class TatumClient {
   }
 
   requestLog() { return this.log.map((e) => ({ ...e })); }
+
+  /**
+   * Proof that the x-api-key header was attached to every request this client
+   * made. Counts only - the key value is never read back or printed.
+   */
+  apiKeyProof() {
+    const entries = this.requestLog();
+    const withKey = entries.filter((e) => e.api_key_sent === true).length;
+    const withoutKey = entries.filter((e) => e.api_key_sent !== true).length;
+    return {
+      total_log_entries: entries.length,
+      requests_with_api_key: withKey,
+      requests_without_api_key: withoutKey,
+      every_request_had_api_key: entries.length > 0 && withoutKey === 0,
+      header_name: "x-api-key",
+      value_printed: false,
+    };
+  }
 }

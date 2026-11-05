@@ -1,47 +1,169 @@
 # Pre-Submission Hardening — FRESHNESS-BOUND RECALL
 
-**Date:** 2026-11-05 ~02:30–03:30 UTC · **Workspace:** `~/total-recall` · **Runtime:** Node v26.13.0, npm 11.20.0
-**Commit under test:** `e57f280` (fresh clones verified against this tree) · **Nothing was pushed, posted, deployed or submitted.**
+## Verdict: **GO** — 2026-11-05 12:15 UTC · final fixes applied · nothing pushed, posted, deployed or submitted
 
-## Verdict: **GO** — with one explicit, delegated retention risk (§1) and 6 decisions listed in §9.
+**Date:** 2026-11-05 · **Workspace:** `~/total-recall` · **Runtime:** Node v26.13.0, npm 11.20.0
+**Nothing was pushed, posted, deployed or submitted.** No transaction was signed; no blob was renewed,
+extended, re-seeded or paid for. The only write to mainnet in this phase was the single policy memory
+the task authorised: `fc-policy-SLOW-v2` (§1).
 
-Nothing in this report implies any action on your accounts or your wallet. No blob was renewed, extended,
-re-seeded, burned or paid for; no transaction was signed; no post or message exists anywhere except in
-this repository.
+**Verification run (this phase, pinned runtime):**
+
+| Check | Result |
+|---|---|
+| `npm test` (offline) | **65 pass · 0 fail · 2 skipped** (the 2 live opt-in tests skip without `RUN_MAINNET=1`) |
+| `RUN_MAINNET=1 node --test test/live/` | **2 pass** — wrote `6InMSm3…` (cp 341894684) and `8xyFMV-…` (cp 341894821) |
+| namespace `freshness-recall` | **20 memories**, 0 deleted, `must_resync=false` |
+| `npm run audit:secrets` (working tree) | **AUDIT: PASS** |
+| `node scripts/audit-history.mjs` (all git refs) | **AUDIT: PASS** |
+| `npm run freeze` | `freeze/freeze-2026-11-05T115517263Z.json` — 20 memories · 306 ledger entries (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED) |
+| `npm run credits` | 21 actual GraphQL requests, **21/21 carried `x-api-key`**, plan `free;ratelimit=3;strategy=shared` |
+| Docker path | **UNKNOWN** — no Docker daemon in the build environment (§6) |
 
 ---
 
-## 1. RETENTION — current state, what could not be read, options
+## 0. What changed in this final phase
+
+| # | Task | Result |
+|---|---|---|
+| 1 | Persist the already-learned SLOW policy | **Done** — `fc-policy-SLOW-v2`, blob `Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4`; learned_at ≠ written_at; read back; gate verdict flipped (§1) |
+| 2 | README: promise, exact rules, live-vs-replay, blob labels | **Done** (§3) |
+| 3 | Judge friction: `.nvmrc`, `Dockerfile`, Node requirement on line 1 | **Done** (§6) |
+| 4 | Tatum proof: `x-api-key` on every call, README usage section | **Done** (§4) |
+| 5 | Re-run freeze/tests/audits; submission + this report | **Done** (§7, §8) |
+
+---
+
+## 1. THE SLOW POLICY IS NOW PERSISTED (one write, authorised)
+
+### What was written
+
+Exactly **one** memory, in namespace `freshness-recall`:
+
+| Field | Value | Source |
+|---|---|---|
+| blob id | `Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4` | relayer |
+| claim | `fc-policy-SLOW-v2` | — |
+| class / state / predicate | `SLOW` / `policy` / `policy_window` | — |
+| `policy.window_checkpoints` | **20000** | the learned value — **not recomputed, not tuned** |
+| `policy.min_checkpoints` / `policy.max_checkpoints` | 10 / 2000000 | the SLOW bounds |
+| `policy.version` | 2 | derived from the ledger (2nd window change of that observer run) |
+| `policy.false_stale` / `policy.missed_change` / `policy.samples` | 6 / 0 / 6 | the engine counters at the learning event |
+| `policy.reason` | `FALSE-STALE 3 > MISSED-CHANGE 0: widen 10000 -> 20000` | verbatim from the ledger entry |
+| **`policy.learned_at`** | **2026-11-05T02:05:19.054Z** | **the ledger event — not backdated** |
+| **`policy.written_at`** / `recorded_at` | **2026-11-05T09:23:05.105Z** | **the real clock at the write** |
+| `proof.checkpoint_seq` / `proof.checkpoint_digest` | 341867198 / `8tVd3KASU65…` | a live Tatum read at write time |
+
+The writer is `scripts/persist-policy.mjs`: it derives **every** number from `data/ledger.jsonl`, asserts
+that the ledger really contains a learning event for the requested window (and that it was a widen with
+≥3 FALSE-STALE samples and 0 MISSED-CHANGE), refuses to run without `--confirm=fc-policy-SLOW-v2`, and
+re-runs the startup credential self-test before writing. **It refuses to write if the self-test fails** —
+which it did on the first attempt (a transient Tatum network failure), so the write was correctly
+suppressed; the retry passed and the single authorised write went out.
+
+### The rule and bounds that produced it (as written into the record body)
+
+> FALSE-STALE (window said stale, subject pin unchanged) widens the window x2; MISSED-CHANGE (window said
+> fresh, subject pin changed) tightens it /2. A window change requires at least 3 actionable samples
+> since the last change; CONSISTENT and UNVERIFIED never move the window. Bounds for class SLOW:
+> window_checkpoints in [10, 2000000].
+
+### The evidence it cites
+
+The record body lists **all 16 FALSE-STALE ledger entries** with timestamp, checkpoint, delta and pin
+state. The six that produced the persisted value (the 02:05:19 learning event) are:
+
+```
+2026-11-05T01:40:07.501Z cp=341752968 delta=11938 pin_unchanged=true -> pending
+2026-11-05T01:45:08.816Z cp=341754208 delta=13178 pin_unchanged=true -> pending
+2026-11-05T01:50:10.489Z cp=341755439 delta=14409 pin_unchanged=true -> widen to 10000
+2026-11-05T01:55:11.902Z cp=341756679 delta=15649 pin_unchanged=true -> pending
+2026-11-05T02:00:18.108Z cp=341757935 delta=16905 pin_unchanged=true -> pending
+2026-11-05T02:05:19.054Z cp=341759185 delta=18155 pin_unchanged=true -> widen to 20000
+```
+
+(The user's brief said "the 14 FALSE-STALE samples" — that was the count when the instruction was written.
+The ledger now holds **16**; the record cites all of them, so the superset is disclosed rather than
+silently trimmed.)
+
+### Read-back and the gate verdict it changes — `node scripts/show-policy-effect.mjs`
+
+```
+A. POLICY READ BACK FROM WALRUS MEMORY (LIVE)
+   fc-policy-SLOW-v2  blob=Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4
+      window=20000 version=2 bounds=[10, 2000000]
+      reason=FALSE-STALE 3 > MISSED-CHANGE 0: widen 10000 -> 20000
+      learned_at=2026-11-05T02:05:19.054Z  written_at=2026-11-05T09:23:05.105Z
+      false_stale=6 missed_change=0 samples=6
+   fc-policy-FAST-v1  blob=19ZE9y-zWt1fuR3lryI3AZiqM-v-cloWw7_oXHGOU4o
+      window=25 version=1 bounds=[10, 200000]
+   engine load source=store loaded_at=2026-11-05T09:26:06.784Z
+
+B. REPLAY: a recorded mainnet observer decision, re-evaluated
+   recorded decision: 2026-11-05T02:05:19.054Z  round 6  checkpoint 341759185
+   memory under test: obs-memwal-registry-341741030 blob=Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g
+   memory OFF (default window 5000): STALE (FALSE-STALE) - checkpoint window exceeded (delta 18155 > window 5000)
+   memory ON  (window 20000 from blob): FRESH (CONSISTENT) - fresh (checkpoint delta 18155 <= 20000, subject unchanged)
+
+C. LIVE: gate evaluated against the live checkpoint + live pin
+   live checkpoint 341867949 · live SLOW pin version 1062994385 digest ByXrgtEzoPoCavLtngGkpCT4yC34VoAUf6yStFGfCCod
+   memory OFF (default window 5000): STALE (FALSE-STALE) - checkpoint window exceeded (delta 6000 > window 5000)
+   memory ON  (window 20000 from blob): FRESH (CONSISTENT) - fresh (checkpoint delta 6000 <= 20000, subject unchanged)
+```
+
+* **B is labelled REPLAY**: a recorded mainnet decision (real memory, real checkpoint, real pin, same
+  clock) — only the window differs.
+* **C is labelled LIVE**: real live checkpoint and real live pin, but the claim is **constructed for the
+  demo** (its anchor checkpoint is a real chain checkpoint 6000 behind the live one); it is not a stored
+  memory, and the script says so.
+
+### Honest caveats about this write
+
+1. **The observer has since learned a wider window.** At 2026-11-05T02:25:24.293Z it widened SLOW
+   20000 → **40000** (3 more FALSE-STALE samples). That result is **not persisted** — the only SLOW
+   policy memory on chain is the 20000 one, which is *tighter* (more conservative) than the latest local
+   mirror. The persisted record discloses this in its own body. (The author may want a `v3` write; that
+   would need confirmation.)
+2. **The SLOW widen happened twice.** The observer restarted at ~01:40 UTC and re-learned
+   5000→10000→20000 from scratch (the earlier run reached 20000 at 01:34:22.687Z). The persisted record
+   cites the **most recent** learning event (02:05:19.054Z).
+3. **One malformed auxiliary field.** `policy.evidence_count=undefined` — a variable-name slip in the
+   writer (`falseStale.length` instead of `falseStaleEntries.length`). The **evidence list itself is
+   intact in the record body** (all 16 entries), `policy.false_stale=6` carries the count that matters,
+   and the policy engine never reads that field. The script has been corrected. Fixing the blob would
+   require a **second write**, which needs the author's confirmation — it was not done.
+4. The ledger has grown since the brief was written (16 FALSE-STALE samples, 306 decisions).
+
+---
+
+## 2. RETENTION — current state, what could not be read, options
 
 ### What the mainnet relayer actually promises (VERIFIED, docs)
 
 Walrus Memory docs → *Environment Variables* (quoted verbatim):
 
 > “The sidecar `POST /walrus/upload` route defaults Walrus storage epochs by network: `50` on `testnet`
-> (about 50 days) and **`2` on `mainnet` (about 4 weeks)**, unless the request explicitly passes `epochs`.”
+> (about 50 days) and **`2` on `mainnet` (about 4 weeks)`**, unless the request explicitly passes `epochs`.”
 
 And *Manage Your Memory*: “A memory persists on Walrus for the number of epochs you paid for. An epoch is
 about 2 weeks on Mainnet … **When the epochs run out, Walrus drops the blob and the memory disappears** …
 Renew before the expiry epoch, not after.”
 
-### Whether these 17 blobs expire before 2026-11-17 (judging) — honest answer
+### Whether these 20 blobs expire before 2026-11-17 (judging) — honest answer
 
-**UNKNOWN, and — with the tools available here — unfalsifiable.** What I tried, in order:
+**UNKNOWN, and — with the tools available here — unfalsifiable.** What was tried:
 
 | Route | Result |
 |---|---|
-| `events(filter:{atCheckpoint: …})` at all 9 write checkpoints and ±12 cps; and `module`-restricted to `0xa9ac…::events` | **No walrus events at all** — the page is crowded by DEX/oracle events (50-entry cap) and Tatum's `afterCheckpoint`/`beforeCheckpoint` range filter returns 0 rows even where events provably exist (coin case was also empty) |
-| Walrus System object `0x2134…` (JSON) | Returns id / version=4 / `package_id=0xa9ac4281c72b0ed3277c08e821ab77eccea7b187f2b402ffa3b33f548d4bbf1e` only — **the current epoch is not published there** |
-| Walrus Staking pool object `0x10b9…` (JSON) | id / version / package_id only |
-| MemWal `listMemories()` / `listNamespaces()` | `memories=17, deleted=0, must_resync=false` — **no expiry field exists** (`MemorySummary` has no end_epoch) |
-| Walrus HTTP aggregators (`aggregator.memory.walrus.xyz`, `aggregator.walrus.xyz`) | **unreachable from this environment** (curl exit 000) |
-| Earliest-blob recall | **OK** — `wYNZE__Q3HkeRZIYf0BljMRa92DnZ0S5yt08xjLEIdE` recalled on 2026-11-05 01:29 UTC (still present at 03:30 UTC; namespace intact) |
+| `events(filter:{atCheckpoint: …})` at all write checkpoints and ±12 cps; `module`-restricted to `0xa9ac…::events` | **No walrus events at all** — the page is crowded by DEX/oracle events (50-entry cap) and Tatum's `afterCheckpoint`/`beforeCheckpoint` range filter returns 0 rows even where events provably exist (coin case was also empty) |
+| Walrus System object `0x2134…` / Staking pool `0x10b9…` (JSON) | id / version=4 / `package_id` only — **the current epoch is not published there** |
+| MemWal `listMemories()` / `listNamespaces()` | `memories=20, deleted=0, must_resync=false` — **no expiry field exists** (`MemorySummary` has no `end_epoch`) |
+| Walrus HTTP aggregators | **unreachable from this environment** (curl exit 000) |
+| Earliest-blob recall | **OK** — `wYNZE__Q3HkeRZIYf0BljMRa92DnZ0S5yt08xjLEIdE` recalled on 2026-11-05 01:29 UTC; namespace intact at 12:00 UTC |
 
 The relayer's upload path almost certainly used the **mainnet default of 2 epochs (~4 weeks)**, which —
-if true — lands around **2026-12-03** (INFERRED from docs, not read off chain). Whether that's the case for
-these specific blobs is not knowable from here, and **expiry before 2026-11-17 cannot be ruled out**: it
-depends on the epoch boundary at registration time and on whether the relayer overrode `epochs` for Walrus
-Memory writes (not documented, not observable).
+if true — lands around **2026-12-03** (INFERRED from docs, not read off chain). Whether that is the case
+for these specific blobs is not knowable from here, and **expiry before 2026-11-17 cannot be ruled out**.
 
 **A judge opening blob `wYNZE__…` today sees it. Whether that blob still exists when judged is UNKNOWN.**
 
@@ -49,16 +171,14 @@ Memory writes (not documented, not observable).
 
 | Option | Cost | Notes |
 |---|---|---|
-| **(a) Accept the risk; ship with cached mode** | 0 | The submission and the demo do **not** depend on the namespace at judging time: `npm run demo:offline`, `npm run proof:offline` and `npm run export` all run from a committed snapshot. The ledger evidence (150 entries, 59 FRESH/87 STALE/4 UNVERIFIED) is frozen in `freeze/freeze-…`. Probably fine but worst case judges see stale/no live blobs |
-| **(b) Renew all 17 blobs** on the Walrus dashboard **before Nov 10** | WAL + gas — negligible (17 tiny blobs, likely < 0.1 WAL + fees) | **Your** transaction — I will not sign or fund. Strongly recommended (renew from the console's “renew memories” flow with ≥1 epoch margin) |
-| **(c) Re-seed namespace with long epochs** via `MemWalManual` `walrusEpochs: 50` | New writes only (new blob ids; reports stale) | Not recommended — throws away the evidence chain |
-| **(d) Ask the relayer / dashboard whether Walrus Memory relayer writes carry 50-epoch defaults** | time only | Unknown until someone looks at the dashboard's blob details |
-
-**Decision needed from you: (a) or (b).** I recommend **(b)**, done 2026-11-09.
+| **(a) Accept the risk; ship with cached mode** | 0 | The submission and the demo do **not** depend on the namespace at judging time: `npm run demo:offline`, `npm run proof:offline` and `npm run export` all run from a committed snapshot. The ledger evidence (306 entries) is frozen in `freeze/freeze-…` |
+| **(b) Renew the blobs** on the Walrus dashboard **before Nov 10** | WAL + gas — negligible for 20 tiny blobs | **Your** transaction — the agent will not sign or fund. Strongly recommended (renew with ≥1 epoch margin) |
+| **(c) Re-seed the namespace with long epochs** | new blob ids; reports go stale | Not recommended |
+| **(d) Ask the relayer / dashboard whether Walrus Memory relayer writes carry 50-epoch defaults** | time only | Unknown until someone checks the dashboard's blob details |
 
 ---
 
-## 2. CREDIT BURN — what `--budget=0` means, projections, safest setting, proof-page failure mode
+## 3. CREDIT BURN — what `--budget=0` means, projections, safest setting, proof-page failure mode
 
 ### What `--budget=0` means (exactly)
 
@@ -72,198 +192,182 @@ In `scripts/observer.mjs`, every write goes through `writeMemory()`/`enqueue()`,
 3. **keeps appending to the local ledger** (`data/ledger.jsonl`) — which is why it costs Tatum credits
    while producing zero mainnet writes.
 
-Measured cost at the current `--interval=60`: **3 GraphQL requests per minute ⇒ ~4,320/day ⇒ ~52k
-requests by 2026-11-17** (12 days). The measurement run made **exactly 30 attempted reads, 21 actual
-GraphQL requests** (9 absorbed by the 1 s checkpoint cache; p50 187 ms; zero errors). Tatum
-credits-per-call remains **UNKNOWN** — no credit header is returned, so the 3 rps free plan is the
-only price signal we have; the dashboard remains yours to check.
+Measured cost at `--interval=60`: **3 GraphQL requests per minute ⇒ ~4,320/day**. The measurement run made
+**exactly 30 attempted reads, 21 actual GraphQL requests** (9 absorbed by the 1 s checkpoint cache; p50
+189 ms; zero errors). Tatum credits-per-call remains **UNKNOWN** — no credit header is returned.
 
 ### Live proof page while running
 
-`npm run proof` in live mode refreshes every `--refresh` seconds (default **15 s**): ~1 checkpoint
-read + 2 subject pins (Tatum) **and** 2 relayer recalls (broad + policy) per refresh ⇒
-~**34,000 Tatum requests/day** + ~57,000 relayer requests/day. It must never run unattended through
-judging.
+`npm run proof` in live mode refreshes every `--refresh` seconds (default **15 s**): ~1 checkpoint read +
+2 subject pins (Tatum) **and** 2 relayer recalls (broad + policy) per refresh ⇒ ~**34,000 Tatum
+requests/day** + ~57,000 relayer requests/day. It must never run unattended through judging.
 
 ### Safest settings for the judging window (11–16 Nov)
 
-- **Observer:** restart at `--interval=300 --budget=0` (~**864 Tatum calls/day**, ~10k over judging), or
-  stop it entirely (`pkill -f observer`) and use the frozen data. I will not restart or stop it without your
-  say-so; it is presently running (PID 16783, `--interval=60`).
+- **Observer:** the running instance is `node scripts/observer.mjs --live --interval=300 --budget=0`
+  (PID 56574) → ~**864 Tatum calls/day**, ~10k over judging, zero writes. Leave it at 300 s or stop it;
+  the agent does not touch it without the author's word.
 - **Proof page:** `--offline` or static (`npm run export`) for the recorded video and the judging demo.
-  Live mode only while you are watching, e.g. `npm run proof` for 2 minutes during a demo and stop it.
 - **Demo:** `npm run demo` (live) on demand — ~6 Tatum calls — not as a background process.
-- **What happens when credits or rate limits run out (now fixed):** the proof page logs
-  `[proof] refresh failed: …`; it keeps serving the **last good snapshot**, `/healthz` reports
-  `{"ok":false, error:"…"}`, and — as of this phase — the page shows a **red banner with the failure and
-  the last-good fetch time** instead of a stale LIVE badge. Offline mode is unaffected and cannot
-  exhaust anything.
+- **When credits or rate limits run out:** the proof page logs `[proof] refresh failed: …`; it keeps
+  serving the **last good snapshot**, `/healthz` reports `{"ok":false, error:"…"}`, and the page shows a
+  **red banner with the failure and the last-good fetch time** instead of a stale LIVE badge. Offline mode
+  is unaffected and cannot exhaust anything.
 
 ---
 
-## 3. LEARNING LOOP HONESTY — counts and the exact words used in public copy
+## 4. LEARNING LOOP HONESTY — counts and the exact words used in public copy
 
 ### Per-class signal counts (from `data/ledger.jsonl`, current tree)
 
 | Class | Samples | MISSED-CHANGE | FALSE-STALE | CONSISTENT | STALE verdicts | FRESH verdicts |
 |---|---|---|---|---|---|---|
-| FAST (Sui Clock) | 75 | **5** | 0 | 68 | 73 | 2 unverified |
-| SLOW (MemWal Registry) | 75 | 0 | **14** | 59 | 14 | 59 |
+| FAST (Sui Clock) | 153 | **5** | 0 | 146 | 151 | 2 unverified |
+| SLOW (MemWal Registry) | 153 | 0 | **16** | 135 | 79 | 72 |
 
-(The FS=14 includes the whole live 5000-checkpoint era, before the live widen at 01:00–01:34 UTC.)
+(Totals: 306 decisions — 72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED. The ledger keeps growing while
+the observer runs; the numbers above are the freeze-time values.)
 
-### Policy state (mirror + memory)
+### Policy state (memory + local mirror)
 
-| Class | Window | Version | Samples | falseStale / missedChange | Where it lives |
-|---|---|---|---|---|---|
-| FAST | **25** | v1 | 31 | 0 / 3 | **Persisted on mainnet** — `fc-policy-FAST-v1`, blob `19ZE9y-zWt1fuR3lryI3AZiqM-v-cloWw7_oXHGOU4o` (loaded at every startup and every answer) |
-| SLOW | **20000** | v2 | 27 | 6 / 0 | **Local mirror only** (`data/policy-mirror.json`, git-ignored). The observer ran with `--budget=0` when the widen fired, so no memory was written — **SLOW reverts to 5000 on restart.** |
+| Class | Window | Version | Persisted? | Where it lives |
+|---|---|---|---|---|
+| FAST | **25** | v1 | **YES** | `fc-policy-FAST-v1`, blob `19ZE9y-zWt1fuR3lryI3AZiqM-v-cloWw7_oXHGOU4o` — loaded at every startup and every answer |
+| SLOW | **20000** | v2 | **YES** (this phase) | `fc-policy-SLOW-v2`, blob `Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4` — learned_at 02:05:19Z, written_at 09:23:05Z |
+| SLOW (later local learning) | 40000 | v3 | no | `data/policy-mirror.json` only — disclosed in the persisted record's body |
 
-### What the README and blog now say (wording, not paraphrase)
+### What the README and blog now say
 
-> **README §5 “Learning — what is demonstrated, honestly”:** tighten persisted (FAST, mainnet); widen
-> learned live (SLOW 5000→10000→20000) but **not persisted** (budget=0 — mirror only, resets on
-> restart); both directions end-to-end with persisted memories = replay only (`test/replay.test.mjs`).
-> Per-class totals printed; no thresholds changed; no samples forced.
+> **README §5:** both directions are learned live **and persisted as memories**; the “both directions
+> persisted end-to-end” row now reads **LIVE, not replay-only**; the replay is kept as the deterministic
+> offline check. The unpersisted 40000 learning, the double learning, the FAST sampling deadlock and the
+> malformed `policy.evidence_count` field are all disclosed in-line.
 >
-> **Blog:** “the persisted, recalled-on-every-start policy in production today is the tightened one for
-> FAST and the **default 5000** for SLOW (no SLOW policy memory was written). The widen direction is
-> real, live, and measurable in the ledger — but it would be fiction to say it survived a restart.”
+> **Blog:** the same table, plus “the policy is not decorative: reading it back changes the gate's
+> verdict” and the three honest caveats. It no longer says the SLOW policy was not persisted.
 
 No thresholds were changed and no events were forced in this phase.
 
 ---
 
-## 4. STATIC PROOF PAGE — `npm run export` (new)
+## 5. STATIC PROOF PAGE — `npm run export`
 
 `scripts/export-site.mjs` — verified:
 
 ```
-[export] wrote ./site/index.html
-[export] source snapshot: …/data/cache/proof-snapshot.json (generated 2026-11-05T02:05:58.622Z)
-[export] bytes=42270 sha256=c4349d6a4d668483…
+[export] wrote /home/unify/total-recall/site/index.html
+[export] source snapshot: …/data/cache/proof-snapshot.json (generated 2026-11-05T11:5x UTC)
+[export] bytes=… sha256=…
 [export] scanned 4 env values for accidental leakage: none found
 ```
 
 * `./site/index.html` is a single self-contained page: no CDN, no fetches, **STATIC EXPORT** banner with
-  timestamp + “network off · ids & stamps from a labelled snapshot”; it contains all 17 blobs and their
-  checkpoint stamps; decision ledger and ablation table included.
-* The HTML is asserted against **every value in `.env`** (length ≥ 8) plus secret-shaped patterns
-  before being written; it was **not** committed (`site/` is git-ignored). The user decides hosting.
-* `npm run export` works from a fresh clone offline (falls back to the committed evidence snapshot,
-  and cannot see any `.env` values — nothing exists to scan).
+  timestamp + “network off · ids & stamps from a labelled snapshot”; it contains all 20 blobs and their
+  checkpoint stamps; the decision ledger, the ablation table and the Tatum request log with the
+  `x-api-key` badge per row.
+* The HTML is asserted against **every value in `.env`** (length ≥ 8) plus secret-shaped patterns before
+  being written; it is **not** committed (`site/` is git-ignored). The author decides hosting.
 
 ---
 
-## 5. JUDGE QUICKSTART — `docs/judge-60s.md` (new, written and verified)
+## 6. JUDGE FRICTION — `.nvmrc`, `Dockerfile`, `docs/judge-60s.md`
 
-Contents: clone → `npm install --ignore-scripts` → `npm test` (expected: 66 tests, **62 pass, 4 skipped**)
-→ `npm run demo:offline` → `npm run proof:offline` (serves `127.0.0.1:8787` from the committed snapshot)
-→ `npm run export`. Optional live: `prewarm`, `demo`, `test:live`.
-
-**Verified fresh-clone runs** (the exact commands from the doc):
-
-```
-$ npm install --ignore-scripts  → added 30 packages in 3s           (under Node v26.13.0)
-$ npm test                      → ℹ tests 66 ℹ pass 62 ℹ fail 0 ℹ skipped 4
-$ npm run demo:offline          → WITHHELD — subject changed … stale-answers=0
-$ npm run export                → ./site/index.html written (env-scan clean)
-$ npm run proof:offline         → "serving …/docs/evidence/proof-snapshot.json" (CACHED SNAPSHOT badge)
-```
-
-Two traps found and fixed during verification:
-
-1. **Node floor is load-bearing.** On this machine the default `node` is v24.22.2; `npm test` there fails
-   with `Cannot find module …/test`, not a nice message. `.npmrc` now sets **`engine-strict=true`** so an
-   old Node fails at install with `ENOTSUP Required: {"node":">=26.13.0"}` (verified), and `judge-60s.md`
-   says `node --version` first with the nvm line.
-2. **The clone had no `.env`** and `createRuntime()` crashed offline. Fixed in `src/runtime.mjs` (offline
-   never touches secrets; live mode fails with a named error instead of ENOENT). Committed; clone verified
-   again end-to-end under the pinned runtime.
+* **`.nvmrc`** → `26.13.0` (nvm picks it up; `nvm use` is the first line of the quickstart).
+* **`Dockerfile`** → `node:26.13.0-slim`, `npm ci --ignore-scripts`, and a default command that runs
+  `npm test` → `npm run demo:offline` → `npm run export`. **No secrets**: `.env` is excluded by
+  `.dockerignore` (which also excludes `node_modules`, `site/`, `freeze/`, the runtime ledger/cache and
+  `.git`), and no command in the image touches the live path.
+* **`docs/judge-60s.md` line 1** is now the Node requirement:
+  `**Requires Node v26.13.0 or newer (node --version; nvm use picks it up from .nvmrc) — an older Node
+  fails at install with a clear ENOTSUP message.**`
+* **Docker execution status: UNKNOWN.** The build environment has **no `docker` binary and no Docker
+  socket** (`docker: command not found`, `/var/run/docker.sock` absent), so `docker build` / `docker run`
+  could not be executed here. What *was* verified natively, from a fresh clone, with the exact command
+  sequence the image runs and **no `.env` present**: `npm ci --ignore-scripts` → 30 packages, `npm test` →
+  66 tests / 62 pass / 0 fail / 4 skipped, `npm run demo:offline` → 0 stale answers, `npm run export` →
+  `site/index.html` written with 0 env values scanned. **The image itself is therefore written but
+  UNVERIFIED**, and the doc says exactly that.
 
 ---
 
-## 6. BLOG — finalized (`docs/blog.md`, paste-ready)
+## 7. FINAL AUDIT — tree, history, form, map, tests
 
-* Placeholders **only**: `{VIDEO_URL}` and `{REPO_URL}`; nothing else is unresolved.
-* States what it does, how Walrus Memory is used (lineage `supersedes`; 17 blobs enumerated; no
-  delete/update in SDK 0.1.13; semantic recall with proof stamps), how Tatum is used (read-only GraphQL
-  on the free shared plan; 1 s cache; ≤2 calls/answer; fail-closed; on-chain MemWalAccount proof), and
-  how it learned over time — with the table in §3 of this report, including “it would be fiction to say
-  [the SLOW widen] survived a restart”.
-* Does **not** claim that no other entry gates recall. It names Recall Lab and RecallIQ stamping
-  freshness, and Invoice Chaser / swiftbotlab stream/canary patterns, and states the actual difference:
-  placement on the answer path + the tolerance being a memory the system rewrites.
-* Retention, credits, no-user persona, and the budget=0 deadlock are all disclosed.
-* Nothing was posted; this is a local Markdown file for you to paste.
+**Working tree:** `npm run audit:secrets` → **AUDIT: PASS** (tracked files fingerprinted; secret values
+never printed; no remote configured).
 
----
-
-## 7. FREEZE — `npm run freeze` (new, verified live)
-
-```
-[freeze] source=live
-[freeze] 17 memories · 150 ledger entries (4 WITHHELD_UNVERIFIED · 87 STALE · 59 FRESH)
-[freeze] commit e57f2803b05e · 1 dirty path(s) · node v26.13.0
-```
-
-* Writes `./freeze/freeze-<UTC-timestamp>.json` (claims · blob ids · checkpoint/object version/digest
-  stamps · verdict counts · node version · git state · sha256 of every copied artifact) plus verbatim
-  copies of `ledger.jsonl` and the proof snapshot used for render. Current artifacts:
-  `freeze/freeze-2026-11-05T022330578Z.json` (17 blobs with cp stamps, 150 ledger entries,
-  commit `e57f2803b05e`, source `live`).
-* `./freeze/` is git-ignored (runtime artifact for the video and submission, printed for you).
-* Re-run any time before the video: `npm run freeze`. It issues a live read; expect ~10–30 s.
-
----
-
-## 8. FINAL AUDIT — tree, history, form, map, tests
-
-**Working tree (this commit):** `npm run audit:secrets` → **AUDIT: PASS** (50 tracked files; 2 fingerprinted
-env values never printed; no remote configured).
-
-**Git history, all refs:** `node scripts/audit-history.mjs` → **AUDIT: PASS** (103 objects · 65 blobs;
-`.env` never in any commit; every blob scanned against current `.env` values and shaped patterns — 0 findings).
+**Git history, all refs:** `node scripts/audit-history.mjs` → **AUDIT: PASS** (`.env` never in any
+commit; every blob scanned against current `.env` values and secret-shaped patterns — 0 findings).
 
 **`.env`:** untracked everywhere; `git check-ignore` ✓; absent from the fresh clone.
 
 **`docs/submission.md` vs the live B2 form (read read-only 2026-11-04):**
 email · discordId · linkedinUrl · telegramId · howHeard · firstWeb3Project · tatumAccountId · suiAddress ·
 `accountId` (Account ID (SUI)) · `memwalAgentId` · description · demoVideoUrl · repoUrl · additionalDocs ·
-walrusExperience · tatumAiBuilderExperience · walrusFriction · socialPosts — **all present** (18/18), plus the
-**event-rules acceptance checkbox** now listed as required, with an explicit note that the **agent never ticks
-it — you do**. No track selector exists; the description carries `Track 02 — Smart Agents for Real Life`.
-Field copy labels match the B2 row verbatim.
+walrusExperience · tatumAiBuilderExperience · walrusFriction · socialPosts — **all present (18/18)**, plus
+the **event-rules acceptance checkbox** listed as required, with an explicit note that the **agent never
+ticks it — you do**. No track selector exists; the description carries `Track 02 — Smart Agents for Real
+Life`. Field copy labels match the B2 row verbatim.
 
-**README claim → evidence map re-read end-to-end for `e57f280`:** 17 memories everywhere; learning claims
-are split into persisted/live-but-unpersisted/replay; credits row shows 21 actual requests (UNKNOWN);
-retention row says UNKNOWN with the relayer default quoted and the Nov-17 caveat; judge quickstart linked.
-
-**Tests (current tree, this machine, pinned runtime):**
-`npm test` → **64 pass · 0 fail · 2 of 66 skipped** (the two opt-in live tests skip unless
-`RUN_MAINNET=1`). Live suite re-run: **2 passed** (writes 2 more blobs — `DL6hLBNQd2fDxRnNM8R0MCekw9QcR583dEuK2YUSRW4`
-at cp 341758897 and `q1vX8synwjZ0tFpdpl9fAdKWIxvtGj9r7G3eBYGVIcw` at cp 341759010 — hence 17 total).
-
-Also re-verified from a fresh clone of `e57f280` (the commit this report reviews): install OK under the
-pinned runtime; tests green; demo works offline; page serves with the CACHED badge; export clean; Node-floor
-trap produces a legible `ENOTSUP` instead of a cryptic failure.
+**README claim → evidence map:** 20 memories everywhere (6 seeds / 7 observations / 4 corrections /
+2 policy records / 1 adversarial); the learning claims are split into live+persisted / unpersisted-40000 /
+replay; the credits row shows 21 actual requests (credits-per-call UNKNOWN); a new **§5b “Tatum usage”**
+section carries the `npm run credits` output, the 21/21 and 291/291 `x-api-key` proofs and a
+**dashboard-screenshot placeholder**; retention stays UNKNOWN with the relayer default quoted.
 
 ---
 
-## 9. Decisions needed from you
+## 8. Decisions needed from you
 
-1. **Retention** — **(a)** accept the documented UNKNOWN (free; the demo and proof page never depend on the
-   namespace at judging time), or **(b)** renew the 17 blobs on the Walrus dashboard before Nov 10
-   (I recommend (b), your transaction, ~0 cost in WAL/gas). I will not sign, fund, renew or re-seed anything.
-2. **Repo to the portal** — the form needs `repoUrl`: public repo? a reviewer-invited private repo? a ZIP via
-   the portal? (Or whichever mechanism the hackathon tells you to use — I configure nothing.)
-3. **Recording cadence** — record the video against `e57f280` now (offline-proof page shot list is
-   deterministic and always works), or after the retention decision settles? My recommendation: record
-   **after** (1) is decided; script stays unchanged either way (`docs/video-script.md`, ≤2:30).
-4. **Bonus posts** — post on X and/or LinkedIn (your accounts; tagging @Tatum_io and @WalrusFoundation is
-   your call), or leave `socialPosts=none` in the form.
-5. **Observer for the judging window** — stop PID 16783 now (`pkill -f observer`), or restart it at
-   `--interval=300`? I do not touch it without your word; my recommendation is restart at 300 s or stop.
-6. **Submission timing** — submit 2026-11-10 morning UTC (12 h headroom), or another slot you prefer.
+1. **Retention** — **(a)** accept the documented UNKNOWN (free; the demo and proof page never depend on
+   the namespace at judging time), or **(b)** renew the blobs on the Walrus dashboard before Nov 10
+   (recommended; your transaction, negligible WAL/gas). The agent will not sign, fund, renew or re-seed.
+2. **Optional `fc-policy-SLOW-v3`** — persist the later live learning (window 40000) as well, or keep
+   20000 as the conservative persisted value? **This would be a second write and needs your confirmation.**
+3. **Optional second write to fix `policy.evidence_count`** in `fc-policy-SLOW-v2` — cosmetic (the
+   evidence list is in the body and the engine ignores the field), but it needs your confirmation.
+4. **Repo to the portal** — the form needs `repoUrl`: public repo? a reviewer-invited private repo? a ZIP
+   via the portal? (The agent configures nothing and has no remote.)
+5. **Recording cadence** — record the video now against the current tree, or after the retention choice?
+   The script is unchanged either way (`docs/video-script.md`, ≤2:30).
+6. **Bonus posts** — post on X and/or LinkedIn (your accounts), or leave `socialPosts=none`.
+7. **Observer** — leave it running at `--interval=300 --budget=0`, or stop it for the judging window?
+8. **Submission timing** — Nov 10 morning UTC (12 h headroom), or another slot you prefer.
 
 **Hard deadline in this plan:** nothing is submitted until you say so.
+
+---
+
+# Appendix — what the earlier hardening pass established (superseded numbers in brackets)
+
+The first pre-submission pass (2026-11-05 02:30–03:30 UTC, commit `f89c8b3`) is superseded by the
+sections above. It is summarised here so the record is complete without repeating stale figures; the
+per-phase build reports (`reports/build-phase1.md` … `build-phase4.md`) remain the primary history.
+
+* **Retention (unchanged conclusion).** Three routes were tried to read a blob's `end_epoch` and all
+  failed for tooling reasons, not because the field is absent: Tatum's Sui event index returns **no
+  walrus events** at the write checkpoints (the 50-entry page is crowded by DEX/oracle events, and the
+  `afterCheckpoint`/`beforeCheckpoint` range filter returns 0 rows even for event types that provably
+  exist — the `0x2::coin` case was also empty); the Walrus **System** object
+  `0x2134d52768ea07e8c43570ef975eb3e4c27a39fa6396bef985b5abc58d03ddd2` and the **Staking** pool
+  `0x10b9d30c28448939ce6c4d6c6e0ffce4a7f8a4ada8248bdad09ef8b70e4a3904` expose only
+  id / version=4 / `package_id=0xa9ac4281c72b0ed3277c08e821ab77eccea7b187f2b402ffa3b33f548d4bbf1e`;
+  and the Walrus HTTP aggregators are unreachable from this environment (curl exit 000). The
+  **relayer mainnet default of 2 epochs (~4 weeks)** comes from the Walrus Memory docs, not from chain
+  state — it is INFERRED for these blobs, not VERIFIED.
+* **Credits (unchanged conclusion).** `npm run credits --calls=20` → 30 attempted reads, **21 actual
+  GraphQL requests** (9 absorbed by the 1 s checkpoint cache), p50 189 ms, 0 errors, plan
+  `free;ratelimit=3;strategy=shared`. Credits-per-call stays **UNKNOWN** — Tatum returns no credit
+  header, so only the dashboard can close it.
+* **Two traps found by fresh-clone testing in that pass, both fixed here.** (a) Offline mode used to
+  read `.env` unconditionally and crashed on a credential-less clone — fixed in `src/runtime.mjs`
+  (offline never touches secrets; live mode fails with a named error). (b) The Node floor is
+  load-bearing: on the build host the default `node` is v24.22.2 and `npm test` fails there with a
+  cryptic `Cannot find module …/test` — `.npmrc` now sets `engine-strict=true`, so an old Node fails at
+  install with `ENOTSUP Required: {"node":">=26.13.0"}`.
+* **Artifacts from that pass** (still valid, superseded by the newer bundle): freeze manifests
+  `freeze-2026-11-05T021132543Z.json` and `freeze-2026-11-05T022330578Z.json`; the committed evidence
+  snapshot `docs/evidence/proof-snapshot.json` (regenerated in this phase with 20 memories and the
+  `x-api-key` proof); `scripts/export-site.mjs`, `scripts/freeze.mjs`, `scripts/audit-history.mjs`.
+* **Numbers superseded by this phase:** 17 → **20** mainnet memories; 150 → **306** ledger entries;
+  59 FRESH / 87 STALE → **72 FRESH / 230 STALE**; the SLOW policy from “learned live, not persisted” →
+  **persisted as `fc-policy-SLOW-v2`**; the Docker path → **UNKNOWN** (no daemon in this environment).

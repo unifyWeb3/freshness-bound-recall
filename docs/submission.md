@@ -1,9 +1,16 @@
 # Submission draft — FRESHNESS-BOUND RECALL
 
+## Status: **GO** — ready for the author to fill the remaining fields and submit. Nothing has been submitted, published, registered, or posted.
+
 **Deadline: 2026-11-10 17:00 UTC.** Judging Nov 11–16. Recommended submission: **Nov 10, morning UTC**.
 Nothing here has been submitted, published, registered, or posted. **You** review and send.
 
 Field list below matches the live form (as read read-only on 2026-11-04; **re-verify the form before sending**).
+
+**Verification at 2026-11-05 12:00 UTC:** offline tests 65 pass / 0 fail / 2 skipped (live opt-in skipped);
+live tests 2 pass; secrets audit PASS (working tree) and PASS (full git history); freeze bundle written
+(`freeze/freeze-2026-11-05T115517263Z.json`, 20 memories · 306 ledger entries); namespace
+`freshness-recall` lists 20 memories, 0 deleted, `must_resync=false`.
 
 ---
 
@@ -25,8 +32,8 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 | demoVideoUrl | `[upload the 60–90 s recording, then paste]` | you |
 | repoUrl | **decision point** — host the repo yourself (public or private repo) and paste; or paste the submission portal's link option if allowed. Agent will not create a remote. | you |
 | additionalDocs | `reports/build-phase1.md` … `build-phase4.md` (if repo public) or a link to the docs/ folder | you/agent |
-| walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 15 memories written; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
-| tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
+| walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 20 memories written in namespace `freshness-recall`; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
+| tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` on every request (proven 21/21 and 291/291 from the request log) + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
 | walrusFriction | "Production SDK (0.1.13) has no delete/update; semantic recall needed substring matching to hit exact claims; index lag after writes; blob retention is not verified in a disposable namespace (availability vs epochs); 5 s default preflight timeout and ~18 s write latency needed explicit timeouts/retries/queueing." | agent-drafted |
 | socialPosts | `[X/LinkedIn posts you publish for the bonus, or “none”]` | you |
 | event-rules checkbox | **Required by the form** (must accept the event rules / terms) — you click it; the agent never accepts legal terms on your behalf | you |
@@ -40,13 +47,14 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 > mainnet GraphQL, 1 cached read) ∧ subject version/digest pin (1 read) ∧ wall-clock backstop, failing
 > closed with a visible reason. Stale memories are never answers; when a claim is re-verified
 > differently, a correction memory supersedes the old blob (lineage chain) and the tolerance itself —
-> a per-class policy memory `fc-policy-FAST-v1` — is rewritten by the system from observed decay
-> (FALSE-STALE widens, MISSED-CHANGE tightens; one policy memory per change).
+> a per-class policy memory (`fc-policy-FAST-v1`, `fc-policy-SLOW-v2`) — is rewritten by the system
+> from observed decay (FALSE-STALE widens, MISSED-CHANGE tightens; one policy memory per change).
 >
-> Evidence: 15 mainnet Walrus blobs in namespace `freshness-recall` (7 observations, 4 corrections,
-> 1 learned-policy memory, 1 adversarial not-stale record) + 2 live round-trip test memories;
-> 90+ recorded stale/fresh decisions with checkpoint stamps; an ablation table on the built-in proof
-> page; everything pinned (Node v26.13.0), zero LLM in the answer path, `.env`-only secrets with a
+> Evidence: 20 mainnet Walrus blobs in namespace `freshness-recall` (7 observer observations, 4
+> corrections, 2 learned-policy memories, 1 adversarial not-stale record, 6 live round-trip test
+> memories); 306 recorded stale/fresh decisions with checkpoint stamps; an ablation table on the
+> built-in proof page; both learning directions persisted as memories and read back before every
+> answer; everything pinned (Node v26.13.0), zero LLM in the answer path, `.env`-only secrets with a
 > startup on-chain credential self-test.
 
 ## Repo contents to include if a repo is hosted
@@ -65,5 +73,11 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 6. Bonus: post X/LinkedIn (your accounts) tagging the event; paste URLs in socialPosts before submitting,
    otherwise leave `none`.
 
-**Known open items at 2026-11-05:** Walrus epoch retention not verified (unknown); Tatum credits per
-call not measured (unknown); no real user validated the persona (hypothesis).
+**Known open items at 2026-11-05:** Walrus epoch retention not verified (unknown — expiry before
+judging cannot be ruled out); Tatum credits per call not measured (unknown — `npm run credits` prints the
+request count for a dashboard comparison); no real user validated the persona (hypothesis); the Docker
+image path is written but unverified (no Docker daemon in the build environment); the `fc-policy-SLOW-v2`
+memory carries one malformed auxiliary field (`policy.evidence_count=undefined`) caused by a
+variable-name slip in the writer — the evidence list itself is intact in the record body, and the
+policy engine does not read that field. Fixing the blob would need a second write, which needs the
+author's confirmation.

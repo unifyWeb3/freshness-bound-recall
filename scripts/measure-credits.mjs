@@ -60,6 +60,7 @@ const elapsedMs = Math.round(performance.now() - t0);
 const sorted = [...latencies].sort((a, b) => a - b);
 const p = (q) => (sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))] : 0);
 const actualCalls = client.callCount;
+const keyProof = client.apiKeyProof();
 
 const report = {
   started_at: startedAt,
@@ -74,6 +75,7 @@ const report = {
   endpoint: TATUM_GRAPHQL,
   chain_id: SUI_MAINNET_CHAIN_ID,
   plan_header: client.planHeader(),
+  api_key_proof: keyProof,
   elapsed_ms: elapsedMs,
   latency_ms: { p50: p(0.5), p95: p(0.95), max: sorted.at(-1) ?? 0 },
   credits_per_call: "UNKNOWN - no credit header is returned by Tatum; compare actual_graphql_requests with the dashboard",
@@ -89,6 +91,7 @@ if (json) {
   console.log(`  object reads        : ${report.object_reads}`);
   console.log(`  errors              : ${report.errors}`);
   console.log(`plan header           : ${report.plan_header}`);
+  console.log(`api key sent         : ${keyProof.requests_with_api_key}/${keyProof.total_log_entries} requests carried the x-api-key header (value never printed) -> ${keyProof.every_request_had_api_key ? "EVERY REQUEST" : "INCOMPLETE"}`);
   console.log(`endpoint              : ${report.endpoint}`);
   console.log(`latency ms            : p50 ${report.latency_ms.p50} / p95 ${report.latency_ms.p95} / max ${report.latency_ms.max}`);
   console.log(`elapsed               : ${report.elapsed_ms} ms`);

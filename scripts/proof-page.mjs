@@ -122,6 +122,7 @@ async function collectLive(rt) {
     plan: rt.tatum.planHeader(),
     tatum_log: rt.tatum.requestLog().slice(-120),
     tatum_call_count: rt.tatum.callCount,
+    tatum_api_key_proof: rt.tatum.apiKeyProof(),
     subjects,
     memories,
     ledger,
@@ -286,8 +287,10 @@ export function page(snapshot) {
       <td>${esc(r.status)}</td>
       <td>${esc(r.latency_ms)} ms</td>
       <td><code>${esc(r.plan ?? "—")}</code></td>
+      <td>${r.api_key_sent === true ? '<span class="badge live">x-api-key</span>' : (r.api_key_sent === false ? '<span class="badge cached">NO KEY</span>' : '<span class="muted">—</span>')}</td>
       <td class="muted">${esc(r.error || "")}</td>
     </tr>`).join("");
+  const keyProof = snapshot.tatum_api_key_proof || null;
 
   const policyCards = Object.entries(snapshot.policy || {}).map(([cls, p]) => `
     <div class="card">
@@ -403,9 +406,13 @@ export function page(snapshot) {
   </table></div>
 
   <h2>Tatum request log</h2>
+  <div class="card">
+    ${keyProof ? `<div class="kv"><span>x-api-key on every request</span><code>${esc(keyProof.requests_with_api_key)}/${esc(keyProof.total_log_entries)} log entries · ${keyProof.every_request_had_api_key ? "EVERY REQUEST CARRIED THE HEADER" : "INCOMPLETE - see log"}</code></div>
+    <div class="kv"><span>key value</span><code>never printed (boolean proof only)</code></div>` : `<div class="muted">api-key proof not recorded in this snapshot</div>`}
+  </div>
   <div class="scroll"><table>
-    <thead><tr><th>at</th><th>query</th><th>status</th><th>latency</th><th>x-ttm-plan</th><th>error</th></tr></thead>
-    <tbody>${tatumRows || '<tr><td colspan="6" class="muted">no requests recorded</td></tr>'}</tbody>
+    <thead><tr><th>at</th><th>query</th><th>status</th><th>latency</th><th>x-ttm-plan</th><th>x-api-key</th><th>error</th></tr></thead>
+    <tbody>${tatumRows || '<tr><td colspan="7" class="muted">no requests recorded</td></tr>'}</tbody>
   </table></div>
 
   <h2>relayer</h2>

@@ -1,3 +1,5 @@
+**Requires Node v26.13.0 or newer (`node --version`; `nvm use` picks it up from `.nvmrc`) — an older Node fails at install with a clear `ENOTSUP` message.**
+
 # Judge quickstart — fresh clone → proof in 60 seconds
 
 Everything below works **without any credentials**. Live paths are optional and marked.
@@ -7,13 +9,16 @@ Everything below works **without any credentials**. Live paths are optional and 
 - Node **v26.13.0** or newer — **check `node --version` first**. If it is older, your `npm test` may
   fail with a cryptic `Cannot find module …/test`; switch Node (nvm: `nvm install 26.13.0 && nvm use 26.13.0`)
   and retry. `.npmrc` sets `engine-strict=true`, so an older Node fails at install time with a clear message.
+  The repo ships **`.nvmrc` (26.13.0)** — `nvm use` in the clone directory selects it automatically.
 - No secrets, no network needed for the default path.
 - A terminal with `git`.
+- Optional: Docker (see §7).
 
 ## 1. Clone and install (~20 s)
 
 ```sh
 git clone <repo-url> freshness-recall && cd freshness-recall
+nvm use                 # reads .nvmrc -> 26.13.0 (skip if you already have Node >= 26.13.0)
 npm install --ignore-scripts
 ```
 
@@ -82,9 +87,30 @@ RUN_MAINNET=1 npm run test:live   # 2 opt-in live tests (both write 1 seed blob 
 Live budget note: the steady observer (`node scripts/observer.mjs --live --interval=300 --budget=0`)
 makes ~3 Tatum calls per 5 minutes and writes nothing. Do not run the live proof page unattended.
 
-## 6. If something fails
+## 6. Optional — one-command container (Docker)
+
+```sh
+docker build -t freshness-bound-recall .
+docker run --rm freshness-bound-recall
+```
+
+The image runs the offline tests, the offline demo and `npm run export`, then prints the path of the
+static proof page. It contains **no credentials**: `.env` is excluded by `.dockerignore` and no
+command in the image touches the live path.
+
+> **Verification status: UNKNOWN — the Docker path could not be executed in the build environment**
+> (no `docker` binary and no Docker socket were available on the build host, 2026-11-05).
+> What *was* verified natively, from a fresh clone, with the exact command sequence the image runs
+> (`npm ci --ignore-scripts` → `npm test` → `npm run demo:offline` → `npm run export`, no `.env`
+> present): all four steps succeed — 66 tests, 62 pass, 0 fail, 4 skipped; the demo completes with
+> 0 stale answers; the export writes `site/index.html` and scans 0 env values. The Docker image
+> itself is therefore **written but UNVERIFIED**; please treat `npm test` on the host as the
+> authoritative check.
+
+## 7. If something fails
 
 - `no snapshot found` — the repo ships `docs/evidence/proof-snapshot.json`; if it was deleted, run
   `npm run proof` live once to regenerate it (needs live credentials), or ask the author for it.
 - `429 rate limited` — Tatum free plan is 3 rps shared; wait a minute; retry.
+- `Cannot find module …/test` — your Node is older than 26.13.0; run `nvm use` (reads `.nvmrc`).
 - Anything else — run `npm run audit:secrets`; it prints AUDIT: PASS/FAIL honestly.

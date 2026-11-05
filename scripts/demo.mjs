@@ -140,8 +140,9 @@ if (offline) hydratePolicy(snapshot);
 const fastPolicy = rt.policy.state("FAST");
 emit("ok", `FAST window = ${fastPolicy.windowCheckpoints} checkpoints (source: ${rt.policy.source}, version ${fastPolicy.version}, reason: ${fastPolicy.lastReason || "initial"})`);
 const slowPolicy = rt.policy.state("SLOW");
-emit("ok", `SLOW window = ${slowPolicy.windowCheckpoints} checkpoints`);
+emit("ok", `SLOW window = ${slowPolicy.windowCheckpoints} checkpoints (source: ${rt.policy.source}, version ${slowPolicy.version}, reason: ${slowPolicy.lastReason || "initial"})`);
 emit("note", "(fc-policy-FAST-v1: MISSED-CHANGE 3 > FALSE-STALE 0 — window tightened live from 50 to 25)");
+emit("note", "(fc-policy-SLOW-v2: FALSE-STALE 3 > MISSED-CHANGE 0 — window widened live from 10000 to 20000; learned 2026-11-05T02:05:19Z)");
 
 // ---------------- step 4: questions and answers
 // Q1: the FAST-seed claim (Sui Clock) is stale -> withheld, live value used.
@@ -188,8 +189,11 @@ emit("ok", `verdict: ${a2.verdict} — ${a2.reason}`);
 emit("note", `same verdict as step 4: ${a1.verdict === a2.verdict}`);
 
 // Q3: the adversarial not-stale memory (old-but-true; window expired)
+// The narration below is DERIVED from the actual gate decision - the pin may
+// have changed since the record was written, and the demo must not claim
+// otherwise.
 line();
-emit("h", "6) FALSE-STALE — an old-but-true memory is withheld (and the loop learns)");
+emit("h", "6) the adversarial old-but-true memory is re-checked (the loop learns)");
 if (offline) {
   const rec = (snapshot?.memories || []).find((m) => m.claim === "adv-not-stale-341741224");
   const decision = evaluateGate({
@@ -198,14 +202,9 @@ if (offline) {
     policy: { windowCheckpoints: rt.policy.state("SLOW").windowCheckpoints, maxAgeSeconds: rt.policy.state("SLOW").maxAgeSeconds },
     now: Date.now(),
   });
-  emit("q", `claim: ${rec.claim} (${rec.class}/${rec.state}) — pin unchanged, window ${rt.policy.state("SLOW").windowCheckpoints}`);
+  emit("q", `claim: ${rec.claim} (${rec.class}/${rec.state}) — window ${rt.policy.state("SLOW").windowCheckpoints}`);
   emit("ok", `verdict: ${decision.verdict} — ${decision.reason}`);
-  if (decision.verdict === VERDICT.FRESH) {
-    emit("note", "  the subject pin has NOT changed; the gate answers from memory (the window still covers this claim).");
-  } else {
-    emit("note", "  the subject pin has NOT changed — the fact is still true, but the window expired (FALSE-STALE).");
-    emit("note", "  the answer path withholds and records FALSE-STALE; the policy engine then widens the SLOW window.");
-  }
+  emitStep6Notes(decision);
 } else {
   const res = await rt.store.recall({ query: "adversarial not-stale record object version checkpoint FAST window", limit: 20, sort: "recent" });
   const hit = (res.results || []).find((h) => (h.text || "").includes("adv-not-stale"));
@@ -221,15 +220,26 @@ if (offline) {
       policy: { windowCheckpoints: rt.policy.state("SLOW").windowCheckpoints, maxAgeSeconds: rt.policy.state("SLOW").maxAgeSeconds },
       now: Date.now(),
     });
-    emit("q", `claim: ${rec.claim} (${rec.class}/${rec.state}) — pin unchanged, window ${rt.policy.state("SLOW").windowCheckpoints}`);
+    emit("q", `claim: ${rec.claim} (${rec.class}/${rec.state}) — window ${rt.policy.state("SLOW").windowCheckpoints}`);
     emit("ok", `verdict: ${decision.verdict} — ${decision.reason}`);
-    if (decision.verdict === VERDICT.FRESH) {
-      emit("note", "  the subject pin has NOT changed; the gate answers from memory (the window still covers this claim).");
-    } else {
-      emit("note", "  the subject pin has NOT changed — the fact is still true, but the window expired (FALSE-STALE).");
-      emit("note", "  the answer path withholds and records FALSE-STALE; the policy engine then widens the SLOW window.");
-    }
+    emitStep6Notes(decision);
   }
+}
+
+/** Narrate step 6 strictly from the decision that was actually made. */
+function emitStep6Notes(decision) {
+  if (decision.verdict === VERDICT.FRESH) {
+    emit("note", "  the subject pin has NOT changed and the window still covers this claim -> the gate answers from memory.");
+    return;
+  }
+  if (decision.signals.pin.changed) {
+    emit("note", "  the subject pin HAS changed since this record was written (the claim is now false, not merely old) -> the gate withholds it as STALE.");
+    emit("note", "  this case is recorded as CONSISTENT, not FALSE-STALE: a changed subject is real staleness, not a too-tight window.");
+    return;
+  }
+  emit("note", "  the subject pin has NOT changed — the fact is still true, but the window expired (FALSE-STALE).");
+  emit("note", "  the answer path withholds and records FALSE-STALE; the policy engine then widens the SLOW window.");
+  emit("note", "  (the FALSE-STALE case is reproducible on demand: node scripts/show-policy-effect.mjs)");
 }
 
 // ---------------- step 7: ablation over the recorded ledger

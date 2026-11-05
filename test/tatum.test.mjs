@@ -35,6 +35,28 @@ test("every request sends x-api-key and the GraphQL endpoint", async () => {
   assert.equal(c.planHeader(), "free;ratelimit=3;strategy=shared");
 });
 
+test("the request log proves x-api-key was sent on every call, without exposing the key", async () => {
+  const fetchImpl = fakeFetch((n, url, init) => {
+    const body = String(init.body).includes("checkpoints") ? CP_BODY : OBJ_BODY;
+    return jsonResponse(body, { headers: { "x-ttm-plan": "free;ratelimit=3;strategy=shared" } });
+  });
+  const c = new TatumClient({ apiKey: "test-key-123", fetchImpl });
+  await c.readCheckpoint();
+  await c.readObject("0x6");
+  const proof = c.apiKeyProof();
+  assert.equal(proof.total_log_entries, 2);
+  assert.equal(proof.requests_with_api_key, 2);
+  assert.equal(proof.requests_without_api_key, 0);
+  assert.equal(proof.every_request_had_api_key, true);
+  assert.equal(proof.header_name, "x-api-key");
+  assert.equal(proof.value_printed, false);
+  // the proof must never contain the key itself
+  const serialized = JSON.stringify(proof);
+  assert.equal(serialized.includes("test-key-123"), false);
+  // every log entry carries the boolean flag
+  for (const e of c.requestLog()) assert.equal(e.api_key_sent, true);
+});
+
 test("the checkpoint read is cached for 1 second and does not consume budget again", async () => {
   const fetchImpl = fakeFetch(() => jsonResponse(CP_BODY));
   const c = new TatumClient({ apiKey: "k", fetchImpl });

@@ -1,0 +1,14 @@
+# Secrets and runtime artifacts never enter the image.
+.env
+.env.*
+*.log
+node_modules/
+site/
+freeze/
+data/cache/
+data/ledger.jsonl
+data/policy-mirror.json
+.git/
+.gitignore
+Dockerfile
+.dockerignore
