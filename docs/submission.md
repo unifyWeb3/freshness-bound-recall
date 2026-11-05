@@ -1,14 +1,24 @@
 # Submission draft — FRESHNESS-BOUND RECALL
 
-## Status: **GO** — ready for the author to fill the remaining fields and submit. Nothing has been submitted, published, registered, or posted.
+## Status: **GO** — repo published and snapshot hosted; the author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
 
 **Deadline: 2026-11-10 17:00 UTC.** Judging Nov 11–16. Recommended submission: **Nov 10, morning UTC**.
-Nothing here has been submitted, published, registered, or posted. **You** review and send.
+The submission form itself has **not** been filled or sent. **You** review and send.
+
+| Published item | URL | State |
+|---|---|---|
+| **Repository (public, full history)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05, verified unauthenticated (HTTP 200) |
+| **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, verified unauthenticated (HTTP 200), byte-identical to `npm run export` (sha256 `91ebae92b30481f9…`) |
+
+> The hosted page is a **static export of a labelled snapshot** — its banner reads
+> `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`. It is not a live service
+> and makes no network requests. The live proof page stays a local process.
 
 Field list below matches the live form (as read read-only on 2026-11-04; **re-verify the form before sending**).
 
-**Verification at 2026-11-05 14:52 UTC (commit `f9832ac4bfdd`, clean tree):** offline tests 65 pass /
-0 fail / 2 skipped (live opt-in skipped); live tests 2 pass; secrets audit PASS (working tree) and PASS
+**Verification at 2026-11-05 17:45 UTC (commit `f9ddd6606d40`, clean tree, pushed):** offline tests 65 pass /
+0 fail / 2 skipped (live opt-in skipped); fresh-clone judge path green (67 tests / 63 pass / 0 fail /
+4 skipped → demo → export → proof page on :8801, HTTP 200); secrets audit PASS (working tree) and PASS
 (full git history); freeze bundle written (`freeze/freeze-2026-11-05T145207337Z.json`, 22 memories ·
 306 ledger entries, live checkpoint 341948733); namespace `freshness-recall` lists **22** memories,
 0 deleted, `must_resync=false`.
@@ -40,8 +50,8 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 | memwalAgentId ("public key from delegate keys") | `[the delegate public key from .env MEMWAL_AGENT_ID — public]` | you |
 | description | see below | agent-drafted, you review |
 | demoVideoUrl | `[upload the 60–90 s recording, then paste]` | you |
-| repoUrl | **decision point** — host the repo yourself (public or private repo) and paste; or paste the submission portal's link option if allowed. Agent will not create a remote. | you |
-| additionalDocs | `reports/build-phase1.md` … `build-phase4.md` (if repo public) or a link to the docs/ folder | you/agent |
+| repoUrl | `https://github.com/unifyWeb3/freshness-bound-recall` — **public, pushed 2026-11-05, full commit history** (the hashes cited in the reports, e.g. `f9832ac`, resolve on GitHub) | **done** — paste as-is |
+| additionalDocs | `reports/build-phase1.md` … `build-phase4.md` (in the public repo) · hosted proof page (**cached snapshot**): `https://freshness-bound-recall-oxunify.vercel.app` · freeze bundle `freeze/freeze-2026-11-05T145207337Z.json` (local — attach the file if the form takes an upload) | you/agent |
 | walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 22 memories written in namespace `freshness-recall`; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
 | tatumAiBuilderExperience | "All chain truth via Tatum Sui mainnet GraphQL (read-only), `x-api-key` on every request (proven from the request log: 21/21 in the controlled measurement run, 7/7 in the final proof snapshot, 2,208/2,208 in a longer page run) + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
 | walrusFriction | "Production SDK (0.1.13) has no delete/update; semantic recall needed substring matching to hit exact claims; index lag after writes; blob retention is not verified in a disposable namespace (availability vs epochs); 5 s default preflight timeout and ~18 s write latency needed explicit timeouts/retries/queueing." | agent-drafted |
@@ -67,17 +77,22 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 > answer; everything pinned (Node v26.13.0), zero LLM in the answer path, `.env`-only secrets with a
 > startup on-chain credential self-test.
 
-## Repo contents to include if a repo is hosted
+## Repo contents — the public repo is already live
 
-`README.md`, `src/`, `scripts/`, `test/`, `fixtures/`, `docs/` (this file, `blog.md`, `video-script.md`),
-`reports/build-phase1.md` … (all evidence, all labels), `data/claim-class-measurement.json`.
-**Never the `.env`.**
+<https://github.com/unifyWeb3/freshness-bound-recall> — public, pushed with the **full commit history**
+(the hashes cited in `reports/`, e.g. `f9832ac`, resolve on GitHub). It contains `README.md`, `src/`,
+`scripts/`, `test/`, `fixtures/`, `docs/` (this file, `blog.md`, `video-script.md`, `judge-60s.md`),
+`reports/build-phase1.md` … (all evidence, all labels), `data/claim-class-measurement.json`,
+`.nvmrc`, `Dockerfile`, `.dockerignore`.
+**Never the `.env`** — it is git-ignored, untracked, and the secrets audit passes on the working tree
+*and* on every pushed commit.
 
 ## Order of operations before Nov 10 17:00 UTC
 
 1. Re-verify the submission form field list and this draft (agent reads it at your request — read-only).
 2. Record the demo per `docs/video-script.md`; upload to a venue you control; paste the URL.
-3. Publish or host the repo per your choice; paste the URL.
+3. ~~Publish or host the repo~~ — **done**: <https://github.com/unifyWeb3/freshness-bound-recall> (paste
+   it into `repoUrl`).
 4. Fill remaining fields; tick the **event-rules acceptance checkbox** (you, not the agent); attach `docs/` if asked; keep the Track 02 line in the description.
 5. Submit, then verify the confirmation page; keep the submission id.
 6. Bonus: post X/LinkedIn (your accounts) tagging the event; paste URLs in socialPosts before submitting,

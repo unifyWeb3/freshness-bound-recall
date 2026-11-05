@@ -10,6 +10,20 @@ Submit by **2026-11-10 17:00 UTC** · Judging Nov 11–16
 the persona is a **HYPOTHESIS** (an operations analyst who answers “is this still true?” about a live
 Sui position between sessions).
 
+**Links**
+
+| What | URL |
+|---|---|
+| **This repository** (public, full history) | <https://github.com/unifyWeb3/freshness-bound-recall> |
+| **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> |
+| Judge quickstart (60 s, no credentials) | [`docs/judge-60s.md`](docs/judge-60s.md) |
+| Pre-submission report (GO, with the open items) | [`reports/pre-submit.md`](reports/pre-submit.md) |
+
+> The hosted page is the **static export of a labelled snapshot** (the banner on it says
+> `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`). It is the same bytes as
+> `npm run export` — sha256 `91ebae92b30481f9…` — and it makes **no network requests**. It is a
+> snapshot, not a live service: the live proof page is a local process and is never hosted.
+
 ## 1. The product in one paragraph
 
 Agents that remember things are wired to trust what they wrote down. That is fine until the world
@@ -344,6 +358,8 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 | Product + demo | `scripts/demo.mjs`, `src/answer.mjs` | works (live & offline) |
 | Proof page | `scripts/proof-page.mjs` (`npm run proof[:offline]`) | live & offline verified |
 | Static export | `npm run export` → `./site` | verified (labelled snapshot, env-scan clean) |
+| **Hosted static export (a cached snapshot)** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, HTTP 200 unauthenticated, byte-identical to `npm run export` |
+| **Public repository** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed with the full history; HTTP 200 unauthenticated |
 | Observed mainnet memories | namespace `freshness-recall` (22) | ids in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 | Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥306 entries |
 | Learned-policy memories | `fc-policy-FAST-v1` (`19ZE9y-zWt1…`), `fc-policy-SLOW-v2` (`Zne2mnjAy6u…`) | both persisted live |

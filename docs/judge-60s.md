@@ -17,10 +17,17 @@ Everything below works **without any credentials**. Live paths are optional and 
 ## 1. Clone and install (~20 s)
 
 ```sh
-git clone <repo-url> freshness-recall && cd freshness-recall
+git clone https://github.com/unifyWeb3/freshness-bound-recall.git freshness-recall && cd freshness-recall
 nvm use                 # reads .nvmrc -> 26.13.0 (skip if you already have Node >= 26.13.0)
 npm install --ignore-scripts
 ```
+
+> **Already published — the hosted proof page (a cached snapshot):**
+> <https://freshness-bound-recall-oxunify.vercel.app>
+> It is the static export of a labelled snapshot (`STATIC EXPORT · … · network off · ids & stamps from a
+> labelled snapshot` on the page itself), byte-identical to `npm run export`
+> (sha256 `91ebae92b30481f9…`). It fetches nothing and needs no credentials. The steps below rebuild
+> the same page locally from the same committed snapshot.
 
 ## 2. Offline tests (~5 s)
 
