@@ -1,6 +1,6 @@
 # Pre-Submission Hardening — FRESHNESS-BOUND RECALL
 
-## Verdict: **GO** — 2026-11-05 12:15 UTC · final fixes applied · nothing pushed, posted, deployed or submitted
+## Verdict: **GO** — 2026-11-05 16:15 UTC · final fixes applied · nothing pushed, posted, deployed or submitted
 
 **Date:** 2026-11-05 · **Workspace:** `~/total-recall` · **Runtime:** Node v26.13.0, npm 11.20.0
 **Nothing was pushed, posted, deployed or submitted.** No transaction was signed; no blob was renewed,
@@ -11,16 +11,18 @@ the task authorised: `fc-policy-SLOW-v2` (§1).
 
 | Check | Result |
 |---|---|
-| `npm test` (offline) | **65 pass · 0 fail · 2 skipped** (the 2 live opt-in tests skip without `RUN_MAINNET=1`) |
+| `npm test` (offline, with `.env` present) | **65 pass · 0 fail · 2 skipped** (the 2 live opt-in tests skip without `RUN_MAINNET=1`) |
+| `npm test` (fresh clone, **no `.env`**) | **63 pass · 0 fail · 4 skipped** — the 2 extra skips are the `.env` redaction tests (no `.env` to redact) |
 | `RUN_MAINNET=1 node --test test/live/` | **2 pass** — wrote `6InMSm3…` (cp 341894684) and `8xyFMV-…` (cp 341894821) |
 | namespace `freshness-recall` | **22 memories**, 0 deleted, `must_resync=false` |
 | `npm run audit:secrets` (working tree) | **AUDIT: PASS** |
 | `node scripts/audit-history.mjs` (all git refs) | **AUDIT: PASS** |
 | `npm run freeze` | `freeze/freeze-2026-11-05T145207337Z.json` — **22 memories** · 306 ledger entries (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED), commit `f9832ac4bfdd`, clean tree, live checkpoint 341948733 |
 | `npm run credits` | 21 actual GraphQL requests, **21/21 carried `x-api-key`**, plan `free;ratelimit=3;strategy=shared` |
+| **fresh-clone judge path** (clone of the final commit, no `.env`) | `npm install --ignore-scripts` → `npm test` → `npm run demo:offline` → `npm run export` → `npm run proof:offline` (`/healthz` = `{"ok":true,"mode":"offline"}`) — **all green** (§6) |
 | Docker path | **UNKNOWN** — no Docker daemon in the build environment (§6) |
 
-**Two operational facts the author should know (both found and fixed/handled in this phase):**
+**Three operational facts the author should know (all found in this phase):**
 
 1. **A stray live proof page was stopped.** An instance left running from an earlier step kept
    auto-refreshing every 15 s and logged **2,208 Tatum requests** before it was killed at ~15:30 UTC.
@@ -29,6 +31,9 @@ the task authorised: `fc-policy-SLOW-v2` (§1).
 2. **The observer is no longer running.** The `--interval=300 --budget=0` instance (PID 56574) wrote its
    last ledger entry at **2026-11-05T09:29:07 UTC** and is gone; the ledger is frozen at 306 decisions.
    The agent did **not** restart it (out of scope for this task) — see decision 7 in §8.
+3. **The default proof-page port 8787 was occupied** by an unrelated service on this host during the
+   fresh-clone run. Fixed by documenting `--port` (the unrelated service was left alone — it is not
+   this project's). Details in §6.
 
 ---
 
@@ -294,9 +299,24 @@ No thresholds were changed and no events were forced in this phase.
   socket** (`docker: command not found`, `/var/run/docker.sock` absent), so `docker build` / `docker run`
   could not be executed here. What *was* verified natively, from a fresh clone, with the exact command
   sequence the image runs and **no `.env` present**: `npm ci --ignore-scripts` → 30 packages, `npm test` →
-  66 tests / 62 pass / 0 fail / 4 skipped, `npm run demo:offline` → 0 stale answers, `npm run export` →
+  **67 tests / 63 pass / 0 fail / 4 skipped**, `npm run demo:offline` → 0 stale answers, `npm run export` →
   `site/index.html` written with 0 env values scanned. **The image itself is therefore written but
   UNVERIFIED**, and the doc says exactly that.
+* **Fresh-clone verification of the final commit `26942dc`** (2026-11-05 16:07 UTC, clone of the local
+  repo into a scratch directory, **no `.env` present**): `npm install --ignore-scripts` → 30 packages;
+  `npm test` → 67 / 63 / 0 / 4; `npm run demo:offline` → FAST 25 + SLOW 20000 loaded from the store,
+  306 decisions, 0 stale answers; `npm run export` → `site/index.html` (47,372 bytes) built from the
+  **committed** `docs/evidence/proof-snapshot.json`; `npm run proof:offline` → `/healthz` =
+  `{"ok":true,"error":null,"mode":"offline"}`, page served with the `CACHED SNAPSHOT` badge and the
+  `x-api-key` badges. **The clone contains no `.env`** — confirmed absent.
+* **One judge-friction finding from that run:** the default proof-page port **8787 was already taken**
+  by an unrelated service on the build host, so the page refused to start (`EADDRINUSE`). That is a
+  flag problem, not a code problem: `node scripts/proof-page.mjs --offline --port=8801` works, and
+  `docs/judge-60s.md` now documents both the flag and the `EADDRINUSE` symptom. The unrelated
+  service was left running — it is not this project's.
+* **Judge-doc numbers corrected** in `docs/judge-60s.md` (they were stale from the 17-memory era):
+  67/63/0/4 tests, snapshot generated 2026-11-05T14:37Z at cp 341944901 with **22** memories and 306
+  decisions, and the real offline-demo output (checkpoint 341944901, Sui Clock version 1019546722).
 
 ---
 

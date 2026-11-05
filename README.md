@@ -288,7 +288,8 @@ scripts/      answer.mjs prewarm.mjs observer.mjs demo.mjs proof-page.mjs
               export-site.mjs freeze.mjs persist-policy.mjs show-policy-effect.mjs
               measure-credits.mjs measure-claim-classes.mjs
               audit-secrets.mjs audit-history.mjs
-test/         65 offline tests + test/live (2 opt-in mainnet tests)
+test/         67 offline test cases (65 pass + 2 live opt-in skipped; 63 pass + 4 skipped
+              in a credential-less clone) + test/live (2 opt-in mainnet tests)
 fixtures/     recorded event log used by the replay/ablation test
 docs/         blog.md, video-script.md, submission.md, judge-60s.md, evidence snapshot
 reports/      build-phase1.md … build-phase4.md, pre-submit.md
