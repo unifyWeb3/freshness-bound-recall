@@ -148,8 +148,11 @@ question
 | **Total** | **22** | `listMemories` on the namespace: 22 memories, 0 deleted, `must_resync=false` | full list in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 
 * Decision ledger: **≥306 checkpoint-stamped stale/fresh decisions** at freeze
-  `freeze-2026-11-05T115517263Z` (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED). It grows every
+  `freeze-2026-11-05T145207337Z` (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED). It grows every
   round the observer runs (`--budget=0`: it *reads and logs* only, never writes).
+  *The freeze bundle itself is a local artifact (`freeze/` is git-ignored); the **committed**
+  equivalent of the same evidence is `docs/evidence/proof-snapshot.json` — 22 memories, 306 decisions,
+  the `x-api-key` proof — and the full history is in `reports/`.*
 * Environment: Node v26.13.0, npm 11.20.0, plan header `free;ratelimit=3;strategy=shared`.
 
 ### Learning — what is demonstrated, honestly

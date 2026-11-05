@@ -7,10 +7,20 @@ Nothing here has been submitted, published, registered, or posted. **You** revie
 
 Field list below matches the live form (as read read-only on 2026-11-04; **re-verify the form before sending**).
 
-**Verification at 2026-11-05 12:00 UTC:** offline tests 65 pass / 0 fail / 2 skipped (live opt-in skipped);
-live tests 2 pass; secrets audit PASS (working tree) and PASS (full git history); freeze bundle written
-(`freeze/freeze-2026-11-05T115517263Z.json`, 20 memories · 306 ledger entries); namespace
-`freshness-recall` lists 20 memories, 0 deleted, `must_resync=false`.
+**Verification at 2026-11-05 14:52 UTC (commit `f9832ac4bfdd`, clean tree):** offline tests 65 pass /
+0 fail / 2 skipped (live opt-in skipped); live tests 2 pass; secrets audit PASS (working tree) and PASS
+(full git history); freeze bundle written (`freeze/freeze-2026-11-05T145207337Z.json`, 22 memories ·
+306 ledger entries, live checkpoint 341948733); namespace `freshness-recall` lists **22** memories,
+0 deleted, `must_resync=false`.
+
+> **The freeze bundle is git-ignored.** `freeze/` is a local artifact directory (it contains the full
+> ledger copy and the proof snapshot). If the repo is hosted for judges, **either attach
+> `freeze/freeze-2026-11-05T145207337Z.json` through the form's `additionalDocs` field** (recommended)
+> **or rely on the committed equivalent**, which *is* in the repo:
+> `docs/evidence/proof-snapshot.json` (22 memories, 306 decisions, the `x-api-key` proof) plus
+> `reports/pre-submit.md`. The demo and proof page do **not** require the namespace or the bundle at
+> judging time — `npm run demo:offline`, `npm run proof:offline` and `npm run export` all run from the
+> committed snapshot.
 
 ---
 

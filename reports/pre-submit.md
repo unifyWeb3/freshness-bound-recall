@@ -16,7 +16,7 @@ the task authorised: `fc-policy-SLOW-v2` (§1).
 | namespace `freshness-recall` | **22 memories**, 0 deleted, `must_resync=false` |
 | `npm run audit:secrets` (working tree) | **AUDIT: PASS** |
 | `node scripts/audit-history.mjs` (all git refs) | **AUDIT: PASS** |
-| `npm run freeze` | `freeze/freeze-2026-11-05T115517263Z.json` — 20 memories · 306 ledger entries (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED) |
+| `npm run freeze` | `freeze/freeze-2026-11-05T145207337Z.json` — **22 memories** · 306 ledger entries (72 FRESH · 230 STALE · 4 WITHHELD_UNVERIFIED), commit `f9832ac4bfdd`, clean tree, live checkpoint 341948733 |
 | `npm run credits` | 21 actual GraphQL requests, **21/21 carried `x-api-key`**, plan `free;ratelimit=3;strategy=shared` |
 | Docker path | **UNKNOWN** — no Docker daemon in the build environment (§6) |
 
@@ -378,7 +378,8 @@ per-phase build reports (`reports/build-phase1.md` … `build-phase4.md`) remain
   cryptic `Cannot find module …/test` — `.npmrc` now sets `engine-strict=true`, so an old Node fails at
   install with `ENOTSUP Required: {"node":">=26.13.0"}`.
 * **Artifacts from that pass** (still valid, superseded by the newer bundle): freeze manifests
-  `freeze-2026-11-05T021132543Z.json` and `freeze-2026-11-05T022330578Z.json`; the committed evidence
+  `freeze-2026-11-05T021132543Z.json`, `freeze-2026-11-05T022330578Z.json` and the superseded
+  `freeze-2026-11-05T115517263Z.json`; the committed evidence
   snapshot `docs/evidence/proof-snapshot.json` (regenerated in this phase with 22 memories and the
   `x-api-key` proof); `scripts/export-site.mjs`, `scripts/freeze.mjs`, `scripts/audit-history.mjs`.
 * **Numbers superseded by this phase:** 17 → **22** mainnet memories; 150 → **306** ledger entries;
