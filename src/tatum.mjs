@@ -7,6 +7,9 @@
 //   - every request logs the x-ttm-plan header
 //   - offline mode serves the last cached checkpoint and says so
 
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
+
 export const TATUM_GRAPHQL = "https://sui-mainnet.gateway.tatum.io/graphql";
 export const SUI_MAINNET_CHAIN_ID = "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S";
 
@@ -37,11 +40,12 @@ export class ReadBudget {
 
 const CP_QUERY = `{ checkpoints(last:1){ nodes { sequenceNumber digest timestamp } } }`;
 const OBJ_QUERY = `query($a: SuiAddress!){ object(address:$a){ address version digest } }`;
+const OBJ_TYPE_QUERY = `query($a: SuiAddress!){ object(address:$a){ address version digest asMoveObject{ contents{ type{ repr } } } } }`;
 const CHAIN_QUERY = `{ chainIdentifier }`;
 
 export class TatumClient {
   constructor({ apiKey, fetchImpl = globalThis.fetch, timeoutMs = 30000, cacheTtlMs = 1000,
-    maxAttempts = 4, backoffBaseMs = 500, logger = () => {}, offline = false } = {}) {
+    maxAttempts = 4, backoffBaseMs = 500, logger = () => {}, offline = false, cachePath = null } = {}) {
     this.apiKey = apiKey;
     this.fetchImpl = fetchImpl;
     this.timeoutMs = timeoutMs;
@@ -50,10 +54,45 @@ export class TatumClient {
     this.backoffBaseMs = backoffBaseMs;
     this.logger = logger;
     this.offline = offline;
+    this.cachePath = cachePath;
     this.log = [];               // request log for the proof page
     this.checkpointCache = null; // { at, value }
+    this.objectCache = new Map();
     this.lastPlan = null;
     this.callCount = 0;          // total network calls (credit measurement)
+    if (cachePath) this.loadDiskCache();
+  }
+
+  /** Load the last saved checkpoint from disk (offline proof page / prewarm). */
+  loadDiskCache() {
+    try {
+      const raw = readFileSync(this.cachePath, "utf8");
+      const saved = JSON.parse(raw);
+      if (saved?.checkpoint?.checkpointSeq !== undefined) {
+        this.checkpointCache = { at: Date.now(), value: { ...saved.checkpoint, source: "cache-disk" } };
+      }
+      for (const [addr, obj] of Object.entries(saved?.objects || {})) {
+        this.objectCache.set(addr, obj);
+      }
+      if (saved?.plan) this.lastPlan = saved.plan;
+      this.diskCacheMeta = { saved_at: saved?.saved_at ?? null, chain_id: saved?.chain_id ?? null };
+    } catch { /* no disk cache yet */ }
+  }
+
+  /** Persist the last checkpoint + observed objects for the offline proof page. */
+  saveDiskCache(extra = {}) {
+    if (!this.cachePath) return;
+    try {
+      mkdirSync(dirname(this.cachePath), { recursive: true });
+      writeFileSync(this.cachePath, JSON.stringify({
+        saved_at: new Date().toISOString(),
+        chain_id: SUI_MAINNET_CHAIN_ID,
+        plan: this.lastPlan,
+        checkpoint: this.checkpointCache?.value ?? null,
+        objects: Object.fromEntries(this.objectCache.entries()),
+        ...extra,
+      }, null, 1));
+    } catch { /* the disk cache is a convenience only */ }
   }
 
   planHeader() { return this.lastPlan; }
@@ -150,13 +189,41 @@ export class TatumClient {
     const data = await this.request(OBJ_QUERY, { a: address }, `object(${address.slice(0, 8)}…)`);
     const obj = data?.object;
     if (!obj) throw new TatumError(`object ${address} not found`, "http");
-    return { version: String(obj.version), digest: obj.digest, address: obj.address, readAt: new Date().toISOString(), source: "live" };
+    const value = { version: String(obj.version), digest: obj.digest, address: obj.address, readAt: new Date().toISOString(), source: "live" };
+    this.objectCache.set(address, value);
+    return value;
+  }
+
+  /** Last known pin for an address, from the disk cache (no network). */
+  cachedObject(address) {
+    const v = this.objectCache.get(address);
+    return v ? { ...v, source: "cache-disk" } : null;
   }
 
   /** Chain identifier (proof page only; not part of the per-answer budget). */
   async readChainIdentifier() {
     const data = await this.request(CHAIN_QUERY, {}, "chainIdentifier");
     return data?.chainIdentifier || null;
+  }
+
+  /**
+   * The Move type of an object (e.g. "0x…::account::MemWalAccount").
+   * Used by the credential self-test to prove that MEMWAL_ACCOUNT_ID is the
+   * MemWalAccount object id and not the owner wallet address.
+   */
+  async readObjectType(address, { budget = null } = {}) {
+    if (budget) budget.take("object-type");
+    const data = await this.request(OBJ_TYPE_QUERY, { a: address }, `objectType(${address.slice(0, 8)}…)`);
+    const obj = data?.object;
+    if (!obj) throw new TatumError(`object ${address} not found`, "http");
+    return {
+      address: obj.address,
+      version: String(obj.version),
+      digest: obj.digest,
+      typeRepr: obj.asMoveObject?.contents?.type?.repr ?? null,
+      readAt: new Date().toISOString(),
+      source: "live",
+    };
   }
 
   /** Last cached checkpoint without any network access (offline proof page). */

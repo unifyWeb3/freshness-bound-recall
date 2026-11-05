@@ -7,6 +7,9 @@ import { recordToText } from "./schema.mjs";
 import { policyRecordText } from "./policy.mjs";
 
 const RECALL_LIMIT = 10;
+// Only a claim is answerable. Observations are evidence, policy records are the
+// learned window, and a superseded memory is history.
+const ANSWERABLE_STATES = new Set(["live", "adversarial"]);
 
 function short(addr) { return String(addr || "").slice(0, 10) + "…"; }
 
@@ -58,10 +61,17 @@ export async function answer(query, {
   for (const hit of recalled.results || []) {
     const parsed = store.parse ? store.parse(hit.text) : null;
     const rec = parsed?.record || parsed;
-    if (rec && rec.predicate !== "policy_window" && rec["proof.checkpoint_seq"] !== undefined) {
+    if (rec && ANSWERABLE_STATES.has(rec.state) && rec["proof.checkpoint_seq"] !== undefined) {
       candidates.push({ hit, record: rec });
     }
   }
+  // Deterministic choice: a live claim first, then the most recently written.
+  candidates.sort((a, b) => {
+    const liveA = a.record.state === "live" ? 0 : 1;
+    const liveB = b.record.state === "live" ? 0 : 1;
+    if (liveA !== liveB) return liveA - liveB;
+    return (Date.parse(b.record["proof.read_at"]) || 0) - (Date.parse(a.record["proof.read_at"]) || 0);
+  });
 
   if (!candidates.length) {
     const out = {
