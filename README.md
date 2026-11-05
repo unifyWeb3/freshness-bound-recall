@@ -172,7 +172,7 @@ data/         measurement evidence (committed); ledger/cache/mirror (git-ignored
 | Observed mainnet memories | namespace `freshness-recall` (15) | ids in `reports/build-phase2.md` §2 |
 | Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥90 entries |
 | Learned-policy memory | `fc-policy-FAST-v1` blob `19ZE9y-zWt1…` | seeded live |
-| Report series | `reports/build-phase1.md`, `-phase2.md`, `-phase3.md` | phase-reports committed |
+| Report series | `reports/build-phase1.md`, `-phase2.md`, `-phase3.md` | phase reports committed (phase 4 pending) |
 | Blog post | `docs/blog.md` | see §10 of submission |
 | Video | `docs/video-script.md` (user to record) | script provided, no upload by agent |
 | Submission text | `docs/submission.md` | fields mapped to B2 form |
