@@ -110,8 +110,8 @@ question
   **re-run for the pre-submission verification**, writing **2 more** (`DL6hLB…`, `q1vX8syn…`).
 * **13 observer-authored mainnet memories** in namespace `freshness-recall` (7 observations,
   4 corrections, 1 learned policy, 1 adversarial not-stale) + the 4 test seeds = **17**.
-* Decision ledger: **≥146 checkpoint-stamped stale/fresh decisions** at freeze
-  `freeze-2026-11-05T021132543Z` (59 FRESH · 83 STALE · 4 WITHHELD_UNVERIFIED). It grows every
+* Decision ledger: **≥150 checkpoint-stamped stale/fresh decisions** at freeze
+  `freeze-2026-11-05T022330578Z` (59 FRESH · 87 STALE · 4 WITHHELD_UNVERIFIED). It grows every
   minute the observer runs (`--budget=0`: it *reads and logs* only, never writes).
 * Environment: Node v26.13.0 (SDK floor documented in the stage2 report), npm 11.20.0, plan header
   `free;ratelimit=3;strategy=shared`.
@@ -203,7 +203,7 @@ data/         measurement evidence (committed); ledger/cache/mirror (git-ignored
 | Proof page | `scripts/proof-page.mjs` (`npm run proof[:offline]`) | live & offline verified |
 | Static export | `npm run export` → `./site` | verified (labelled snapshot, env-scan clean) |
 | Observed mainnet memories | namespace `freshness-recall` (17) | ids in `reports/build-phase2.md` §2 + phase 4 |
-| Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥146 entries |
+| Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥150 entries |
 | Learned-policy memory | `fc-policy-FAST-v1` blob `19ZE9y-zWt1…` | persisted live |
 | Judge 60 s | `docs/judge-60s.md` | fresh-clone verified |
 | Videos + submission | `docs/video-script.md`, `docs/submission.md` | user records/sends |
