@@ -1,0 +1,185 @@
+{
+  "note": "Recorded gate events for offline replay. Shape matches the decision ledger (src/ledger.mjs). The FAST subject is the Sui mainnet Clock object (0x6), the SLOW subject is the MemWal mainnet AccountRegistry (0x8bf82c...). Checkpoint deltas are synthetic but the subjects, versions and change rates are taken from data/claim-class-measurement.json (2026-11-05).",
+  "events": [
+    {
+      "at": "2026-11-05T00:10:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000060, "checkpoint_digest": "cpDigestE1", "read_at": "2026-11-05T00:10:00.000Z" },
+      "pin": { "version": "1018746136", "digest": "clockDigestV1", "read_at": "2026-11-05T00:10:00.000Z" },
+      "verdict": "STALE",
+      "signal": "FALSE-STALE"
+    },
+    {
+      "at": "2026-11-05T00:11:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000070, "checkpoint_digest": "cpDigestE2", "read_at": "2026-11-05T00:11:00.000Z" },
+      "pin": { "version": "1018746136", "digest": "clockDigestV1", "read_at": "2026-11-05T00:11:00.000Z" },
+      "verdict": "STALE",
+      "signal": "FALSE-STALE"
+    },
+    {
+      "at": "2026-11-05T00:12:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000080, "checkpoint_digest": "cpDigestE3", "read_at": "2026-11-05T00:12:00.000Z" },
+      "pin": { "version": "1018746136", "digest": "clockDigestV1", "read_at": "2026-11-05T00:12:00.000Z" },
+      "verdict": "STALE",
+      "signal": "FALSE-STALE"
+    },
+    {
+      "at": "2026-11-05T00:13:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000090, "checkpoint_digest": "cpDigestE4", "read_at": "2026-11-05T00:13:00.000Z" },
+      "pin": { "version": "1018746136", "digest": "clockDigestV1", "read_at": "2026-11-05T00:13:00.000Z" },
+      "verdict": "FRESH",
+      "signal": "CONSISTENT"
+    },
+    {
+      "at": "2026-11-05T00:14:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000095, "checkpoint_digest": "cpDigestE5", "read_at": "2026-11-05T00:14:00.000Z" },
+      "pin": { "version": "1018749900", "digest": "clockDigestV2", "read_at": "2026-11-05T00:14:00.000Z" },
+      "verdict": "STALE",
+      "signal": "MISSED-CHANGE"
+    },
+    {
+      "at": "2026-11-05T00:15:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000095, "checkpoint_digest": "cpDigestE6", "read_at": "2026-11-05T00:15:00.000Z" },
+      "pin": { "version": "1018749900", "digest": "clockDigestV2", "read_at": "2026-11-05T00:15:00.000Z" },
+      "verdict": "STALE",
+      "signal": "MISSED-CHANGE"
+    },
+    {
+      "at": "2026-11-05T00:16:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000095, "checkpoint_digest": "cpDigestE7", "read_at": "2026-11-05T00:16:00.000Z" },
+      "pin": { "version": "1018749900", "digest": "clockDigestV2", "read_at": "2026-11-05T00:16:00.000Z" },
+      "verdict": "STALE",
+      "signal": "MISSED-CHANGE"
+    },
+    {
+      "at": "2026-11-05T00:17:00.000Z",
+      "query": "Is the Sui clock object still at the recorded version?",
+      "memory": {
+        "claim": "fc-fast-clock-0001",
+        "class": "FAST",
+        "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1018746136",
+          "object_digest": "clockDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000090, "checkpoint_digest": "cpDigestE8", "read_at": "2026-11-05T00:17:00.000Z" },
+      "pin": { "version": "1018746136", "digest": "clockDigestV1", "read_at": "2026-11-05T00:17:00.000Z" },
+      "verdict": "STALE",
+      "signal": "FALSE-STALE"
+    },
+    {
+      "at": "2026-11-05T00:20:00.000Z",
+      "query": "Is the MemWal AccountRegistry still at the recorded version?",
+      "memory": {
+        "claim": "fc-slow-registry-0001",
+        "class": "SLOW",
+        "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
+        "predicate": "object_version",
+        "proof_at_write": {
+          "checkpoint_seq": 1000000,
+          "object_version": "1062994378",
+          "object_digest": "registryDigestV1",
+          "read_at": "2026-11-05T00:00:00.000Z"
+        }
+      },
+      "live": { "checkpoint_seq": 1000090, "checkpoint_digest": "cpDigestE9", "read_at": "2026-11-05T00:20:00.000Z" },
+      "pin": { "version": "1062994378", "digest": "registryDigestV1", "read_at": "2026-11-05T00:20:00.000Z" },
+      "verdict": "FRESH",
+      "signal": "CONSISTENT"
+    }
+  ]
+}
