@@ -14,8 +14,12 @@ import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
 
 const args = process.argv.slice(2);
 const getArg = (n, d = null) => {
-  const a = args.find((x) => x.startsWith(`--${n}=`));
-  return a ? a.split("=").slice(1).join("=") : d;
+  const flag = `--${n}`;
+  const equals = args.find((x) => x.startsWith(`${flag}=`));
+  if (equals) return equals.slice(flag.length + 1);
+  const index = args.indexOf(flag);
+  const next = index >= 0 ? args[index + 1] : undefined;
+  return next !== undefined && !next.startsWith("--") ? next : d;
 };
 const has = (n) => args.includes(`--${n}`);
 
