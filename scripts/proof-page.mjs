@@ -149,25 +149,34 @@ export function summarize(snapshot) {
   const stale = count("STALE");
   const withheld = count("WITHHELD_UNVERIFIED");
   const total = decisions.length;
+  const changed = decisions.filter((e) => e.verdict === "STALE" && (
+    e.signal === "MISSED-CHANGE" ||
+    String(e.reason || "").startsWith("subject changed") ||
+    (e.pin && e.memory?.proof_at_write && (
+      String(e.pin.version) !== String(e.memory.proof_at_write.object_version) ||
+      String(e.pin.digest) !== String(e.memory.proof_at_write.object_digest)
+    ))
+  )).length;
+  const stillTrueOld = stale - changed;
 
   const ablation = {
     rows: [
       {
         name: "memory-off (every answer read live)",
         from_memory: 0, from_live: total, withheld: 0,
-        reads: total, stale_answers: 0,
+        reads: total, changed_answers: 0, still_true_old_answers: 0, unverified_answers: 0,
         note: "1 Tatum read per answer, no stored context used",
       },
       {
         name: "memory-on, no gate",
         from_memory: total, from_live: 0, withheld: 0,
-        reads: 0, stale_answers: stale + withheld,
-        note: "0 reads, but every stale memory would be answered",
+        reads: 0, changed_answers: changed, still_true_old_answers: stillTrueOld, unverified_answers: withheld,
+        note: "0 reads; changed, old, and unverified memories would all answer",
       },
       {
         name: "memory-on, gate + learned policy",
         from_memory: fresh, from_live: stale + withheld, withheld,
-        reads: total * 2, stale_answers: 0,
+        reads: total * 2, changed_answers: 0, still_true_old_answers: 0, unverified_answers: 0,
         note: "2 reads per answer (checkpoint + pin)",
       },
     ],
@@ -307,7 +316,9 @@ export function page(snapshot) {
       <td>${r.from_live}</td>
       <td>${r.withheld}</td>
       <td>${r.reads}</td>
-      <td class="${r.stale_answers > 0 ? "bad" : "ok"}"><strong>${r.stale_answers}</strong></td>
+      <td class="${r.changed_answers > 0 ? "bad" : "ok"}"><strong>${r.changed_answers}</strong></td>
+      <td>${r.still_true_old_answers}</td>
+      <td>${r.unverified_answers}</td>
       <td class="muted">${esc(r.note)}</td>
     </tr>`).join("");
 
@@ -385,10 +396,10 @@ export function page(snapshot) {
 
   <h2>memory-off vs memory-on (over the recorded decisions)</h2>
   <div class="scroll"><table>
-    <thead><tr><th>configuration</th><th>from memory</th><th>from live</th><th>withheld</th><th>Tatum reads</th><th>stale answers</th><th>note</th></tr></thead>
+    <thead><tr><th>configuration</th><th>from memory</th><th>from live</th><th>withheld</th><th>Tatum reads</th><th>changed answers</th><th>still-true old</th><th>unverified</th><th>note</th></tr></thead>
     <tbody>${ablationRows}</tbody>
   </table></div>
-  <p class="muted">Reads are counted per decision: memory-off reads the subject once; the gate reads one checkpoint plus one subject pin. Stale answers are decisions where the gate (or the live read) proved the memory wrong.</p>
+  <p class="muted">Reads are counted per decision: memory-off reads the subject once; the gate reads one checkpoint plus one subject pin. Changed memories are false now; still-true old memories only exceeded a freshness bound; unverified memories lack a complete proof.</p>
 
   <h2>lineage (supersedes)</h2>
   <div class="card">${lineageSvg(snapshot.memories || [])}</div>

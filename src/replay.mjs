@@ -32,21 +32,22 @@ function pinOf(ev) {
  * Replay events and report, for one target query, how the verdict evolves.
  * @param {Array} events  ledger entries (or a fixture in the same shape)
  */
-export function replay(events, { query = null, className = "FAST", minSamples = 3, now = Date.now() } = {}) {
+export function replay(events, { query = null, className = "FAST", minSamples = 3 } = {}) {
   let state = newState(className);
   const timeline = [];
   const policyChanges = [];
 
   for (const ev of events) {
     if (query && ev.query !== query) continue;
+    const eventNow = Date.parse(ev.at);
     const record = recordOf(ev, className);
     const decision = evaluateGate({
       record, live: liveOf(ev), pin: pinOf(ev),
       policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
-      now,
+      now: eventNow,
     });
     const before = state.windowCheckpoints;
-    const res = applySignal(state, decision.signal, { minSamples, now });
+    const res = applySignal(state, decision.signal, { minSamples, now: eventNow });
     state = res.state;
     timeline.push({
       at: ev.at, query: ev.query, claim: record.claim,
@@ -64,7 +65,8 @@ export function replay(events, { query = null, className = "FAST", minSamples = 
     const last = matching.at(-1);
     const d = evaluateGate({
       record: recordOf(last, className), live: liveOf(last), pin: pinOf(last),
-      policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds }, now,
+      policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
+      now: Date.parse(last.at),
     });
     finalVerdict = {
       verdict: d.verdict, reason: d.reason, signal: d.signal,
@@ -86,7 +88,7 @@ export function replay(events, { query = null, className = "FAST", minSamples = 
  *                              re-read from the chain (2 Tatum reads per answer:
  *                              one checkpoint + one subject pin)
  */
-export function ablation(events, { className = "FAST", minSamples = 3, now = Date.now() } = {}) {
+export function ablation(events, { className = "FAST", minSamples = 3 } = {}) {
   const rows = [];
   const queries = [...new Set(events.map((e) => e.query))].filter(Boolean);
 
@@ -95,10 +97,11 @@ export function ablation(events, { className = "FAST", minSamples = 3, now = Dat
     let state = newState(className);
 
     let offAnswersLive = 0, offReads = 0;
-    let onAnswers = 0, onReads = 0, onStale = 0;
-    let gatedFromMemory = 0, gatedWithheld = 0, gatedReads = 0, gatedStale = 0;
+    let onAnswers = 0, onReads = 0, onChanged = 0, onStillTrueOld = 0, onUnverified = 0;
+    let gatedFromMemory = 0, gatedWithheld = 0, gatedReads = 0;
 
     for (const ev of evs) {
+      const eventNow = Date.parse(ev.at);
       const record = recordOf(ev, className);
       const live = liveOf(ev);
       const pin = pinOf(ev);
@@ -109,20 +112,23 @@ export function ablation(events, { className = "FAST", minSamples = 3, now = Dat
 
       const d = evaluateGate({
         record, live, pin,
-        policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds }, now,
+        policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
+        now: eventNow,
       });
 
       // memory-on without the gate: the memory answers, even when it is wrong
       onAnswers += 1;
       onReads += 0;
-      if (d.verdict !== VERDICT.FRESH) onStale += 1;
+      if (d.verdict === VERDICT.WITHHELD_UNVERIFIED) onUnverified += 1;
+      else if (d.verdict === VERDICT.STALE && d.signals.pin.changed) onChanged += 1;
+      else if (d.verdict === VERDICT.STALE) onStillTrueOld += 1;
 
       // memory-on with the gate + learned policy
-      const res = applySignal(state, d.signal, { minSamples, now });
+      const res = applySignal(state, d.signal, { minSamples, now: eventNow });
       state = res.state;
       gatedReads += 2; // checkpoint + subject pin
       if (d.verdict === VERDICT.FRESH) gatedFromMemory += 1;
-      else { gatedWithheld += 1; gatedStale += 0; }
+      else gatedWithheld += 1;
     }
 
     rows.push({
@@ -130,15 +136,16 @@ export function ablation(events, { className = "FAST", minSamples = 3, now = Dat
       events: evs.length,
       "memory-off": {
         answers_from_memory: 0, answers_from_live: offAnswersLive, withheld: 0,
-        tatum_reads: offReads, stale_answers: 0,
+        tatum_reads: offReads, changed_answers: 0, still_true_old_answers: 0, unverified_answers: 0,
       },
       "memory-on (no gate)": {
         answers_from_memory: onAnswers, answers_from_live: 0, withheld: 0,
-        tatum_reads: onReads, stale_answers: onStale,
+        tatum_reads: onReads, changed_answers: onChanged,
+        still_true_old_answers: onStillTrueOld, unverified_answers: onUnverified,
       },
       "memory-on (gate + learned policy)": {
         answers_from_memory: gatedFromMemory, answers_from_live: gatedWithheld, withheld: gatedWithheld,
-        tatum_reads: gatedReads, stale_answers: gatedStale,
+        tatum_reads: gatedReads, changed_answers: 0, still_true_old_answers: 0, unverified_answers: 0,
       },
     });
   }

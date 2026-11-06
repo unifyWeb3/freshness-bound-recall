@@ -1,9 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { replay, ablation, readEvents } from "../src/replay.mjs";
 import { evaluateGate, VERDICT, SIGNAL } from "../src/gate.mjs";
+import { page, summarize } from "../scripts/proof-page.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const events = readEvents(resolve(ROOT, "fixtures/event-log.json"));
@@ -75,31 +77,64 @@ test("replay: the SLOW class subject stays fresh under its wider window", () => 
   assert.equal(r.policyChanges.length, 0);
 });
 
+test("replay evaluates every decision at that event's timestamp", () => {
+  const r = replay(events, {
+    query: FAST_Q,
+    className: "FAST",
+    now: Date.parse("2099-01-01T00:00:00.000Z"),
+  });
+  assert.equal(r.timeline[3].verdict, VERDICT.FRESH,
+    "a caller's current time must not make a historical event fail the wall-clock backstop");
+});
+
 test("ablation: memory-off never answers from a stale memory", () => {
   const rows = ablation(events, { className: "FAST" });
   const fast = rows.find((r) => r.query === FAST_Q);
   const off = fast["memory-off"];
   assert.equal(off.answers_from_memory, 0);
   assert.equal(off.answers_from_live, fast.events);
-  assert.equal(off.stale_answers, 0);
+  assert.equal(off.changed_answers, 0);
+  assert.equal(off.still_true_old_answers, 0);
+  assert.equal(off.unverified_answers, 0);
   assert.equal(off.tatum_reads, fast.events, "memory-off reads the subject once per answer");
 });
 
-test("ablation: memory-on without the gate answers stale memories", () => {
+test("ablation: memory-on without the gate separates changed, still-true old, and unverified answers", () => {
   const rows = ablation(events, { className: "FAST" });
   const fast = rows.find((r) => r.query === FAST_Q);
   const on = fast["memory-on (no gate)"];
   assert.equal(on.answers_from_memory, fast.events);
   assert.equal(on.tatum_reads, 0, "no verification reads without the gate");
-  assert.ok(on.stale_answers > 0, "the gate is what prevents these wrong answers");
+  assert.ok(on.changed_answers > 0, "the gate is what prevents changed memories from answering");
+  assert.ok(on.still_true_old_answers > 0, "old-but-still-true memories are reported separately");
+  assert.equal(on.unverified_answers, 0);
+  assert.equal("stale_answers" in on, false, "the ambiguous combined count is removed");
 });
 
 test("ablation: memory-on with the gate answers only what it proved fresh", () => {
   const rows = ablation(events, { className: "FAST" });
   const fast = rows.find((r) => r.query === FAST_Q);
   const gated = fast["memory-on (gate + learned policy)"];
-  assert.equal(gated.stale_answers, 0);
+  assert.equal(gated.changed_answers, 0);
+  assert.equal(gated.still_true_old_answers, 0);
+  assert.equal(gated.unverified_answers, 0);
   assert.equal(gated.answers_from_memory + gated.withheld, fast.events);
   assert.equal(gated.tatum_reads, fast.events * 2, "one checkpoint + one pin per answer");
   assert.ok(gated.withheld > 0, "the gate must withhold at least one memory");
+});
+
+test("proof-page ablation reports the recorded 214 changed / 16 still-true old / 4 unverified split", () => {
+  const snapshot = JSON.parse(readFileSync(resolve(ROOT, "docs/evidence/proof-snapshot.json"), "utf8"));
+  const summary = summarize(snapshot);
+  const noGate = summary.ablation.rows.find((r) => r.name === "memory-on, no gate");
+  assert.equal(noGate.changed_answers, 214);
+  assert.equal(noGate.still_true_old_answers, 16);
+  assert.equal(noGate.unverified_answers, 4);
+  assert.equal("stale_answers" in noGate, false);
+
+  const html = page(snapshot);
+  assert.match(html, /changed answers/);
+  assert.match(html, /still-true old/);
+  assert.match(html, /unverified/);
+  assert.doesNotMatch(html, /<th>stale answers<\/th>/);
 });
