@@ -5,13 +5,47 @@
 import { evaluateGate, VERDICT, SIGNAL } from "./gate.mjs";
 import { recordToText } from "./schema.mjs";
 import { policyRecordText } from "./policy.mjs";
+import { SUBJECTS } from "./subjects.mjs";
+import { SUI_MAINNET_CHAIN_ID } from "./tatum.mjs";
 
 const RECALL_LIMIT = 10;
 // Only a claim is answerable. Observations are evidence, policy records are the
 // learned window, and a superseded memory is history.
 const ANSWERABLE_STATES = new Set(["live", "adversarial"]);
+const DOMAIN_STOP_WORDS = new Set([
+  "a", "an", "and", "at", "claim", "checkpoint", "fresh", "is", "mainnet", "memory",
+  "object", "of", "on", "recorded", "shared", "still", "sui", "the", "version", "what",
+]);
+const REQUIRED_PROOF_FIELDS = [
+  "proof.chain_id", "proof.checkpoint_seq", "proof.checkpoint_digest",
+  "proof.object_version", "proof.object_digest", "proof.read_at",
+];
 
 function short(addr) { return String(addr || "").slice(0, 10) + "…"; }
+
+function words(value) {
+  return new Set((String(value || "").toLowerCase().match(/[a-z0-9]+/g) || [])
+    .filter((word) => word.length >= 3 && !DOMAIN_STOP_WORDS.has(word)));
+}
+
+function requestedSubjects(query) {
+  const normalized = String(query || "").toLowerCase();
+  const queryWords = words(query);
+  return new Set(SUBJECTS.filter((subject) => {
+    if (normalized.includes(subject.address.toLowerCase())) return true;
+    const aliases = words(`${subject.id} ${subject.class} ${subject.label}`);
+    return [...aliases].some((word) => queryWords.has(word));
+  }).map((subject) => subject.address.toLowerCase()));
+}
+
+function isValidCandidate(record, now) {
+  if (!record || !ANSWERABLE_STATES.has(record.state)) return false;
+  if (REQUIRED_PROOF_FIELDS.some((field) => record[field] === undefined || record[field] === null || record[field] === "")) return false;
+  if (record["proof.chain_id"] !== SUI_MAINNET_CHAIN_ID) return false;
+  const checkpoint = Number(record["proof.checkpoint_seq"]);
+  const readAt = Date.parse(record["proof.read_at"]);
+  return Number.isInteger(checkpoint) && checkpoint >= 0 && Number.isFinite(readAt) && readAt <= now;
+}
 
 export function renderFreshAnswer({ record, decision }) {
   const delta = decision.signals.window.delta;
@@ -56,21 +90,24 @@ export async function answer(query, {
   await policy.load();
 
   // 2. recall
-  const recalled = await store.recall({ query, limit: RECALL_LIMIT, sort: "recent" });
+  const recalled = await store.recall({ query, limit: RECALL_LIMIT });
+  const subjectFilter = requestedSubjects(query);
   const candidates = [];
-  for (const hit of recalled.results || []) {
+  for (const [index, hit] of (recalled.results || []).entries()) {
     const parsed = store.parse ? store.parse(hit.text) : null;
     const rec = parsed?.record || parsed;
-    if (rec && ANSWERABLE_STATES.has(rec.state) && rec["proof.checkpoint_seq"] !== undefined) {
-      candidates.push({ hit, record: rec });
-    }
+    if (!isValidCandidate(rec, now)) continue;
+    if (subjectFilter.size && !subjectFilter.has(String(rec.subject).toLowerCase())) continue;
+    candidates.push({ hit, record: rec, index });
   }
-  // Deterministic choice: a live claim first, then the most recently written.
+  // Preserve semantic relevance: the closest valid hit wins. Recall order is
+  // the stable fallback when a backend omits distance or returns a tie.
   candidates.sort((a, b) => {
-    const liveA = a.record.state === "live" ? 0 : 1;
-    const liveB = b.record.state === "live" ? 0 : 1;
-    if (liveA !== liveB) return liveA - liveB;
-    return (Date.parse(b.record["proof.read_at"]) || 0) - (Date.parse(a.record["proof.read_at"]) || 0);
+    const distanceA = Number(a.hit.distance);
+    const distanceB = Number(b.hit.distance);
+    const rankA = Number.isFinite(distanceA) ? distanceA : Number.POSITIVE_INFINITY;
+    const rankB = Number.isFinite(distanceB) ? distanceB : Number.POSITIVE_INFINITY;
+    return rankA - rankB || a.index - b.index;
   });
 
   if (!candidates.length) {

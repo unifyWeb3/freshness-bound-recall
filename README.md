@@ -330,7 +330,8 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
    any tool available here. Local checkpoint-cache age is separately covered: a disk-loaded checkpoint
    keeps its saved timestamp and cannot become “fresh” merely because the process just loaded it.
 5. No real user has validated the persona. It is a hypothesis, and the product is deliberately
-   domain-agnostic.
+   domain-agnostic. Recall selection now preserves semantic distance and constrains known Clock vs
+   AccountRegistry queries to the matching subject, but that engineering check is not user validation.
 
 * **Memory has no delete/update** — revision is by `supersedes` lineage and `epoch` semantics. Judges
   can recover older generations by blob id, which is by design.

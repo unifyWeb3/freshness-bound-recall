@@ -11,6 +11,7 @@ import { recordToText } from "../src/schema.mjs";
 import { FakeTatum } from "./helpers/fake-tatum.mjs";
 
 const SUBJECT = "0x0000000000000000000000000000000000000000000000000000000000000006";
+const REGISTRY = "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f";
 const NOW = Date.parse("2026-11-05T01:00:00.000Z");
 
 function claim({ claim = "fc-fast-clock-0001", className = "FAST", subject = SUBJECT,
@@ -179,4 +180,54 @@ test("the decision is written to the ledger with its checkpoint stamps", async (
   assert.equal(e.live.checkpoint_seq, 1000010);
   assert.equal(e.memory.proof_at_write.checkpoint_seq, 1000000);
   assert.equal(e.verdict, "FRESH");
+});
+
+test("answer keeps semantic ranking and chooses the closest valid hit in the requested subject domain", async () => {
+  const target = claim({
+    claim: "fc-fast-clock-target",
+    version: "v1",
+    digest: "d1",
+    readAt: "2026-11-05T00:50:00.000Z",
+  });
+  const newerSameSubject = claim({
+    claim: "fc-fast-clock-newer-but-farther",
+    version: "v2",
+    digest: "d2",
+    readAt: "2026-11-05T00:59:00.000Z",
+  });
+  const unrelatedNewest = claim({
+    claim: "fc-slow-memwal-registry-newest",
+    className: "SLOW",
+    subject: REGISTRY,
+    version: "r1",
+    digest: "rd1",
+    readAt: "2026-11-05T00:59:30.000Z",
+  });
+
+  const store = new MockStore({ namespace: "freshness-recall" });
+  store.recall = async ({ query }) => query.startsWith("FR-v1 policy")
+    ? { results: [], total: 0 }
+    : {
+      results: [
+        { blob_id: "target", text: target, distance: 0.1, created_at: "2026-11-05T00:50:00.000Z" },
+        { blob_id: "same-subject-farther", text: newerSameSubject, distance: 0.3, created_at: "2026-11-05T00:59:00.000Z" },
+        { blob_id: "unrelated", text: unrelatedNewest, distance: 0.01, created_at: "2026-11-05T00:59:30.000Z" },
+      ],
+      total: 3,
+    };
+  const tatum = new FakeTatum({
+    checkpoint: { sequenceNumber: 1000010, digest: "cpLive", timestamp: "2026-11-05T01:00:00.000Z" },
+    objects: {
+      [SUBJECT]: { version: "v1", digest: "d1" },
+      [REGISTRY]: { version: "r1", digest: "rd1" },
+    },
+  });
+  const policy = new PolicyEngine({ store });
+  const ledger = new Ledger(join(mkdtempSync(join(tmpdir(), "fr-ledger-")), "ledger.jsonl"));
+
+  const out = await answer("clock version", { store, tatum, policy, ledger, now: NOW, writeCorrections: false });
+  assert.equal(out.memory.claim, "fc-fast-clock-target");
+  assert.equal(out.memory.blob_id, "target");
+  assert.equal(out.memory.distance, 0.1);
+  assert.equal(out.verdict, "FRESH");
 });
