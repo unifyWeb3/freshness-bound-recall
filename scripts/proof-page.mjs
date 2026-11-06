@@ -19,6 +19,7 @@ import { SUBJECTS } from "../src/subjects.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
 import { Ledger } from "../src/ledger.mjs";
 import { selectRecordedRevisionLifecycle } from "../src/recorded-lifecycle.mjs";
+import { comparePolicyWindows, recordedPolicyEffect } from "../src/policy-effect.mjs";
 
 const args = process.argv.slice(2);
 const has = (n) => args.includes(`--${n}`);
@@ -271,6 +272,15 @@ export function page(snapshot) {
   const lifecycle = selectRecordedRevisionLifecycle(snapshot);
   const persistenceDelay = Date.parse(lifecycle.correction.created_at) - Date.parse(lifecycle.correction.recorded_at);
   const firstLaterCheckDelay = Date.parse(lifecycle.laterEvent.at) - Date.parse(lifecycle.correction.created_at);
+  const policyEffect = recordedPolicyEffect(snapshot);
+  const storedSlowPolicy = (snapshot.memories || []).find((memory) => (
+    memory.predicate === "policy_window" &&
+    memory.class === "SLOW" &&
+    Number(memory.policy?.window) === 20000
+  ));
+  if (!storedSlowPolicy?.blob_id) throw new Error("recorded SLOW policy memory is missing");
+  const policyComparison = comparePolicyWindows(policyEffect, { newWindow: Number(storedSlowPolicy.policy.window) });
+  const policyDelta = Number(policyEffect.event.live.checkpoint_seq) - Number(policyEffect.record["proof.checkpoint_seq"]);
   const live = snapshot.mode === "live";
   const cp = snapshot.checkpoint || {};
   const cpReadAt = cp.read_at ?? cp.readAt;
@@ -452,6 +462,20 @@ export function page(snapshot) {
   .safety-line { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
   .safety-line span { padding: 5px 8px; border: 1px solid var(--hairline); border-radius: 5px; color: var(--secondary); font: 12px/1.4 ui-monospace, monospace; }
   .lifecycle-caveat { margin: 16px 0 0; padding: 12px 14px; border-left: 2px solid var(--amber); background: var(--bg); color: var(--secondary); font-size: 12px; }
+  .learning-proof { min-width: 0; padding: 24px; border: 1px solid var(--hairline-strong); border-radius: 16px; background: var(--card); }
+  .policy-source { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .policy-source-item { min-width: 0; padding: 16px; border: 1px solid var(--hairline); border-radius: 10px; background: var(--bg); }
+  .policy-source-item span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; }
+  .policy-source-item strong { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 500; }
+  .policy-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .policy-case { min-width: 0; padding: 20px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--raised); }
+  .policy-case-learned { border-color: rgba(76,195,138,.32); }
+  .policy-window { display: block; margin-bottom: 12px; color: var(--muted); font: 12px/1.5 ui-monospace, monospace; }
+  .policy-verdict { display: block; margin-bottom: 8px; font-size: 24px; font-weight: 500; }
+  .policy-case-learned .policy-verdict { color: var(--green); }
+  .policy-reason { margin: 0; color: var(--secondary); font-size: 13px; }
+  .policy-disclosure { margin: 20px 0 0; color: var(--secondary); font-size: 13px; }
+  .policy-disclosure code { color: var(--secondary); }
   .recorded-decision { scroll-margin-top: 24px; }
   .evidence-panel { min-width: 0; padding: 24px; border: 1px solid var(--hairline-strong); border-radius: 16px; background: var(--card); }
   .checkpoint-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; min-width: 0; margin-bottom: 24px; }
@@ -542,6 +566,7 @@ export function page(snapshot) {
     .hero-actions { align-items: stretch; flex-direction: column; }
     .action { width: 100%; }
     .lineage-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .policy-source, .policy-compare { grid-template-columns: minmax(0, 1fr); }
     .evidence-panel { padding: 16px; border-radius: 12px; }
     .checkpoint-rail { gap: 4px; }
     .rail-stop { font-size: 9px; }
@@ -653,6 +678,30 @@ npm run recall:checked -- --sample sui-clock-revision-lifecycle</code></pre>
       <div class="capture-item"><span class="capture-label">Evidence captured</span><span class="capture-value">${esc(fmtTime(snapshot.generated_at))}</span></div>
       <div class="capture-item"><span class="capture-label">Static page exported</span><span class="capture-value">${snapshot.exported_at ? esc(fmtTime(snapshot.exported_at)) : "Not exported"}</span></div>
       <div class="capture-item"><span class="capture-label">Snapshot age</span><span class="capture-value">${esc(evidenceAge)}</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="learning-loop" aria-labelledby="learning-loop-title">
+    <div class="section-heading"><div><p class="eyebrow">Recorded learning loop</p><h2 id="learning-loop-title">A policy memory changed the verdict</h2><p class="section-copy">The same recorded inputs—Mainnet observation, checkpoint, subject pin, and evaluation time—are replayed twice. Only the freshness window changes, from the built-in default to the policy read from Walrus Memory.</p></div></div>
+    <div class="learning-proof">
+      <div class="policy-source">
+        <div class="policy-source-item"><span>Walrus policy memory</span><strong><code>${esc(storedSlowPolicy.claim)}</code> · learned step 10,000 → 20,000</strong><code>${esc(storedSlowPolicy.blob_id)}</code></div>
+        <div class="policy-source-item"><span>Observation under test</span><strong><code>${esc(policyEffect.memory.claim)}</code> · checkpoint ${esc(policyEffect.record["proof.checkpoint_seq"])}</strong><code>${esc(policyEffect.memory.blob_id)}</code></div>
+      </div>
+      <div class="policy-compare" aria-label="Same recorded decision before and after the stored policy">
+        <article class="policy-case">
+          <span class="policy-window">Without stored policy · default 5,000 checkpoints</span>
+          <strong class="policy-verdict">${esc(policyComparison.oldPolicy.verdict)} · ${esc(policyComparison.oldPolicy.signal)}</strong>
+          <p class="policy-reason">${esc(policyComparison.oldPolicy.reason)}</p>
+        </article>
+        <article class="policy-case policy-case-learned">
+          <span class="policy-window">With Walrus policy memory · 20,000 checkpoints</span>
+          <strong class="policy-verdict">${esc(policyComparison.newPolicy.verdict)} · ${esc(policyComparison.newPolicy.signal)}</strong>
+          <p class="policy-reason">${esc(policyComparison.newPolicy.reason)}</p>
+        </article>
+      </div>
+      <p class="policy-disclosure">Identical inputs: anchor checkpoint <code>${esc(policyEffect.record["proof.checkpoint_seq"])}</code>, decision checkpoint <code>${esc(policyEffect.event.live.checkpoint_seq)}</code>, delta <code>${esc(policyDelta.toLocaleString("en-US"))}</code>, and an unchanged subject pin. The policy was learned at <code>${esc(fmtTime(policyEffect.event.at))}</code> and written to Walrus later at <code>${esc(fmtTime(storedSlowPolicy.recorded_at))}</code>; it is not backdated.</p>
+      <div class="safety-line" aria-label="Learning replay safety"><span>recorded Mainnet replay</span><span>offline</span><span>read-only</span><span>network off</span><span>Writes: none</span></div>
     </div>
   </section>
 

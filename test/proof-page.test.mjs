@@ -83,6 +83,30 @@ test("homepage exposes the exact credential-free 60-second lifecycle", () => {
   assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|new WebSocket/);
 });
 
+test("homepage shows a Walrus policy memory changing the same recorded verdict", () => {
+  const html = staticPage();
+  const learning = capture(html, /<section(?=[^>]*\bid="learning-loop")[^>]*>([\s\S]*?)<\/section>/,
+    "the recorded learning-loop section");
+
+  assert.match(learning, /Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4/,
+    "the persisted SLOW policy blob must be named");
+  assert.match(learning, /Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g/,
+    "the observation replayed under both policies must be named");
+  assert.match(learning, /same recorded inputs/i);
+  assert.match(learning, /18[,.]?155/);
+  assert.match(learning, /5[,.]?000[\s\S]*STALE[\s\S]*FALSE-STALE/);
+  assert.match(learning, /20[,.]?000[\s\S]*FRESH[\s\S]*CONSISTENT/);
+  assert.match(learning, /10[,.]?000\s*(?:→|-&gt;|to)\s*20[,.]?000/i,
+    "the stored policy's actual learning step must be disclosed");
+  assert.match(learning, /2026-11-05(?:T| )02:05:19\.054Z/,
+    "the recorded learning time must be visible");
+  assert.match(learning, /2026-11-05(?:T| )09:23:05\.105Z/,
+    "the later Walrus write time must be visible");
+  assert.match(learning, /offline/i);
+  assert.match(learning, /read-only/i);
+  assert.match(learning, /writes?[^<]{0,20}none/i);
+});
+
 test("homepage uses the checkpoint signature without a generic FBR tile", () => {
   const html = staticPage();
   assert.match(html, /class="brand-mark"/);
