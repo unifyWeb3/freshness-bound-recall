@@ -6,11 +6,11 @@
   "description": "FRESHNESS-BOUND RECALL - a Walrus Memory agent that never answers from a stale memory, gated by live Tatum Sui mainnet reads.",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=26.13.0"
+    "node": ">=24"
   },
   "scripts": {
-    "test": "node --test test/",
-    "test:live": "RUN_MAINNET=1 node --test test/live/",
+    "test": "node --test test/*.test.mjs",
+    "test:live": "RUN_MAINNET=1 node --test test/live/*.test.mjs",
     "answer": "node scripts/answer.mjs",
     "observe": "node scripts/observer.mjs",
     "proof": "node scripts/proof-page.mjs",
