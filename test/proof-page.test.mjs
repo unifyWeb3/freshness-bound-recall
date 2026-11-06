@@ -113,6 +113,9 @@ test("homepage uses the checkpoint signature without a generic FBR tile", () => 
   assert.doesNotMatch(html, />FBR</);
   assert.match(html, /Recorded Mainnet evidence/);
   assert.doesNotMatch(html, /EVIDENCE PAGE|CACHED SNAPSHOT|STATIC EXPORT/);
+  assert.match(html, /--amber: #f4b860/);
+  assert.doesNotMatch(html, /gradient|box-shadow|--green|--red|--focus|--amber-ink/,
+    "the page must use one amber accent without gradients or haze");
 });
 
 test("proof page keeps dense evidence accessible without widening mobile documents", () => {
