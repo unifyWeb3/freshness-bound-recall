@@ -32,3 +32,18 @@ test("judge quickstart leads with the recorded lifecycle and records the accepte
   assert.match(judge, /123 tests, 123 pass, 0 fail, 0 skipped/);
   assert.match(judge, /120 tests, 120 pass, 0 fail, 0 skipped/);
 });
+
+test("README leads with the exact quickstart, architecture, and honest integration limits", () => {
+  const readme = read("README.md");
+  const command = "npm run recall:checked -- --sample sui-clock-revision-lifecycle";
+
+  assert.match(readme, /## The problem/);
+  assert.match(readme, /Risk without a gate/);
+  assert.match(readme, /npm install --ignore-scripts/);
+  assert.match(readme, new RegExp(command.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  assert.match(readme, /## Architecture/);
+  assert.match(readme, /## Honest limits/);
+  assert.match(readme, /Live read-only CLI end to end \| \*\*UNVERIFIED\*\*/);
+  assert.match(readme, /MCP tool \/ agent adapter \| \*\*NOT DELIVERED\*\*/);
+  assert.match(readme, /older published state/);
+});
