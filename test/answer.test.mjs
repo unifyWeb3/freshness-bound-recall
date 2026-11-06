@@ -135,6 +135,56 @@ test("the policy memory is written exactly once per change", async () => {
   assert.equal(policyMemories.length, 1, "exactly one policy memory per change");
 });
 
+test("a policy change is committed in memory only after storage confirms a blob id", async () => {
+  const { store, tatum, policy, ledger } = setup({
+    texts: [claim()],
+    checkpoint: 1000060,
+    objects: { [SUBJECT]: { version: "v1", digest: "d1" } },
+  });
+  const q = "clock version";
+  await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+  await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+
+  const waitFor = store.waitFor.bind(store);
+  let windowDuringWait = null;
+  store.waitFor = async (jobId) => {
+    windowDuringWait = policy.state("FAST").windowCheckpoints;
+    return waitFor(jobId);
+  };
+
+  const out = await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+  assert.equal(windowDuringWait, 50,
+    "the proposed window must not be visible before persistence succeeds");
+  assert.equal(out.policy.changed, true);
+  assert.equal(out.policy.after_window, 100);
+  assert.equal(policy.state("FAST").windowCheckpoints, 100);
+  assert.ok(out.writes.find((w) => w.type === "policy")?.blob_id);
+});
+
+test("a failed or unconfirmed policy write rolls back the proposed in-memory change", async () => {
+  for (const failure of ["throw", "no-blob"]) {
+    const { store, tatum, policy, ledger } = setup({
+      texts: [claim()],
+      checkpoint: 1000060,
+      objects: { [SUBJECT]: { version: "v1", digest: "d1" } },
+    });
+    const q = "clock version";
+    await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+    await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+    store.waitFor = failure === "throw"
+      ? async () => { throw new Error("write failed"); }
+      : async () => [];
+
+    const out = await answer(q, { store, tatum, policy, ledger, now: NOW, writeCorrections: true });
+    assert.equal(out.policy.changed, false, failure);
+    assert.equal(out.policy.after_window, 50, failure);
+    assert.equal(policy.state("FAST").windowCheckpoints, 50, failure);
+    assert.equal(policy.state("FAST").version, 0, failure);
+    assert.equal(policy.state("FAST").pendingSamples, 2, failure);
+    assert.match(out.writes.find((w) => w.type === "policy")?.error || "", /failed|blob/i, failure);
+  }
+});
+
 test("the policy memory is read again on the next answer and widens the gate", async () => {
   const { store, tatum, policy, ledger } = setup({
     texts: [claim()],

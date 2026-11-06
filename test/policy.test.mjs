@@ -100,3 +100,24 @@ test("PolicyEngine falls back to defaults when the store has no policy memory", 
   assert.equal(engine.state("FAST").windowCheckpoints, 50);
   assert.equal(engine.state("SLOW").windowCheckpoints, 5000);
 });
+
+test("reloading the same policy version preserves pending learning counters", async () => {
+  const store = new MockStore({ namespace: "freshness-recall" });
+  let s = newState("FAST");
+  s = applySignal(s, SIGNAL.FALSE_STALE).state;
+  s = applySignal(s, SIGNAL.FALSE_STALE).state;
+  const persisted = applySignal(s, SIGNAL.FALSE_STALE).state;
+  await store.remember(policyRecordText(persisted, { now: Date.parse("2026-11-05T01:00:00.000Z") }))
+    .then(({ jobId }) => store.waitFor(jobId));
+
+  const engine = new PolicyEngine({ store });
+  await engine.load();
+  engine.apply("FAST", SIGNAL.FALSE_STALE);
+  assert.equal(engine.state("FAST").pendingSamples, 1);
+  assert.equal(engine.state("FAST").pendingFalseStale, 1);
+
+  await engine.load();
+  assert.equal(engine.state("FAST").version, persisted.version);
+  assert.equal(engine.state("FAST").pendingSamples, 1);
+  assert.equal(engine.state("FAST").pendingFalseStale, 1);
+});

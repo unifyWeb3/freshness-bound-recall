@@ -209,9 +209,10 @@ export class PolicyEngine {
       }
     }
     for (const [cls, s] of found) {
-      const current = this.state(cls);
-      if (s.version >= current.version) {
-        this.states.set(cls, { ...current, ...s, maxAgeSeconds: current.maxAgeSeconds });
+      const current = this.states.get(cls);
+      if (!current || s.version > current.version) {
+        const base = current || newState(cls, this.defaults[cls] || {});
+        this.states.set(cls, { ...base, ...s, maxAgeSeconds: base.maxAgeSeconds });
       }
     }
     this.loadedAt = new Date().toISOString();
@@ -219,8 +220,17 @@ export class PolicyEngine {
   }
 
   apply(className, signal, opts = {}) {
+    return this.commit(className, this.preview(className, signal, opts));
+  }
+
+  /** Calculate the next state without making it visible in memory. */
+  preview(className, signal, opts = {}) {
     const before = this.state(className);
-    const res = applySignal(before, signal, { minSamples: this.minSamples, ...opts });
+    return applySignal(before, signal, { minSamples: this.minSamples, ...opts });
+  }
+
+  /** Make a previewed result visible after any required persistence succeeds. */
+  commit(className, res) {
     this.states.set(className, res.state);
     if (res.changed && this.mirrorPath) this.writeMirror();
     return res;

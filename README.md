@@ -322,7 +322,9 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
    field. The gate now has regression coverage for every required chain/checkpoint/object/time proof
    field, but that validation does not and cannot rewrite this auxiliary field in the existing blob.
 2. The observer later learned a SLOW window of **40000**. That value was never persisted as a memory,
-   so the SLOW policy stored on chain is **20000**.
+   so the SLOW policy stored on chain is **20000**. The current engine now previews changes, persists
+   them, and only commits in memory after a confirmed blob id; tests cover same-version reloads and
+   failed/unconfirmed writes. The historical snapshot still contains the old 40000/20000 mismatch.
 3. The Docker path is **UNKNOWN** because it was never executed: the build environment had no Docker
    binary and no Docker socket. The same command sequence was verified natively instead.
 4. Walrus blob retention beyond the relayer default is **UNKNOWN**. The relayer's documented mainnet

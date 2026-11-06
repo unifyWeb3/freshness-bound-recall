@@ -69,6 +69,7 @@ let budgetUsed = 0;
 let queued = 0;
 let policyWritten = 0;
 let policyQueued = 0;
+const pendingPolicyClasses = new Set();
 let adversarialWritten = false;
 let writing = false;
 const queue = [];
@@ -101,7 +102,8 @@ async function drain() {
     try {
       const { jobId } = await rt.store.remember(item.text);
       const done = await rt.store.waitFor(jobId);
-      item.blob_id = done?.[0]?.blob_id ?? null;
+      item.blob_id = done?.find((result) => result?.blob_id)?.blob_id ?? null;
+      if (!item.blob_id) throw new Error("write completed without a confirmed blob id");
       budgetUsed += 1;
       queued -= 1;
       log(`[observer] wrote ${item.what} -> ${item.blob_id} (${budgetUsed}/${budget})`);
@@ -287,21 +289,38 @@ async function round(n) {
 
     // policy learning from the window-gate signal
     let policyResult = null;
-    if (anchor) {
-      policyResult = rt.policy.apply(subject.class, decision.signal, { now });
+    if (anchor && !pendingPolicyClasses.has(subject.class)) {
+      policyResult = rt.policy.preview(subject.class, decision.signal, { now });
+      if (!policyResult.changed) rt.policy.commit(subject.class, policyResult);
       if (policyResult.changed && policyWritten + policyQueued < policyCap) {
         const ptext = policyRecordText(policyResult.state, {
           now, epoch: 1, chainId: SUI_MAINNET_CHAIN_ID, agentId: rt.env.MEMWAL_AGENT_ID || "",
           checkpointSeq: live.checkpointSeq, checkpointDigest: live.checkpointDigest,
         });
         policyQueued += 1;
+        pendingPolicyClasses.add(subject.class);
         const w = enqueue(ptext, `policy ${subject.class} window ${policyResult.previousWindow}->${policyResult.state.windowCheckpoints}`,
-          () => { policyWritten += 1; policyQueued -= 1; },
-          () => { policyQueued -= 1; });
+          () => {
+            rt.policy.commit(subject.class, policyResult);
+            policyWritten += 1;
+            policyQueued -= 1;
+            pendingPolicyClasses.delete(subject.class);
+          },
+          () => {
+            policyQueued -= 1;
+            pendingPolicyClasses.delete(subject.class);
+          });
+        if (!w) {
+          policyQueued -= 1;
+          pendingPolicyClasses.delete(subject.class);
+          log(`[observer] policy ${subject.class} change not committed because persistence was unavailable`);
+        }
         entry.subjects[subject.class] = { ...entry.subjects[subject.class], policy_write: w?.blob_id ?? "queued" };
       } else if (policyResult.changed) {
-        log(`[observer] policy ${subject.class} changed (${policyResult.previousWindow}->${policyResult.state.windowCheckpoints}) but the policy cap (${policyCap}) is reached - ledger only`);
+        log(`[observer] policy ${subject.class} proposed (${policyResult.previousWindow}->${policyResult.state.windowCheckpoints}) but the policy cap (${policyCap}) is reached - state unchanged`);
       }
+    } else if (anchor) {
+      log(`[observer] policy ${subject.class} persistence is pending - learning state unchanged this round`);
     }
 
     if (!anchor) {

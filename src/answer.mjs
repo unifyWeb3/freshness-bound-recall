@@ -158,8 +158,44 @@ export async function answer(query, {
 
   // 5. learning signal -> policy (one policy memory per change)
   const before = { ...classState };
-  const policyResult = policy.apply(record.class, decision.signal, { now });
   const writes = [];
+  const proposedPolicy = policy.preview(record.class, decision.signal, { now });
+  let policyResult = proposedPolicy;
+
+  if (!proposedPolicy.changed) {
+    policy.commit(record.class, proposedPolicy);
+  } else if (writeCorrections) {
+    const ptext = policyRecordText(proposedPolicy.state, {
+      now, epoch, chainId, agentId,
+      checkpointSeq: live?.checkpointSeq,
+      checkpointDigest: live?.checkpointDigest,
+    });
+    try {
+      const { jobId } = await store.remember(ptext);
+      const done = await store.waitFor(jobId);
+      const blobId = done?.find((item) => item?.blob_id)?.blob_id ?? null;
+      if (!blobId) throw new Error("policy write completed without a confirmed blob id");
+      policy.commit(record.class, proposedPolicy);
+      writes.push({ type: "policy", job_id: jobId, blob_id: blobId, text: ptext });
+      logger(`[answer] policy changed for ${record.class}: ${proposedPolicy.reason}`);
+    } catch (e) {
+      policyResult = {
+        ...proposedPolicy,
+        state: before,
+        changed: false,
+        reason: `policy change not committed: ${e?.message || e}`,
+      };
+      writes.push({ type: "policy", error: String(e?.message || e) });
+      logger(`[answer] policy write failed; in-memory state unchanged: ${e?.message || e}`);
+    }
+  } else {
+    policyResult = {
+      ...proposedPolicy,
+      state: before,
+      changed: false,
+      reason: "policy change not committed: persistence disabled",
+    };
+  }
 
   let text;
   if (decision.verdict === VERDICT.FRESH) {
@@ -211,24 +247,6 @@ export async function answer(query, {
     } catch (e) {
       writes.push({ type: "correction", error: String(e?.message || e) });
       logger(`[answer] correction write failed: ${e?.message || e}`);
-    }
-  }
-
-  // 7. policy memory (one per change)
-  if (writeCorrections && policyResult.changed) {
-    const ptext = policyRecordText(policyResult.state, {
-      now, epoch, chainId, agentId,
-      checkpointSeq: live?.checkpointSeq,
-      checkpointDigest: live?.checkpointDigest,
-    });
-    try {
-      const { jobId } = await store.remember(ptext);
-      const done = await store.waitFor(jobId);
-      writes.push({ type: "policy", job_id: jobId, blob_id: done?.[0]?.blob_id ?? null, text: ptext });
-      logger(`[answer] policy changed for ${record.class}: ${policyResult.reason}`);
-    } catch (e) {
-      writes.push({ type: "policy", error: String(e?.message || e) });
-      logger(`[answer] policy write failed: ${e?.message || e}`);
     }
   }
 
