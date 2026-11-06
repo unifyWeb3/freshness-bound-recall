@@ -12,3 +12,12 @@ test("package supports Node 24 and uses explicit test-file globs", () => {
   assert.equal(pkg.scripts.test, "node --test test/*.test.mjs");
   assert.equal(pkg.scripts["test:live"], "RUN_MAINNET=1 node --test test/live/*.test.mjs");
 });
+
+test("package exposes the safe recall_checked command and library contract", () => {
+  assert.equal(pkg.private, true, "registry publication remains intentionally disabled");
+  assert.equal(pkg.bin.recall_checked, "./scripts/recall-checked.mjs");
+  assert.equal(pkg.exports["."], "./src/recall-checked.mjs");
+  assert.equal(pkg.exports["./core"], "./src/answer.mjs");
+  assert.ok(pkg.files.includes("docs/evidence/proof-snapshot.json"));
+  assert.ok(pkg.files.includes("scripts/recall-checked.mjs"));
+});

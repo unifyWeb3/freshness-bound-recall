@@ -84,7 +84,7 @@ export function renderUnverifiedAnswer({ decision }) {
  */
 export async function answer(query, {
   store, tatum, policy, ledger, now = Date.now(), epoch = 1,
-  agentId = "", chainId = "", writeCorrections = true, readBudget = 2, logger = () => {},
+  agentId = "", chainId = "", writeCorrections = false, readBudget = 2, logger = () => {},
 }) {
   // 1. policy memory is read at every answer
   await policy.load();
@@ -114,7 +114,8 @@ export async function answer(query, {
     const out = {
       query, at: new Date(now).toISOString(), answer: `No stored claim matched "${query}".`,
       withheld: true, verdict: VERDICT.WITHHELD_UNVERIFIED, reason: "no claim memory found",
-      signal: SIGNAL.UNVERIFIED, memory: null, live: null, policy: null, writes: [], reads: { checkpoint: 0, pin: 0 },
+      signal: SIGNAL.UNVERIFIED, memory: null, live: null, pin: null, subject_changed: null,
+      policy: null, writes: [], reads: { checkpoint: 0, pin: 0, budget_max: readBudget },
     };
     ledger?.append(out);
     return out;

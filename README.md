@@ -49,16 +49,50 @@ already built. The factual differences here are:
   (old-but-true) is generated from the anchor's actual old proof and regression-tested,
 * the critical path has **no LLM** — the answers are templates over verified chain data.
 
-## 2. Quickstart (offline, no network)
+## 2. Quickstart: safe recall (offline by default)
 
 ```sh
 node --version         # supports >= 24; .nvmrc pins the published verification runtime (26.13.0)
 nvm use                # if you use nvm: reads .nvmrc -> 26.13.0
 npm install --ignore-scripts   # deterministic install; never runs lifecycle scripts
 npm test                     # offline suite, no network
+node scripts/recall-checked.mjs --sample sui-clock-changed --json
 npm run demo:offline         # cached-snapshot demo (no network)
 npm run proof:offline        # proof page over cached snapshot: http://127.0.0.1:8787
 npm run export               # or a fully static copy of the proof page at ./site
+```
+
+`recall_checked` is the small public product surface. With no mode flag it runs the
+`sui-clock-changed` recorded-Mainnet sample: a real Walrus blob from the committed evidence snapshot,
+checked through the same freshness gate with **no wallet, credentials, network access, or writes**.
+The result is a stable `recall_checked/v1` JSON document when `--json` is supplied. After installing
+the packed package, the equivalent command is:
+
+```sh
+recall_checked --sample sui-clock-changed --json
+```
+
+Live recall is also read-only unless writes are explicitly enabled. It reads credentials from the
+process environment and from `.env` in the **current working directory** (not from inside the
+installed package):
+
+```sh
+recall_checked --live --query "Is the Sui Clock memory still true?" --json
+```
+
+`--allow-mainnet-writes` is deliberately separate. It permits correction/policy memories and can
+incur Mainnet cost; use it only with the account owner's specific approval. Merely selecting
+`--live` never enables writes.
+
+The same contract is available as a library. `recallChecked()` is dependency-injected and defaults
+to zero writes; only `allowWrites: true` opts in. The recorded sample needs no dependencies:
+
+```js
+import { recallChecked, recallCheckedSample } from "freshness-bound-recall";
+
+const sample = await recallCheckedSample();
+const live = await recallChecked("Is this still true?", { store, tatum });
+// Explicit write opt-in: recallChecked(query, { store, tatum, allowWrites: true })
 ```
 
 **Judges**: see `docs/judge-60s.md` for the 60-second path (fresh clone → tests → demo → proof page),
@@ -191,15 +225,12 @@ B. REPLAY: recorded mainnet decision 2026-11-05T02:05:19.054Z, checkpoint 341759
    memory obs-memwal-registry-341741030 (blob Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g)
    memory OFF (default window 5000): STALE (FALSE-STALE) - checkpoint window exceeded (delta 18155 > window 5000)
    memory ON  (window 20000 from blob): FRESH (CONSISTENT) - fresh (checkpoint delta 18155 <= 20000, subject unchanged)
-C. LIVE: live checkpoint 341867949 + live SLOW pin, claim anchored 6000 checkpoints back
-   memory OFF (default window 5000): STALE (FALSE-STALE) - checkpoint window exceeded (delta 6000 > window 5000)
-   memory ON  (window 20000 from blob): FRESH (CONSISTENT) - fresh (checkpoint delta 6000 <= 20000, subject unchanged)
 ```
 
-Part B is a **replay** of a recorded mainnet decision (real memory, real checkpoint, real pin, same
-clock — only the window differs). Part C is **live** but uses a claim *constructed* for the demo (live
-checkpoint + live pin, anchor 6000 checkpoints back) — it is not a stored memory, and it is labelled as
-such in the script output.
+Part B is a **replay** of a recorded mainnet decision (real memory, complete proof envelope, real
+checkpoint, real pin, same clock — only the window differs). The SLOW policy is read back live from
+Walrus Memory in part A; the decision inputs come from the committed evidence snapshot so the result
+is reproducible without constructing a synthetic claim.
 
 **Disclosed limits of the learning evidence (nothing hidden):**
 
@@ -278,7 +309,6 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 | Learned SLOW window 5000→10000→20000 from 3 live FALSE-STALE samples, persisted | VERIFIED (live learning; memory written later, learned_at ≠ written_at) | `fc-policy-SLOW-v2` blob `Zne2mnjAy6u…`; ledger entries 2026-11-05 01:55–02:05 UTC |
 | Both learning directions persisted as Walrus Memory and read back at startup | VERIFIED (live) | `scripts/show-policy-effect.mjs` part A (`source=store`) |
 | The persisted SLOW policy changes a gate verdict (recorded mainnet decision) | VERIFIED (replay of a recorded mainnet decision) | `scripts/show-policy-effect.mjs` part B: window 5000 → STALE, window 20000 → FRESH |
-| The persisted SLOW policy changes a gate verdict (live reads) | VERIFIED (live, constructed claim) | `scripts/show-policy-effect.mjs` part C: live checkpoint + live pin |
 | A later SLOW window (40000) was learned live but is **not** persisted | VERIFIED (disclosed) | `fc-policy-SLOW-v2` body; ledger 2026-11-05 02:25:24 UTC |
 | One policy memory per change (when the budget allows) | VERIFIED | `test/answer.test.mjs` |
 | `x-api-key` was sent on every Tatum request | VERIFIED | `TatumClient.apiKeyProof()` → 21/21 in the credits run, 7/7 in the final proof snapshot (2,208/2,208 in a longer earlier page run); `test/tatum.test.mjs` |
@@ -298,13 +328,13 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 ```
 src/          FR-v1 schema, gate, policy, Tatum client, store (mock + mainnet),
               answer path, ledger, replay/ablation, redaction, runtime assembly,
-              mainnet credentials & self-test, subject registry
-scripts/      answer.mjs prewarm.mjs observer.mjs demo.mjs proof-page.mjs
+              mainnet credentials & self-test, subject registry, recall_checked library
+scripts/      recall-checked.mjs answer.mjs prewarm.mjs observer.mjs demo.mjs proof-page.mjs
               export-site.mjs freeze.mjs persist-policy.mjs show-policy-effect.mjs
               measure-credits.mjs measure-claim-classes.mjs
               audit-secrets.mjs audit-history.mjs
-test/         67 offline test cases (65 pass + 2 live opt-in skipped; 63 pass + 4 skipped
-              in a credential-less clone) + test/live (2 opt-in mainnet tests)
+test/         offline unit, contract, CLI, packaging, and replay coverage;
+              test/live contains the credential-gated Mainnet tests
 fixtures/     recorded event log used by the replay/ablation test
 docs/         blog.md, video-script.md, submission.md, judge-60s.md, evidence snapshot
 reports/      build-phase1.md … build-phase4.md, pre-submit.md
@@ -369,7 +399,7 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 | Observed mainnet memories | namespace `freshness-recall` (22) | ids in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 | Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥306 entries |
 | Learned-policy memories | `fc-policy-FAST-v1` (`19ZE9y-zWt1…`), `fc-policy-SLOW-v2` (`Zne2mnjAy6u…`) | both persisted live |
-| Policy read-back + gate effect | `scripts/show-policy-effect.mjs` | verified (live read-back, replay + live verdict flip) |
+| Policy read-back + gate effect | `scripts/show-policy-effect.mjs` | verified (live policy read-back + recorded-mainnet replay verdict flip) |
 | Judge 60 s | `docs/judge-60s.md` | fresh-clone verified |
 | Judge container | `Dockerfile`, `.nvmrc`, `.dockerignore` | written; docker build UNVERIFIED (no daemon in build env) |
 | Videos + submission | `docs/video-script.md`, `docs/submission.md` | user records/sends |

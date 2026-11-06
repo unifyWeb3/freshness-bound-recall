@@ -45,7 +45,8 @@ What the live run actually shows, honestly:
 The policy is not decorative: reading it back changes the gate's verdict. Replaying a recorded mainnet
 decision (real memory `obs-memwal-registry-341741030`, real checkpoint 341759185, real pin, same clock)
 with the default window 5000 gives **STALE (FALSE-STALE)**; with the window 20000 loaded from the blob it
-gives **FRESH (CONSISTENT)**. The same flip is shown against live reads.
+gives **FRESH (CONSISTENT)**. The replay uses the complete proof envelope, checkpoint and pin preserved
+in the committed evidence snapshot; it does not construct a synthetic live claim.
 
 Three honest caveats:
 

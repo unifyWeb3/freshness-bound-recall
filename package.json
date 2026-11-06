@@ -5,6 +5,19 @@
   "type": "module",
   "description": "FRESHNESS-BOUND RECALL - a Walrus Memory agent that never answers from a stale memory, gated by live Tatum Sui mainnet reads.",
   "license": "Apache-2.0",
+  "bin": {
+    "recall_checked": "./scripts/recall-checked.mjs"
+  },
+  "exports": {
+    ".": "./src/recall-checked.mjs",
+    "./core": "./src/answer.mjs"
+  },
+  "files": [
+    "src/",
+    "scripts/recall-checked.mjs",
+    "docs/evidence/proof-snapshot.json",
+    "README.md"
+  ],
   "engines": {
     "node": ">=24"
   },
@@ -12,6 +25,7 @@
     "test": "node --test test/*.test.mjs",
     "test:live": "RUN_MAINNET=1 node --test test/live/*.test.mjs",
     "answer": "node scripts/answer.mjs",
+    "recall:checked": "node scripts/recall-checked.mjs",
     "observe": "node scripts/observer.mjs",
     "proof": "node scripts/proof-page.mjs",
     "demo": "node scripts/demo.mjs",
