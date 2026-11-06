@@ -40,14 +40,16 @@ test("replay: the same query gets a different verdict after the policy memory ch
   const underOldPolicy = evaluateGate({
     record: {
       class: "FAST", claim: ev.memory.claim, subject: ev.memory.subject, predicate: ev.memory.predicate,
+      "proof.chain_id": ev.memory.proof_at_write.chain_id,
       "proof.checkpoint_seq": ev.memory.proof_at_write.checkpoint_seq,
+      "proof.checkpoint_digest": ev.memory.proof_at_write.checkpoint_digest,
       "proof.object_version": ev.memory.proof_at_write.object_version,
       "proof.object_digest": ev.memory.proof_at_write.object_digest,
       "proof.read_at": ev.memory.proof_at_write.read_at,
     },
     live: { checkpointSeq: ev.live.checkpoint_seq, checkpointDigest: ev.live.checkpoint_digest, readAt: ev.live.read_at },
     pin: { version: ev.pin.version, digest: ev.pin.digest, readAt: ev.pin.read_at },
-    policy: { windowCheckpoints: 50, maxAgeSeconds: 86400 },
+    policy: { windowCheckpoints: 50, minCheckpoints: 10, maxCheckpoints: 200000, maxAgeSeconds: 86400 },
     now: Date.parse("2026-11-05T01:00:00.000Z"),
   });
   assert.equal(underOldPolicy.verdict, VERDICT.STALE);

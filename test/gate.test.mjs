@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { evaluateGate, learningSignal, VERDICT, SIGNAL } from "../src/gate.mjs";
+import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
 
 const NOW = Date.parse("2026-11-05T01:00:00.000Z");
 
@@ -10,7 +11,9 @@ function rec(over = {}) {
     claim: "fc-fast-clock-0001",
     subject: "0x6",
     predicate: "object_version",
+    "proof.chain_id": SUI_MAINNET_CHAIN_ID,
     "proof.checkpoint_seq": 1000,
+    "proof.checkpoint_digest": "cp1000",
     "proof.object_version": "v1",
     "proof.object_digest": "d1",
     "proof.read_at": "2026-11-05T00:59:00.000Z",
@@ -19,7 +22,13 @@ function rec(over = {}) {
 }
 const live = (seq) => ({ checkpointSeq: seq, checkpointDigest: `cp${seq}`, readAt: "2026-11-05T01:00:00.000Z" });
 const pin = (version, digest = "d1") => ({ version, digest, readAt: "2026-11-05T01:00:00.000Z" });
-const policy = (windowCheckpoints = 50, maxAgeSeconds = 86400) => ({ windowCheckpoints, maxAgeSeconds });
+const policy = (windowCheckpoints = 50, maxAgeSeconds = 86400, over = {}) => ({
+  windowCheckpoints,
+  minCheckpoints: 10,
+  maxCheckpoints: 200000,
+  maxAgeSeconds,
+  ...over,
+});
 
 test("fresh: inside window, subject unchanged", () => {
   const d = evaluateGate({ record: rec(), live: live(1010), pin: pin("v1"), policy: policy(), now: NOW });
@@ -74,6 +83,66 @@ test("fail closed when the subject pin read failed", () => {
   assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED);
   assert.equal(d.signal, SIGNAL.UNVERIFIED);
   assert.match(d.reason, /subject pin read failed/);
+});
+
+test("fail closed on non-finite or negative checkpoint deltas", () => {
+  for (const current of [Number.NaN, Number.POSITIVE_INFINITY, 999]) {
+    const d = evaluateGate({ record: rec(), live: live(current), pin: pin("v1"), policy: policy(), now: NOW });
+    assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED, `checkpoint ${current}`);
+    assert.equal(d.signal, SIGNAL.UNVERIFIED);
+  }
+});
+
+test("fail closed on invalid or future timestamps", () => {
+  const cases = [
+    { record: rec({ "proof.read_at": "not-a-time" }), live: live(1010), pin: pin("v1") },
+    { record: rec({ "proof.read_at": "2026-11-05T01:00:01.000Z" }), live: live(1010), pin: pin("v1") },
+    { record: rec(), live: { ...live(1010), readAt: "not-a-time" }, pin: pin("v1") },
+    { record: rec(), live: live(1010), pin: { ...pin("v1"), readAt: "not-a-time" } },
+  ];
+  for (const c of cases) {
+    const d = evaluateGate({ ...c, policy: policy(), now: NOW });
+    assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED);
+    assert.equal(d.signal, SIGNAL.UNVERIFIED);
+  }
+});
+
+test("fail closed on malformed policy bounds", () => {
+  const policies = [
+    policy(-1),
+    policy(Number.NaN),
+    policy(50, -1),
+    policy(5),
+    policy(50, 86400, { minCheckpoints: 100, maxCheckpoints: 10 }),
+  ];
+  for (const candidate of policies) {
+    const d = evaluateGate({ record: rec(), live: live(1010), pin: pin("v1"), policy: candidate, now: NOW });
+    assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED);
+    assert.equal(d.signal, SIGNAL.UNVERIFIED);
+  }
+});
+
+test("fail closed when a proof claims the wrong chain", () => {
+  const d = evaluateGate({
+    record: rec({ "proof.chain_id": "not-sui-mainnet" }),
+    live: live(1010), pin: pin("v1"), policy: policy(), now: NOW,
+  });
+  assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED);
+  assert.match(d.reason, /chain/i);
+});
+
+test("fail closed when any required proof field is missing", () => {
+  const required = [
+    "proof.chain_id", "proof.checkpoint_seq", "proof.checkpoint_digest",
+    "proof.object_version", "proof.object_digest", "proof.read_at",
+  ];
+  for (const field of required) {
+    const record = rec();
+    delete record[field];
+    const d = evaluateGate({ record, live: live(1010), pin: pin("v1"), policy: policy(), now: NOW });
+    assert.equal(d.verdict, VERDICT.WITHHELD_UNVERIFIED, field);
+    assert.equal(d.signal, SIGNAL.UNVERIFIED);
+  }
 });
 
 test("the decision carries the proof at write time and the live checkpoint", () => {

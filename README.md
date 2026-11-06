@@ -319,7 +319,8 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 1. The policy memory blob `Zne2mnjA…` (`fc-policy-SLOW-v2`) contains one malformed auxiliary field,
    `policy.evidence_count=undefined`. A Walrus blob is immutable, so this cannot be edited in place.
    The evidence list itself is intact inside the record body, and the policy engine does not read that
-   field.
+   field. The gate now has regression coverage for every required chain/checkpoint/object/time proof
+   field, but that validation does not and cannot rewrite this auxiliary field in the existing blob.
 2. The observer later learned a SLOW window of **40000**. That value was never persisted as a memory,
    so the SLOW policy stored on chain is **20000**.
 3. The Docker path is **UNKNOWN** because it was never executed: the build environment had no Docker

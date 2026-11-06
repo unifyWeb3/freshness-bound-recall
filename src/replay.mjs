@@ -16,6 +16,8 @@ function recordOf(ev, className) {
     subject: ev.memory?.subject,
     predicate: ev.memory?.predicate,
     "proof.checkpoint_seq": ev.memory?.proof_at_write?.checkpoint_seq ?? ev.proof_at_write?.checkpoint_seq,
+    "proof.checkpoint_digest": ev.memory?.proof_at_write?.checkpoint_digest ?? ev.proof_at_write?.checkpoint_digest,
+    "proof.chain_id": ev.memory?.proof_at_write?.chain_id ?? ev.proof_at_write?.chain_id,
     "proof.object_version": ev.memory?.proof_at_write?.object_version ?? ev.proof_at_write?.object_version,
     "proof.object_digest": ev.memory?.proof_at_write?.object_digest ?? ev.proof_at_write?.object_digest,
     "proof.read_at": ev.memory?.proof_at_write?.read_at ?? ev.proof_at_write?.read_at,
@@ -43,7 +45,10 @@ export function replay(events, { query = null, className = "FAST", minSamples = 
     const record = recordOf(ev, className);
     const decision = evaluateGate({
       record, live: liveOf(ev), pin: pinOf(ev),
-      policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
+      policy: {
+        windowCheckpoints: state.windowCheckpoints, minCheckpoints: state.minCheckpoints,
+        maxCheckpoints: state.maxCheckpoints, maxAgeSeconds: state.maxAgeSeconds,
+      },
       now: eventNow,
     });
     const before = state.windowCheckpoints;
@@ -65,7 +70,10 @@ export function replay(events, { query = null, className = "FAST", minSamples = 
     const last = matching.at(-1);
     const d = evaluateGate({
       record: recordOf(last, className), live: liveOf(last), pin: pinOf(last),
-      policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
+      policy: {
+        windowCheckpoints: state.windowCheckpoints, minCheckpoints: state.minCheckpoints,
+        maxCheckpoints: state.maxCheckpoints, maxAgeSeconds: state.maxAgeSeconds,
+      },
       now: Date.parse(last.at),
     });
     finalVerdict = {
@@ -112,7 +120,10 @@ export function ablation(events, { className = "FAST", minSamples = 3 } = {}) {
 
       const d = evaluateGate({
         record, live, pin,
-        policy: { windowCheckpoints: state.windowCheckpoints, maxAgeSeconds: state.maxAgeSeconds },
+        policy: {
+          windowCheckpoints: state.windowCheckpoints, minCheckpoints: state.minCheckpoints,
+          maxCheckpoints: state.maxCheckpoints, maxAgeSeconds: state.maxAgeSeconds,
+        },
         now: eventNow,
       });
 

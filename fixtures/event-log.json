@@ -10,7 +10,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -30,7 +32,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -50,7 +54,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -70,7 +76,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -90,7 +98,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -110,7 +120,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -130,7 +142,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -150,7 +164,9 @@
         "subject": "0x0000000000000000000000000000000000000000000000000000000000000006",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1018746136",
           "object_digest": "clockDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"
@@ -170,7 +186,9 @@
         "subject": "0x8bf82c9e09e36b8d1c38298f68b7cb68e7b8762887e7592add9986d5e9cf199f",
         "predicate": "object_version",
         "proof_at_write": {
+          "chain_id": "4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S",
           "checkpoint_seq": 1000000,
+          "checkpoint_digest": "cpDigestAtWrite",
           "object_version": "1062994378",
           "object_digest": "registryDigestV1",
           "read_at": "2026-11-05T00:00:00.000Z"

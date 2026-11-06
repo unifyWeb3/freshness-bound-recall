@@ -107,7 +107,12 @@ export async function answer(query, {
   // 4. gate
   const decision = evaluateGate({
     record, live, pin,
-    policy: { windowCheckpoints: classState.windowCheckpoints, maxAgeSeconds: classState.maxAgeSeconds },
+    policy: {
+      windowCheckpoints: classState.windowCheckpoints,
+      minCheckpoints: classState.minCheckpoints,
+      maxCheckpoints: classState.maxCheckpoints,
+      maxAgeSeconds: classState.maxAgeSeconds,
+    },
     now,
   });
   if (readError && decision.verdict === VERDICT.WITHHELD_UNVERIFIED) {
@@ -203,7 +208,8 @@ export async function answer(query, {
       predicate: record.predicate, value_at_write: record.value_at_write, created_at: hit.created_at,
       distance: hit.distance,
       proof_at_write: {
-        checkpoint_seq: record["proof.checkpoint_seq"], object_version: record["proof.object_version"],
+        chain_id: record["proof.chain_id"], checkpoint_seq: record["proof.checkpoint_seq"],
+        checkpoint_digest: record["proof.checkpoint_digest"], object_version: record["proof.object_version"],
         object_digest: record["proof.object_digest"], read_at: record["proof.read_at"],
       },
     },
