@@ -1,5 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { TatumClient, ReadBudget, TatumError, TATUM_GRAPHQL, SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
 
 // A fetch stub that never touches the network.
@@ -75,6 +78,32 @@ test("a checkpoint read older than 1s goes back to the network", async () => {
   await c.readCheckpoint({ now: 1_000_000 });
   await c.readCheckpoint({ now: 1_002_000 });
   assert.equal(fetchImpl.calls.length, 2);
+});
+
+test("a checkpoint loaded from disk keeps its saved timestamp and is not freshly cached", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "fr-tatum-cache-"));
+  const cachePath = join(dir, "tatum-cache.json");
+  const savedAt = "2026-11-05T00:00:00.000Z";
+  writeFileSync(cachePath, JSON.stringify({
+    saved_at: savedAt,
+    chain_id: SUI_MAINNET_CHAIN_ID,
+    checkpoint: {
+      checkpointSeq: 999,
+      checkpointDigest: "diskDigest",
+      readAt: savedAt,
+      source: "live",
+    },
+    objects: {},
+  }));
+
+  const fetchImpl = fakeFetch(() => jsonResponse(CP_BODY));
+  const c = new TatumClient({ apiKey: "k", fetchImpl, cachePath });
+  assert.equal(c.checkpointCache.at, Date.parse(savedAt));
+
+  const checkpoint = await c.readCheckpoint({ now: Date.parse("2026-11-05T00:00:10.000Z") });
+  assert.equal(checkpoint.source, "live");
+  assert.equal(checkpoint.checkpointSeq, 1000);
+  assert.equal(fetchImpl.calls.length, 1, "an old disk checkpoint must be refreshed online");
 });
 
 test("the read budget refuses more than 2 reads per answer", async () => {

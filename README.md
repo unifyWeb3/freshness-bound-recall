@@ -327,7 +327,8 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
    binary and no Docker socket. The same command sequence was verified natively instead.
 4. Walrus blob retention beyond the relayer default is **UNKNOWN**. The relayer's documented mainnet
    default is 2 epochs (about 4 weeks), but the exact `end_epoch` of these blobs could not be read with
-   any tool available here.
+   any tool available here. Local checkpoint-cache age is separately covered: a disk-loaded checkpoint
+   keeps its saved timestamp and cannot become “fresh” merely because the process just loaded it.
 5. No real user has validated the persona. It is a hypothesis, and the product is deliberately
    domain-agnostic.
 

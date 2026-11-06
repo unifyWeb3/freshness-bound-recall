@@ -69,7 +69,11 @@ export class TatumClient {
       const raw = readFileSync(this.cachePath, "utf8");
       const saved = JSON.parse(raw);
       if (saved?.checkpoint?.checkpointSeq !== undefined) {
-        this.checkpointCache = { at: Date.now(), value: { ...saved.checkpoint, source: "cache-disk" } };
+        const savedAt = Date.parse(saved?.saved_at);
+        this.checkpointCache = {
+          at: Number.isFinite(savedAt) ? savedAt : 0,
+          value: { ...saved.checkpoint, source: "cache-disk" },
+        };
       }
       for (const [addr, obj] of Object.entries(saved?.objects || {})) {
         this.objectCache.set(addr, obj);
