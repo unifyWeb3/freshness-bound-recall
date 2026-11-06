@@ -226,7 +226,7 @@ function correctionText({ subject, live, pin, decision, supersedesClaim, superse
   });
 }
 
-function adversarialText({ subject, live, pin, decision, ageCheckpoints, fastWindow }) {
+function adversarialText({ subject, anchor, live, pin, decision, ageCheckpoints, fastWindow }) {
   return recordToText({
     claim: `adv-not-stale-${live.checkpointSeq}`,
     class: subject.class,
@@ -234,22 +234,22 @@ function adversarialText({ subject, live, pin, decision, ageCheckpoints, fastWin
     state: "adversarial",
     subject: subject.address,
     predicate: "object_version",
-    value_at_write: `version=${pin.version} digest=${pin.digest}`,
-    "proof.transport": "tatum-sui-mainnet/graphql",
-    "proof.chain_id": SUI_MAINNET_CHAIN_ID,
-    "proof.checkpoint_seq": live.checkpointSeq,
-    "proof.checkpoint_digest": live.checkpointDigest,
-    "proof.object_version": pin.version,
-    "proof.object_digest": pin.digest,
-    "proof.read_at": pin.readAt,
+    value_at_write: `version=${anchor["proof.object_version"]} digest=${anchor["proof.object_digest"]}`,
+    "proof.transport": anchor["proof.transport"] || "tatum-sui-mainnet/graphql",
+    "proof.chain_id": anchor["proof.chain_id"],
+    "proof.checkpoint_seq": anchor["proof.checkpoint_seq"],
+    "proof.checkpoint_digest": anchor["proof.checkpoint_digest"],
+    "proof.object_version": anchor["proof.object_version"],
+    "proof.object_digest": anchor["proof.object_digest"],
+    "proof.read_at": anchor["proof.read_at"],
     "adversarial.age_checkpoints": ageCheckpoints,
     "adversarial.fast_window": fastWindow,
     "adversarial.verdict": decision.verdict,
     agent_id: rt.env.MEMWAL_AGENT_ID || "",
     recorded_at: new Date().toISOString(),
-    body: `Adversarial not-stale record. At checkpoint ${live.checkpointSeq} this memory is ${ageCheckpoints} checkpoints old - ` +
-      `more than the FAST window of ${fastWindow} - but its subject (${subject.label}) still has ` +
-      `version=${pin.version} digest=${pin.digest}, unchanged since the memory was written. ` +
+    body: `Adversarial not-stale record. The anchor proof from checkpoint ${anchor["proof.checkpoint_seq"]} is ` +
+      `${ageCheckpoints} checkpoints old at checkpoint ${live.checkpointSeq} - more than the FAST window of ${fastWindow} - ` +
+      `but its subject (${subject.label}) still has version=${pin.version} digest=${pin.digest}, matching the anchor proof. ` +
       `The gate answered ${decision.verdict}, so it withholds stale memories, not old-but-true ones.`,
   });
 }
@@ -350,7 +350,10 @@ async function round(n) {
     const fastWindow = rt.policy.state("FAST").windowCheckpoints;
     const anchorDelta = anchor ? live.checkpointSeq - anchor.record["proof.checkpoint_seq"] : 0;
     if (!adversarialWritten && anchor && decision.verdict === VERDICT.FRESH && anchorDelta > fastWindow) {
-      const text = adversarialText({ subject, live, pin, decision, ageCheckpoints: anchorDelta, fastWindow });
+      const text = adversarialText({
+        subject, anchor: anchor.record, live, pin, decision,
+        ageCheckpoints: anchorDelta, fastWindow,
+      });
       const item = enqueue(text, "adversarial not-stale record", () => { adversarialWritten = true; });
       if (item) entry.adversarial = "queued";
     }

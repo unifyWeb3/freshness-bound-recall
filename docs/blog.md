@@ -64,8 +64,8 @@ Three honest caveats:
 ## What Walrus Memory is used for — concretely
 
 * **The only memory store.** 22 mainnet blobs in `freshness-recall` — 7 observer observations,
-  4 corrections, 2 learned-policy memories, 1 adversarial not-stale record, 8 test seeds (4 live-test
-  runs × 2 seeds).
+  4 corrections, 2 learned-policy memories, 1 historical adversarial specimen that predates the
+  anchor-proof fix, 8 test seeds (4 live-test runs × 2 seeds).
 * **Lineage, not deletion.** The production SDK (0.1.13) exposes no delete/update, so revision is by
   `supersedes=<blob_id>`; the proof page renders the lineage chain.
 * **Semantic recall for answers** — claims carry `FR-v1` checkpoint + object version stamps, so the

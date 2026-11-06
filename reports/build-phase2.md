@@ -56,9 +56,10 @@ by one — see §4.)
 **Namespace:** `freshness-recall`. All records parse as FR-v1 (verified by `store.parse()` in the live listing).
 
 ### Adversarial record — what it actually demonstrates
-`adv-not-stale-341741224` is class SLOW and references the **FAST window of 50** in its body. It was written
-when the gate answered FRESH for the SLOW subject while that memory was 194 checkpoints old — i.e. **old-but-true**.
-It is a valid adversarial-not-stale example, but it is not the FAST-window specimen the label implies.
+`adv-not-stale-341741224` is class SLOW and references the **FAST window of 50** in its body. Its body
+claimed an age of 194 checkpoints, but its proof was stamped with the current checkpoint rather than
+the old anchor checkpoint. It is therefore not valid evidence of age-at-creation. The current observer
+generator stamps the anchor's real proof and is covered by `test/observer.test.mjs`.
 No correction was written, because deleting/overwriting Walrus blobs is not available in `@mysten-incubation/memwal@0.1.13`
 (the demo supersedes rather than rewrites). **Labelling: INFERRED / honest defect, see §6–8.**
 

@@ -25,7 +25,7 @@ gate onto the answer path and make the tolerance a memory."*
 | 1:04 | demo output step 3 (SLOW line) or `node scripts/show-policy-effect.mjs` | “The other class widened: SLOW window 20000, learned live from FALSE-STALE decisions — and that one is a memory too, `fc-policy-SLOW-v2`, read back from Walrus Memory before this answer.” |
 | 1:08 | demo output step 4 | “The seeded claim the recall returns — the gate refuses to answer it. WITHHELD — subject changed. And it shows the live value instead of lying.” |
 | 1:22 | demo output step 4 (verdict text) | “That verdict is what every answer in the product goes through. Fresh, or withheld. There is no ‘answer anyway.’” |
-| 1:28 | demo output step 6 | “The adversarial old-but-true record gets re-checked against the chain — the demo tells you what actually happened, pin changed or not, and the FALSE-STALE path is reproducible on demand with `scripts/show-policy-effect.mjs`.” |
+| 1:28 | demo output step 6 | “The adversarial record gets re-checked against the chain — the demo tells you what actually happened, pin changed or not. New specimens carry the anchor's real old proof; the committed historical specimen predates that fix.” |
 | 1:42 | demo output step 7 (ablation table) | “Over three hundred decisions recorded with checkpoint stamps: without the gate, two hundred and thirty-four of them would have been served stale. With it — zero.” |
 | 1:52 | demo output step 8 (lineage) | “Every correction links the blob it superseded — lineage is on-chain, not implied.” |
 | 2:02 | proof page detail: Tatum request log (plan header) | “Both integrations are real: every request goes through Tatum GraphQL with the API key and logs the plan header; every memory is on Walrus.” |

@@ -45,7 +45,7 @@ already built. The factual differences here are:
 * the tolerance **is itself a Walrus Memory**: the system’s behaviour changes because of a memory it
   wrote and later read back (a learning loop, not a constant),
 * supersession is explicitly tracked (`supersedes` / lineage), and the adversarial case
-  (old-but-true) is exercised and documented,
+  (old-but-true) is generated from the anchor's actual old proof and regression-tested,
 * the critical path has **no LLM** — the answers are templates over verified chain data.
 
 ## 2. Quickstart (offline, no network)
@@ -158,7 +158,7 @@ question
 | **Observer observations** (`state=observation`, claim `obs-*`) | 7 | what the observer saw on chain, each stamped with checkpoint + object version/digest at read time | `EXLTJp9…`, `Pk3CAi9…`, `BZ8iuoO…`, `WJv-iK2…`, `FMBYgz…`, `goZjQJ3…`, `zAji1w8…` |
 | **Corrections** (`state=live`, claim `cor-*`, `supersedes=…`) | 4 | the superseding memory written when the FAST subject changed | `5ndF6Q5q…`, `_RswBPgo…`, `1JJVQ71R…`, `mjxZQ1X2…` |
 | **Policy records** (`state=policy`, predicate `policy_window`) | 2 | the learned windows — **the only memories the answer path reads as policy** | `19ZE9y-zWt1…` (`fc-policy-FAST-v1`), `Zne2mnjAy6u…` (`fc-policy-SLOW-v2`) |
-| **Adversarial** (`state=adversarial`, claim `adv-not-stale-*`) | 1 | old-but-true memory used to test that a still-true claim is not automatically stale | `MNQZ0eE0…` |
+| **Adversarial** (`state=adversarial`, claim `adv-not-stale-*`) | 1 | historical specimen; the current generator now stamps the anchor's actual old proof | `MNQZ0eE0…` |
 | **Total** | **22** | `listMemories` on the namespace: 22 memories, 0 deleted, `must_resync=false` | full list in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 
 * Decision ledger: **≥306 checkpoint-stamped stale/fresh decisions** at freeze
@@ -283,7 +283,7 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 | `x-api-key` was sent on every Tatum request | VERIFIED | `TatumClient.apiKeyProof()` → 21/21 in the credits run, 7/7 in the final proof snapshot (2,208/2,208 in a longer earlier page run); `test/tatum.test.mjs` |
 | Sui mainnet checkpoint advances ~243 cps/min (measurement window) | VERIFIED | `data/claim-class-measurement.json` |
 | Sui Clock ~2.78 changes/min; MemWal AccountRegistry ~0.09 changes/min | VERIFIED | `data/claim-class-measurement.json` |
-| Adversarial not-stale memory answered FRESH at its snapshot epoch | VERIFIED (snapshot) | `adv-not-stale-341741224`; offline demo/proof shows FRESH at snapshot time |
+| Adversarial generator carries the old anchor proof it claims to test | VERIFIED (offline test) | `test/observer.test.mjs`; the historical snapshot specimen predates this fix and is not proof of age-at-creation |
 | Live demo answers are pulled from current chain state, not from memory | VERIFIED | `npm run demo` output step 4 |
 | Product survives relayer/Tatum failure without answering stale | VERIFIED (offline tests) + INFERRED (live) | gate fails closed on live-read failure in `src/gate.mjs` / offline tests |
 | A real user persona works | HYPOTHESIS | no user confirmed |

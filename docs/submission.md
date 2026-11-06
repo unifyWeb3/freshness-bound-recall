@@ -71,7 +71,8 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 > from observed decay (FALSE-STALE widens, MISSED-CHANGE tightens; one policy memory per change).
 >
 > Evidence: 22 mainnet Walrus blobs in namespace `freshness-recall` (7 observer observations, 4
-> corrections, 2 learned-policy memories, 1 adversarial not-stale record, 8 live round-trip test
+> corrections, 2 learned-policy memories, 1 historical adversarial specimen (it predates the
+> anchor-proof fix), 8 live round-trip test
 > memories); 306 recorded stale/fresh decisions with checkpoint stamps; an ablation table on the
 > built-in proof page; both learning directions persisted as memories and read back before every
 > answer; everything pinned (Node v26.13.0), zero LLM in the answer path, `.env`-only secrets with a

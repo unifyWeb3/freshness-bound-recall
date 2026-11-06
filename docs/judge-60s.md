@@ -74,6 +74,10 @@ live in this mode.
 > adversarial record's pin (unchanged → `FALSE-STALE`, changed → `STALE`/`CONSISTENT`) — it never
 > claims a pin state it did not read. The `FALSE-STALE` path is reproducible on demand with
 > `node scripts/show-policy-effect.mjs` (needs live credentials).
+>
+> The committed snapshot's adversarial record predates the anchor-proof fix, so its body is not
+> evidence that it was already old when written. `test/observer.test.mjs` verifies that new records
+> carry the anchor's real checkpoint, digest, object pin and read time.
 
 ## 4. The proof page (~1 s)
 
