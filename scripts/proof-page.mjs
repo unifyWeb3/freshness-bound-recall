@@ -208,68 +208,93 @@ function fmtTime(iso) {
   try { return new Date(iso).toISOString().replace("T", " ").replace(".000Z", "Z"); } catch { return iso; }
 }
 
-function lineageSvg(memories) {
-  const nodes = memories
-    .filter((m) => m.class && m.claim)
-    .slice()
-    .sort((a, b) => (a.proof.checkpoint_seq || 0) - (b.proof.checkpoint_seq || 0));
-  if (!nodes.length) return `<p class="muted">No memories yet.</p>`;
-  const W = 980;
-  const rowH = 30;
-  const H = Math.max(120, nodes.length * rowH + 40);
-  const left = 250, right = 700;
-  const color = (m) => m.state === "observation" ? "#3b82f6"
-    : m.predicate === "policy_window" ? "#a855f7"
-    : m.state === "adversarial" ? "#f59e0b"
-    : m.claim?.startsWith("cor-") ? "#10b981" : "#e5e7eb";
-  const y = (i) => 24 + i * rowH;
-  const positions = new Map();
-  nodes.forEach((m, i) => positions.set(m.blob_id || m.claim, { x: m.state === "observation" ? left : right, y: y(i), m }));
-  const edges = [];
-  for (const m of nodes) {
-    const target = m.supersedes_ref || m.supersedes;
-    if (!target) continue;
-    const from = positions.get(m.blob_id || m.claim);
-    const to = positions.get(target) || nodes.find((n) => n.claim === target || n.blob_id === target);
-    if (!from || !to) continue;
-    const toPos = positions.get(to.blob_id || to.claim);
-    if (!toPos) continue;
-    edges.push(`<path d="M${from.x + 120} ${from.y} C ${from.x + 200} ${from.y}, ${toPos.x - 60} ${toPos.y}, ${toPos.x} ${toPos.y}" fill="none" stroke="#4b5563" stroke-width="1.2" marker-end="url(#arrow)"/>`);
+function fmtAge(from, to = Date.now()) {
+  const start = Date.parse(from);
+  const end = typeof to === "number" ? to : Date.parse(to);
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return "—";
+  const seconds = Math.max(0, Math.round((end - start) / 1000));
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ${seconds % 60}s`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ${minutes % 60}m`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ${hours % 24}h`;
+}
+
+function featuredDecision(snapshot) {
+  return (snapshot.ledger || []).filter((entry) => (
+    entry.verdict === "STALE" &&
+    entry.memory?.claim?.includes("sui-clock") &&
+    entry.pin?.version &&
+    String(entry.reason || "").startsWith("subject changed")
+  )).at(-1) || null;
+}
+
+function correctionList(memories) {
+  const byId = new Map();
+  for (const memory of memories) {
+    if (memory.blob_id) byId.set(memory.blob_id, memory);
+    if (memory.claim) byId.set(memory.claim, memory);
   }
-  const labels = nodes.map((m, i) => {
-    const p = positions.get(m.blob_id || m.claim);
-    const label = `${short(m.claim, 26)} · ${m.state}`;
-    return `<g><rect x="${p.x - 4}" y="${p.y - 13}" width="128" height="26" rx="6" fill="#111827" stroke="${color(m)}" stroke-width="1.2"/>
-      <text x="${p.x + 2}" y="${p.y + 4}" fill="${color(m)}" font-size="10" font-family="ui-monospace,monospace">${esc(label)}</text>
-      <text x="${p.x + 132}" y="${p.y + 4}" fill="#6b7280" font-size="9" font-family="ui-monospace,monospace">cp ${esc(m.proof.checkpoint_seq ?? "—")}</text></g>`;
-  }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="memory lineage graph">
-    <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"/></marker></defs>
-    <text x="250" y="12" fill="#6b7280" font-size="10" font-family="ui-monospace,monospace">OBSERVATIONS</text>
-    <text x="700" y="12" fill="#6b7280" font-size="10" font-family="ui-monospace,monospace">CLAIMS / POLICY / ADVERSARIAL</text>
-    ${edges.join("")}${labels}
-  </svg>`;
+  const pairs = memories
+    .filter((memory) => memory.claim?.startsWith("cor-") && memory.supersedes)
+    .map((correction) => ({
+      correction,
+      observation: byId.get(correction.supersedes_ref) || byId.get(correction.supersedes),
+    }))
+    .filter(({ observation }) => observation?.state === "observation")
+    .sort((a, b) => Number(b.correction.proof?.checkpoint_seq || 0) - Number(a.correction.proof?.checkpoint_seq || 0));
+
+  if (!pairs.length) return `<p class="muted">No connected observation and correction records were captured.</p>`;
+  return `<ol class="correction-list">${pairs.map(({ observation, correction }) => `
+    <li class="correction-row">
+      <article class="record old-record">
+        <span class="record-kind">Recalled observation</span>
+        <strong><code>${esc(observation.claim)}</code></strong>
+        <span>Version <code>${esc(observation.proof?.object_version ?? "—")}</code></span>
+        <span>Checkpoint <code>${esc(observation.proof?.checkpoint_seq ?? "—")}</code></span>
+      </article>
+      <span class="correction-arrow" aria-hidden="true">→</span>
+      <article class="record corrected-record">
+        <span class="record-kind">Recorded correction</span>
+        <strong><code>${esc(correction.claim)}</code></strong>
+        <span>Version <code>${esc(correction.proof?.object_version ?? "—")}</code></span>
+        <span>Checkpoint <code>${esc(correction.proof?.checkpoint_seq ?? "—")}</code></span>
+      </article>
+    </li>`).join("")}</ol>`;
 }
 
 export function page(snapshot) {
   const s = summarize(snapshot);
   const live = snapshot.mode === "live";
   const cp = snapshot.checkpoint || {};
+  const cpReadAt = cp.read_at ?? cp.readAt;
+  const renderedAt = snapshot.exported_at || snapshot.served_at || Date.now();
+  const evidenceAge = fmtAge(snapshot.generated_at, renderedAt);
+  const checkpointAge = fmtAge(cpReadAt, renderedAt);
+  const decision = featuredDecision(snapshot);
+  const rememberedVersion = decision?.memory?.proof_at_write?.object_version ?? "—";
+  const rememberedCheckpoint = decision?.memory?.proof_at_write?.checkpoint_seq ?? "—";
+  const verifiedVersion = decision?.pin?.version ?? "—";
+  const verifiedCheckpoint = decision?.live?.checkpoint_seq ?? "—";
+  const decisionQuestion = decision
+    ? `Is the Sui Clock still at version ${rememberedVersion}?`
+    : "Can this recalled Sui state still be trusted?";
   const badge = snapshot.live_error
-    ? `<span class="badge cached">REFRESH FAILED (live) · showing last good fetch from ${esc(fmtTime(snapshot.generated_at))}</span><div class="reason" style="margin-top:6px;border-color:#7f1d1d">${esc(snapshot.live_error)}</div>`
+    ? `<span class="status status-warning">Refresh failed · showing the last captured evidence from ${esc(fmtTime(snapshot.generated_at))}</span><div class="reason error-reason">${esc(snapshot.live_error)}</div>`
     : snapshot.exported_at
-    ? `<span class="badge cached">STATIC EXPORT · ${esc(fmtTime(snapshot.exported_at))} · network off · ids &amp; stamps from a labelled snapshot</span>`
+    ? `<span class="status status-snapshot">CACHED SNAPSHOT · STATIC EXPORT · network off</span>`
     : live
-      ? `<span class="badge live">LIVE · fetched ${esc(fmtTime(snapshot.generated_at))}</span>`
-      : `<span class="badge cached">CACHED SNAPSHOT · ${esc(fmtTime(snapshot.generated_at))} (network off)</span>`;
-  const age = cp.read_at ? Math.max(0, Math.round((Date.now() - Date.parse(cp.read_at)) / 1000)) : null;
+      ? `<span class="status status-live">Live evidence · fetched ${esc(fmtTime(snapshot.generated_at))}</span>`
+      : `<span class="status status-snapshot">CACHED SNAPSHOT · network off</span>`;
 
   const decisionRows = (snapshot.ledger || []).filter((e) => e.verdict).slice(-40).reverse().map((e) => `
     <tr>
       <td>${esc(fmtTime(e.at))}</td>
       <td>${esc(e.type || "answer")}</td>
       <td><code>${esc(short(e.query, 34))}</code></td>
-      <td><span class="pill ${e.verdict === "FRESH" ? "ok" : "bad"}">${esc(e.verdict)}</span></td>
+      <td><span class="verdict ${e.verdict === "FRESH" ? "verdict-fresh" : "verdict-withheld"}">${esc(e.verdict)}</span></td>
       <td>${esc(e.signal || "—")}</td>
       <td class="muted">${esc(e.reason || "")}</td>
       <td><code>${esc(e.live?.checkpoint_seq ?? "—")}</code></td>
@@ -280,9 +305,9 @@ export function page(snapshot) {
     <tr>
       <td><code title="${esc(m.blob_id)}">${esc(short(m.blob_id, 12))}</code></td>
       <td><code>${esc(m.claim)}</code></td>
-      <td><span class="pill ${m.class === "FAST" ? "fast" : "slow"}">${esc(m.class)}</span></td>
+      <td><span class="class-label">${esc(m.class)}</span></td>
       <td>${esc(m.state)}</td>
-      <td><code title="${esc(m.subject)}">${esc(short(m.subject, 10))}</code></td>
+      <td><code class="address" title="${esc(m.subject)}">${esc(short(m.subject, 10))}</code></td>
       <td><code>${esc(m.proof.checkpoint_seq ?? "—")}</code></td>
       <td><code>${esc(m.proof.object_version ?? "—")}</code></td>
       <td><code title="${esc(m.proof.object_digest)}">${esc(short(m.proof.object_digest, 12))}</code></td>
@@ -296,7 +321,7 @@ export function page(snapshot) {
       <td>${esc(r.status)}</td>
       <td>${esc(r.latency_ms)} ms</td>
       <td><code>${esc(r.plan ?? "—")}</code></td>
-      <td>${r.api_key_sent === true ? '<span class="badge live">x-api-key</span>' : (r.api_key_sent === false ? '<span class="badge cached">NO KEY</span>' : '<span class="muted">—</span>')}</td>
+      <td>${r.api_key_sent === true ? '<span class="key-state">header sent</span>' : (r.api_key_sent === false ? '<span class="key-state key-missing">not sent</span>' : '<span class="muted">—</span>')}</td>
       <td class="muted">${esc(r.error || "")}</td>
     </tr>`).join("");
   const keyProof = snapshot.tatum_api_key_proof || null;
@@ -324,117 +349,311 @@ export function page(snapshot) {
 
   const subjectCards = Object.values(snapshot.subjects || {}).map(({ subject, pin, error }) => `
     <div class="card">
-      <div class="card-title">${esc(subject.label)} <span class="pill ${subject.class === "FAST" ? "fast" : "slow"}">${esc(subject.class)}</span></div>
-      <div class="muted">subject <code>${esc(subject.address)}</code></div>
+      <div class="card-heading"><span>${esc(subject.label)}</span><span class="class-label">${esc(subject.class)}</span></div>
+      <div class="muted address-line">Subject <code class="address">${esc(subject.address)}</code></div>
       ${error ? `<div class="bad">${esc(error)}</div>` : `
-        <div class="kv"><span>version</span><code>${esc(pin.version)}</code></div>
-        <div class="kv"><span>digest</span><code title="${esc(pin.digest)}">${esc(short(pin.digest, 18))}</code></div>
-        <div class="kv"><span>read at</span><code>${esc(fmtTime(pin.readAt))}</code></div>`}
+        <div class="kv"><span>Version</span><code>${esc(pin.version)}</code></div>
+        <div class="kv"><span>Digest</span><code title="${esc(pin.digest)}">${esc(short(pin.digest, 18))}</code></div>
+        <div class="kv"><span>Read at</span><code>${esc(fmtTime(pin.readAt ?? pin.read_at))}</code></div>`}
     </div>`).join("");
+
+  const changed = s.ablation.rows[1]?.changed_answers ?? 0;
+  const unchangedOld = s.ablation.rows[1]?.still_true_old_answers ?? 0;
+  const unverified = s.ablation.rows[1]?.unverified_answers ?? 0;
+  const fullSnapshotUrl = "https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/evidence/proof-snapshot.json";
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>FRESHNESS-BOUND RECALL · proof</title>
+<meta name="description" content="A static evidence page showing how Freshness-Bound Recall withholds stale memory and verifies the current Sui value before answering."/>
+<meta property="og:title" content="Freshness-Bound Recall · Evidence"/>
+<meta property="og:description" content="See the recorded decision where stale memory was withheld and replaced with a verified Sui value."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://freshness-bound-recall-oxunify.vercel.app/"/>
+<title>Freshness-Bound Recall · Evidence</title>
 <style>
-  :root { color-scheme: dark; }
+  :root {
+    color-scheme: dark;
+    --bg: #0b0d14;
+    --card: #11141c;
+    --raised: #1a1e28;
+    --ink: #eef0f5;
+    --secondary: #a3a9b8;
+    --muted: #7a8296;
+    --hairline: rgba(238,240,245,.09);
+    --hairline-strong: rgba(238,240,245,.16);
+    --amber: #f4b860;
+    --amber-ink: #2a1c08;
+    --green: #4cc38a;
+    --red: #ef7d82;
+    --focus: #b9c8ff;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: #0b0f17; color: #e5e7eb; font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
-  header { padding: 22px 28px 14px; border-bottom: 1px solid #1f2937; }
-  h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: .2px; }
-  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .12em; color: #9ca3af; margin: 28px 0 10px; }
-  .sub { color: #9ca3af; }
-  main { padding: 8px 28px 60px; max-width: 1240px; }
-  .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .04em; }
-  .badge.live { background: #052e1c; color: #34d399; border: 1px solid #065f46; }
-  .badge.cached { background: #2a1f05; color: #fbbf24; border: 1px solid #92400e; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-  .card { background: #0f1520; border: 1px solid #1f2937; border-radius: 10px; padding: 14px 16px; }
-  .card-title { font-weight: 600; margin-bottom: 6px; }
-  .kv { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: #9ca3af; }
-  .kv code { color: #e5e7eb; }
-  .muted { color: #8b93a1; font-size: 12px; }
-  .reason { margin-top: 8px; font-size: 12px; color: #cbd5e1; background: #0b1220; border-left: 2px solid #334155; padding: 6px 8px; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th { text-align: left; color: #8b93a1; font-weight: 600; border-bottom: 1px solid #1f2937; padding: 7px 8px; white-space: nowrap; }
-  td { border-bottom: 1px solid #131a26; padding: 6px 8px; vertical-align: top; }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; }
-  .pill { padding: 1px 7px; border-radius: 999px; font-size: 10.5px; font-weight: 700; letter-spacing: .03em; }
-  .pill.ok { background: #052e1c; color: #34d399; }
-  .pill.bad { background: #3f0d12; color: #f87171; }
-  .pill.fast { background: #172554; color: #93c5fd; }
-  .pill.slow { background: #1e1b4b; color: #c4b5fd; }
-  .ok { color: #34d399; } .bad { color: #f87171; }
-  .stat { font-size: 26px; font-weight: 700; }
-  .stat-row { display: flex; gap: 26px; flex-wrap: wrap; margin: 10px 0 0; }
-  .stat-row > div { min-width: 120px; }
-  footer { color: #6b7280; font-size: 11px; padding: 0 28px 30px; }
-  .scroll { overflow-x: auto; }
-  .auto { color: #6b7280; font-size: 11px; margin-left: 10px; }
+  html, body { width: 100%; max-width: 100%; margin: 0; overflow-x: hidden; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  a { color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--hairline-strong); transition: color 160ms cubic-bezier(.22,1,.36,1), text-decoration-color 160ms cubic-bezier(.22,1,.36,1); }
+  a:hover { color: var(--amber); text-decoration-color: var(--amber); }
+  a:focus-visible, summary:focus-visible, .scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  code { max-width: 100%; color: var(--ink); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 { max-width: 1040px; margin-bottom: 20px; font-size: clamp(48px, 5vw, 64px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; }
+  h2 { margin: 0 0 8px; font-size: clamp(24px, 3vw, 32px); font-weight: 500; line-height: 1.2; letter-spacing: -.02em; }
+  h3 { margin: 0; font-size: 16px; font-weight: 500; }
+  .shell { width: min(100% - 48px, 1440px); margin: 0 auto; min-width: 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; border-bottom: 1px solid var(--hairline); }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 15px; font-weight: 500; }
+  .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--hairline-strong); border-radius: 8px; color: var(--amber); font: 500 11px/1 ui-monospace, monospace; }
+  .nav-links { display: flex; gap: 20px; font-size: 13px; }
+  .snapshot-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; padding: 16px 0; border-bottom: 1px solid var(--hairline); }
+  .status { display: inline-flex; min-height: 32px; align-items: center; padding: 4px 10px; border: 1px solid var(--hairline-strong); border-radius: 6px; font: 500 12px/1.4 ui-monospace, monospace; }
+  .status-snapshot, .status-warning { border-color: rgba(244,184,96,.38); background: rgba(244,184,96,.08); color: var(--amber); }
+  .status-live { border-color: rgba(76,195,138,.38); background: rgba(76,195,138,.08); color: var(--green); }
+  .snapshot-note { color: var(--secondary); font-size: 13px; text-align: right; }
+  .error-reason { margin-top: 8px; border-color: rgba(239,125,130,.5); }
+  main { min-width: 0; padding-bottom: 80px; }
+  .hero { min-height: calc(100vh - 128px); display: grid; align-content: center; gap: 32px; padding: 48px 0; border-bottom: 1px solid var(--hairline); }
+  .eyebrow { margin-bottom: 16px; color: var(--amber); font: 500 12px/1.4 ui-monospace, monospace; }
+  .hero-intro { color: var(--secondary); max-width: 720px; margin-bottom: 0; font-size: 18px; line-height: 1.6; }
+  .evidence-panel { min-width: 0; padding: 24px; border: 1px solid var(--hairline-strong); border-radius: 16px; background: var(--card); }
+  .checkpoint-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; min-width: 0; margin-bottom: 24px; }
+  .checkpoint-rail::before { content: ""; position: absolute; top: 5px; right: 12.5%; left: 12.5%; height: 1px; background: var(--hairline-strong); }
+  .rail-stop { position: relative; min-width: 0; padding-top: 20px; color: var(--muted); font: 11px/1.4 ui-monospace, monospace; text-align: center; overflow-wrap: anywhere; }
+  .rail-stop::before { content: ""; position: absolute; top: 0; left: calc(50% - 5px); width: 10px; height: 10px; border: 2px solid var(--card); background: var(--secondary); }
+  .rail-stop.gate::before { background: var(--amber); box-shadow: 0 0 0 1px rgba(244,184,96,.4); }
+  .decision-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; min-width: 0; }
+  .flow-step { position: relative; min-width: 0; min-height: 172px; display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--raised); }
+  .flow-step::after { content: "→"; position: absolute; z-index: 2; top: calc(50% - 16px); right: -23px; width: 32px; height: 32px; display: grid; place-items: center; color: var(--muted); font-size: 18px; }
+  .flow-step:last-child::after { content: none; }
+  .flow-step.gate-step { border-color: rgba(244,184,96,.46); }
+  .flow-step.verified-step { border-color: rgba(76,195,138,.32); }
+  .step-label { color: var(--muted); font: 12px/1.4 ui-monospace, monospace; }
+  .step-value { margin: 0; font-size: 17px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+  .step-meta { margin-top: auto; color: var(--secondary); font: 12px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+  .gate-verdict { color: var(--amber); font-size: 26px; letter-spacing: -.02em; }
+  .verified-step .step-value { color: var(--green); }
+  .why { margin: 20px 0 0; padding-top: 20px; border-top: 1px solid var(--hairline); color: var(--secondary); }
+  .why strong { color: var(--ink); font-weight: 500; }
+  .capture-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; min-width: 0; border: 1px solid var(--hairline); border-radius: 12px; overflow: hidden; background: var(--hairline); }
+  .capture-item { min-width: 0; padding: 16px; background: var(--card); }
+  .capture-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; }
+  .capture-value { display: block; color: var(--ink); font: 500 13px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+  .section { min-width: 0; padding-top: 64px; }
+  .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+  .section-copy { max-width: 680px; margin: 0; color: var(--secondary); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; min-width: 0; }
+  .grid > *, .decision-flow > *, .capture-grid > * { min-width: 0; }
+  .card { min-width: 0; padding: 20px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--card); }
+  .card-heading, .card-title { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 12px; font-weight: 500; }
+  .class-label { color: var(--muted); font: 12px/1.5 ui-monospace, monospace; }
+  .address, .address-line, .address-line code { overflow-wrap: anywhere; word-break: break-word; }
+  .kv { display: flex; justify-content: space-between; gap: 16px; min-width: 0; padding-top: 8px; color: var(--secondary); font-size: 13px; }
+  .kv > * { min-width: 0; }
+  .kv code { color: var(--ink); text-align: right; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .reason { margin-top: 12px; padding: 8px 12px; border-left: 2px solid var(--hairline-strong); background: var(--bg); color: var(--secondary); font-size: 12px; }
+  .split-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); min-width: 0; margin-bottom: 24px; border: 1px solid var(--hairline); border-radius: 12px; overflow: hidden; }
+  .split-stat { min-width: 0; padding: 24px; background: var(--card); }
+  .split-stat + .split-stat { border-left: 1px solid var(--hairline); }
+  .split-number { display: block; margin-bottom: 8px; font: 500 32px/1 ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .split-label { color: var(--secondary); overflow-wrap: anywhere; }
+  .split-stat:first-child .split-number { color: var(--amber); }
+  .scroll { width: 100%; max-width: 100%; overflow-x: auto; border: 1px solid var(--hairline); border-radius: 12px; background: var(--card); }
+  table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 12px; }
+  caption { padding: 12px 16px; border-bottom: 1px solid var(--hairline); color: var(--secondary); text-align: left; }
+  th { padding: 10px 12px; border-bottom: 1px solid var(--hairline-strong); color: var(--secondary); font-weight: 500; text-align: left; white-space: nowrap; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  .ok, .verdict-fresh { color: var(--green); }
+  .bad, .verdict-withheld { color: var(--red); }
+  .verdict, .key-state { font: 500 11px/1.5 ui-monospace, monospace; }
+  .key-missing { color: var(--red); }
+  .correction-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .correction-row { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; min-width: 0; }
+  .record { display: grid; gap: 8px; min-width: 0; padding: 16px; border: 1px solid var(--hairline); background: var(--card); }
+  .old-record { border-radius: 12px 0 0 12px; }
+  .corrected-record { border-color: rgba(76,195,138,.28); border-radius: 0 12px 12px 0; }
+  .record-kind { color: var(--muted); font-size: 12px; }
+  .record span:not(.record-kind) { color: var(--secondary); font-size: 13px; }
+  .correction-arrow { display: grid; place-items: center; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); background: var(--raised); color: var(--green); }
+  details { min-width: 0; border: 1px solid var(--hairline); border-radius: 12px; background: var(--card); }
+  details + details { margin-top: 16px; }
+  summary { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; cursor: pointer; font-weight: 500; }
+  summary::marker { color: var(--amber); }
+  .details-content { min-width: 0; padding: 0 16px 16px; }
+  .details-meta { color: var(--muted); font: 12px/1.5 ui-monospace, monospace; }
+  .request-proof { margin-bottom: 16px; }
+  .footer { padding: 32px 0 48px; border-top: 1px solid var(--hairline); color: var(--secondary); font-size: 13px; }
+  .footer-inner { display: flex; justify-content: space-between; gap: 24px; }
+  .footer-links { display: flex; gap: 16px; }
+  @media (max-width: 1080px) {
+    .capture-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .decision-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .flow-step:nth-child(2)::after { content: none; }
+  }
+  @media (max-width: 720px) {
+    .shell { width: min(100% - 32px, 1440px); }
+    .topbar { align-items: start; padding: 16px 0; }
+    .nav-links { flex-direction: column; align-items: end; gap: 8px; }
+    .snapshot-bar { align-items: start; flex-direction: column; }
+    .snapshot-note { text-align: left; }
+    .hero { min-height: auto; gap: 32px; padding: 48px 0; }
+    h1 { font-size: clamp(36px, 11vw, 44px); }
+    .hero-intro { font-size: 16px; }
+    .evidence-panel { padding: 16px; border-radius: 12px; }
+    .checkpoint-rail { gap: 4px; }
+    .rail-stop { font-size: 9px; }
+    .decision-flow { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .flow-step { min-height: auto; }
+    .flow-step::after, .flow-step:nth-child(2)::after { content: "↓"; top: auto; right: calc(50% - 16px); bottom: -20px; }
+    .flow-step:last-child::after { content: none; }
+    .capture-grid, .split-stats { grid-template-columns: minmax(0, 1fr); }
+    .capture-item + .capture-item, .split-stat + .split-stat { border-top: 1px solid var(--hairline); border-left: 0; }
+    .section { padding-top: 48px; }
+    .section-heading { align-items: start; flex-direction: column; gap: 8px; }
+    .correction-row { grid-template-columns: minmax(0, 1fr); }
+    .old-record, .corrected-record { border-radius: 12px; }
+    .correction-arrow { min-height: 32px; border: 0; }
+    .footer-inner { flex-direction: column; }
+  }
 </style>
-<script>${live ? `setTimeout(() => location.reload(), ${refreshSeconds * 1000});` : ""}</script>
 </head>
 <body>
-<header>
-  <h1>FRESHNESS-BOUND RECALL <span class="auto">${live ? `auto-refresh ${refreshSeconds}s` : ""}</span></h1>
-  <div class="sub">${badge} &nbsp; chain <code>${esc(snapshot.chain_id || SUI_MAINNET_CHAIN_ID)}</code></div>
-  <div class="stat-row">
-    <div><div class="muted">checkpoint</div><div class="stat"><code>${esc(cp.checkpointSeq ?? "—")}</code></div><div class="muted">${esc(short(cp.checkpointDigest, 18))}</div></div>
-    <div><div class="muted">checkpoint age</div><div class="stat">${age === null ? "—" : `${age}s`}</div><div class="muted">${esc(cp.source ?? "")}</div></div>
-    <div><div class="muted">memories shown</div><div class="stat">${(snapshot.memories || []).length}</div><div class="muted">${s.byClass?.FAST?.memories ?? 0} FAST · ${s.byClass?.SLOW?.memories ?? 0} SLOW</div></div>
-    <div><div class="muted">decisions</div><div class="stat">${s.total}</div><div class="muted">${s.fresh} fresh · ${s.stale} stale · ${s.withheld} unverified</div></div>
-    <div><div class="muted">Tatum plan</div><div class="stat" style="font-size:13px"><code>${esc(snapshot.plan ?? "—")}</code></div><div class="muted">${esc(snapshot.tatum_call_count ?? 0)} requests this process</div></div>
+<nav class="shell topbar" aria-label="Primary navigation">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">FBR</span><span>Freshness-Bound Recall</span></div>
+  <div class="nav-links">
+    <a href="https://github.com/unifyWeb3/freshness-bound-recall">GitHub repo</a>
+    <a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Judge quickstart</a>
   </div>
+</nav>
+<header class="shell snapshot-bar">
+  <div>${badge}</div>
+  <div class="snapshot-note">Read-only evidence · chain <code>${esc(snapshot.chain_id || SUI_MAINNET_CHAIN_ID)}</code></div>
 </header>
-<main>
+<main class="shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <p class="eyebrow">Evidence page · stale-answer gate</p>
+      <h1 id="hero-title">A stale answer was withheld</h1>
+      <p class="hero-intro">This snapshot records the exact memory, checkpoint gate, and Sui value used to stop an old claim from answering.</p>
+    </div>
+    <div class="evidence-panel" aria-label="Recorded stale memory decision">
+      <div class="checkpoint-rail" aria-label="Verification checkpoints">
+        <span class="rail-stop">question</span>
+        <span class="rail-stop">memory cp ${esc(rememberedCheckpoint)}</span>
+        <span class="rail-stop gate">freshness gate</span>
+        <span class="rail-stop">live cp ${esc(verifiedCheckpoint)}</span>
+      </div>
+      <div class="decision-flow">
+        <article class="flow-step">
+          <span class="step-label">Question</span>
+          <p class="step-value">${esc(decisionQuestion)}</p>
+          <span class="step-meta">Recorded query reconstructed from the recalled claim</span>
+        </article>
+        <article class="flow-step">
+          <span class="step-label">Recalled memory</span>
+          <p class="step-value"><code>${esc(decision?.memory?.claim ?? "No recorded claim")}</code></p>
+          <span class="step-meta">version ${esc(rememberedVersion)} · checkpoint ${esc(rememberedCheckpoint)}</span>
+        </article>
+        <article class="flow-step gate-step">
+          <span class="step-label">Gate verdict</span>
+          <p class="step-value gate-verdict">WITHHELD</p>
+          <span class="step-meta">${esc(decision?.reason || "The recalled proof could not be verified as fresh")}</span>
+        </article>
+        <article class="flow-step verified-step">
+          <span class="step-label">Verified live value</span>
+          <p class="step-value">version ${esc(verifiedVersion)}</p>
+          <span class="step-meta">checkpoint ${esc(verifiedCheckpoint)} · ${esc(fmtTime(decision?.pin?.read_at))}</span>
+        </article>
+      </div>
+      <p class="why"><strong>Why it matters:</strong> the system returned the verified current value instead of letting version ${esc(rememberedVersion)} answer after the Sui Clock had changed.</p>
+    </div>
+    <div class="capture-grid" aria-label="Snapshot provenance">
+      <div class="capture-item"><span class="capture-label">Captured source</span><span class="capture-value">${esc(cp.source ?? snapshot.mode ?? "—")}</span></div>
+      <div class="capture-item"><span class="capture-label">Pins at snapshot</span><span class="capture-value">${Object.keys(snapshot.subjects || {}).length}</span></div>
+      <div class="capture-item"><span class="capture-label">Requests captured in snapshot</span><span class="capture-value">${(snapshot.tatum_log || []).length}</span></div>
+      <div class="capture-item"><span class="capture-label">Evidence captured</span><span class="capture-value">${esc(fmtTime(snapshot.generated_at))}</span></div>
+      <div class="capture-item"><span class="capture-label">Static page exported</span><span class="capture-value">${snapshot.exported_at ? esc(fmtTime(snapshot.exported_at)) : "Not exported"}</span></div>
+      <div class="capture-item"><span class="capture-label">Snapshot age</span><span class="capture-value">${esc(evidenceAge)}</span></div>
+    </div>
+  </section>
 
-  <h2>subjects (live Sui mainnet pins)</h2>
-  <div class="grid">${subjectCards || '<p class="muted">no subject data</p>'}</div>
+  <section class="section" aria-labelledby="pins-title">
+    <div class="section-heading"><div><h2 id="pins-title">Pins captured in the snapshot</h2><p class="section-copy">The subject versions and digests recorded alongside the evidence. Checkpoint age at render: <code>${esc(checkpointAge)}</code>.</p></div></div>
+    <div class="grid">${subjectCards || '<p class="muted">No subject data captured.</p>'}</div>
+  </section>
 
-  <h2>learned policy (from Walrus Memory)</h2>
-  <div class="grid">${policyCards || '<p class="muted">no policy memories yet</p>'}</div>
+  <section class="section" aria-labelledby="policy-title">
+    <div class="section-heading"><div><h2 id="policy-title">Learned freshness policy</h2><p class="section-copy">Windows recovered from Walrus Memory for fast- and slow-changing claims.</p></div></div>
+    <div class="grid">${policyCards || '<p class="muted">No policy memories captured.</p>'}</div>
+  </section>
 
-  <h2>memory-off vs memory-on (over the recorded decisions)</h2>
-  <div class="scroll"><table>
-    <thead><tr><th>configuration</th><th>from memory</th><th>from live</th><th>withheld</th><th>Tatum reads</th><th>changed answers</th><th>still-true old</th><th>unverified</th><th>note</th></tr></thead>
+  <section class="section" aria-labelledby="comparison-title">
+    <div class="section-heading"><div><h2 id="comparison-title">What the gate prevented</h2><p class="section-copy">The recorded decisions separated changed memories from old claims that remained true and records that could not be verified.</p></div></div>
+    <div class="split-stats" aria-label="Recorded unsafe memory outcomes">
+      <div class="split-stat"><span class="split-number">${changed}</span><span class="split-label">changed</span></div>
+      <div class="split-stat"><span class="split-number">${unchangedOld}</span><span class="split-label">unchanged-but-old</span></div>
+      <div class="split-stat"><span class="split-number">${unverified}</span><span class="split-label">unverified</span></div>
+    </div>
+    <div class="scroll" tabindex="0" role="region" aria-label="Memory-off and memory-on comparison table"><table>
+    <caption>Memory-off versus memory-on over all ${s.total} recorded decisions</caption>
+    <thead><tr><th scope="col">configuration</th><th scope="col">from memory</th><th scope="col">from live</th><th scope="col">withheld</th><th scope="col">Tatum reads</th><th scope="col">changed answers</th><th scope="col">still-true old</th><th scope="col">unverified</th><th scope="col">note</th></tr></thead>
     <tbody>${ablationRows}</tbody>
   </table></div>
-  <p class="muted">Reads are counted per decision: memory-off reads the subject once; the gate reads one checkpoint plus one subject pin. Changed memories are false now; still-true old memories only exceeded a freshness bound; unverified memories lack a complete proof.</p>
+    <p class="muted">“Unchanged-but-old” is the still-true old category: the value matched, but the memory exceeded its freshness bound. The gate uses one checkpoint read and one subject-pin read per decision.</p>
+  </section>
 
-  <h2>lineage (supersedes)</h2>
-  <div class="card">${lineageSvg(snapshot.memories || [])}</div>
+  <section class="section" aria-labelledby="corrections-title">
+    <div class="section-heading"><div><h2 id="corrections-title">Observation → correction chain</h2><p class="section-copy">Only corrections connected to a captured observation are shown; unconnected smoke-test seeds are excluded.</p></div></div>
+    ${correctionList(snapshot.memories || [])}
+  </section>
 
-  <h2>memories on Walrus (blob ids + checkpoint stamps)</h2>
-  <div class="scroll"><table>
-    <thead><tr><th>blob</th><th>claim</th><th>class</th><th>state</th><th>subject</th><th>proof cp</th><th>object version</th><th>object digest</th><th>read at</th></tr></thead>
-    <tbody>${memoryRows || '<tr><td colspan="9" class="muted">no memories</td></tr>'}</tbody>
-  </table></div>
+  <section class="section" aria-labelledby="records-title">
+    <div class="section-heading"><div><h2 id="records-title">Evidence records</h2><p class="section-copy">Dense inventories stay available for inspection without competing with the recorded decision above.</p></div></div>
+    <details>
+      <summary><span>Memory inventory</span><span class="details-meta">${(snapshot.memories || []).length} captured records</span></summary>
+      <div class="details-content"><div class="scroll" tabindex="0" role="region" aria-label="Memory inventory table"><table>
+        <caption>Walrus Memory blob identifiers and checkpoint stamps</caption>
+        <thead><tr><th scope="col">Blob</th><th scope="col">Claim</th><th scope="col">Class</th><th scope="col">State</th><th scope="col">Subject</th><th scope="col">Proof cp</th><th scope="col">Object version</th><th scope="col">Object digest</th><th scope="col">Read at</th></tr></thead>
+        <tbody>${memoryRows || '<tr><td colspan="9" class="muted">No memories captured.</td></tr>'}</tbody>
+      </table></div></div>
+    </details>
+    <details>
+      <summary><span>Latest 40 of ${s.total} decisions</span><span class="details-meta">Open ledger</span></summary>
+      <div class="details-content">
+        <p class="muted">The complete ledger is preserved in the <a href="${fullSnapshotUrl}">full proof snapshot</a>.</p>
+        <div class="scroll" tabindex="0" role="region" aria-label="Latest decision ledger table"><table>
+          <caption>Latest 40 of ${s.total} decisions</caption>
+          <thead><tr><th scope="col">At</th><th scope="col">Kind</th><th scope="col">Query</th><th scope="col">Verdict</th><th scope="col">Signal</th><th scope="col">Reason</th><th scope="col">Live cp</th><th scope="col">Proof cp</th></tr></thead>
+          <tbody>${decisionRows || '<tr><td colspan="8" class="muted">No decisions recorded.</td></tr>'}</tbody>
+        </table></div>
+      </div>
+    </details>
+  </section>
 
-  <h2>decision ledger (every stale/fresh decision)</h2>
-  <div class="scroll"><table>
-    <thead><tr><th>at</th><th>kind</th><th>query</th><th>verdict</th><th>signal</th><th>reason</th><th>live cp</th><th>proof cp</th></tr></thead>
-    <tbody>${decisionRows || '<tr><td colspan="8" class="muted">no decisions recorded yet</td></tr>'}</tbody>
-  </table></div>
+  <section class="section" aria-labelledby="requests-title">
+    <div class="section-heading"><div><h2 id="requests-title">Captured Tatum requests</h2><p class="section-copy">Read-only request metadata preserved in this snapshot. API-key values are never printed.</p></div></div>
+    <div class="card request-proof">
+      ${keyProof ? `<div class="kv"><span>x-api-key on every request</span><code>${esc(keyProof.requests_with_api_key)}/${esc(keyProof.total_log_entries)} log entries · ${keyProof.every_request_had_api_key ? "every request carried the header" : "incomplete — see log"}</code></div>
+      <div class="kv"><span>Key value</span><code>never printed; boolean proof only</code></div>` : `<div class="muted">API-key proof was not recorded in this snapshot.</div>`}
+    </div>
+    <div class="scroll" tabindex="0" role="region" aria-label="Tatum request log table"><table>
+      <caption>Latest ${Math.min(30, (snapshot.tatum_log || []).length)} captured request log entries</caption>
+      <thead><tr><th scope="col">At</th><th scope="col">Query</th><th scope="col">Status</th><th scope="col">Latency</th><th scope="col">x-ttm-plan</th><th scope="col">x-api-key</th><th scope="col">Error</th></tr></thead>
+      <tbody>${tatumRows || '<tr><td colspan="7" class="muted">No requests captured.</td></tr>'}</tbody>
+    </table></div>
+  </section>
 
-  <h2>Tatum request log</h2>
-  <div class="card">
-    ${keyProof ? `<div class="kv"><span>x-api-key on every request</span><code>${esc(keyProof.requests_with_api_key)}/${esc(keyProof.total_log_entries)} log entries · ${keyProof.every_request_had_api_key ? "EVERY REQUEST CARRIED THE HEADER" : "INCOMPLETE - see log"}</code></div>
-    <div class="kv"><span>key value</span><code>never printed (boolean proof only)</code></div>` : `<div class="muted">api-key proof not recorded in this snapshot</div>`}
-  </div>
-  <div class="scroll"><table>
-    <thead><tr><th>at</th><th>query</th><th>status</th><th>latency</th><th>x-ttm-plan</th><th>x-api-key</th><th>error</th></tr></thead>
-    <tbody>${tatumRows || '<tr><td colspan="7" class="muted">no requests recorded</td></tr>'}</tbody>
-  </table></div>
-
-  <h2>relayer</h2>
-  <div class="card">
-    ${snapshot.relayer ? `<div class="kv"><span>status</span><code>${esc(snapshot.relayer.status)}</code></div>
-    <div class="kv"><span>version</span><code>${esc(snapshot.relayer.version)}</code></div>
-    <div class="kv"><span>mode</span><code>${esc(snapshot.relayer.mode)}</code></div>
-    <div class="kv"><span>write ready</span><code>${esc(snapshot.relayer.write_ready)}</code></div>` : `<div class="muted">relayer info not collected in this snapshot</div>`}
-  </div>
+  <section class="section" aria-labelledby="relayer-title">
+    <div class="section-heading"><div><h2 id="relayer-title">Relayer record</h2></div></div>
+    <div class="card">
+      ${snapshot.relayer ? `<div class="kv"><span>Status</span><code>${esc(snapshot.relayer.status)}</code></div>
+      <div class="kv"><span>Version</span><code>${esc(snapshot.relayer.version)}</code></div>
+      <div class="kv"><span>Mode</span><code>${esc(snapshot.relayer.mode)}</code></div>
+      <div class="kv"><span>Write ready</span><code>${esc(snapshot.relayer.write_ready)}</code></div>` : `<div class="muted">Relayer information was not collected in this snapshot.</div>`}
+    </div>
+  </section>
 </main>
-<footer>FRESHNESS-BOUND RECALL · Tatum Sui mainnet GraphQL (read-only) + Walrus Memory · ${live ? "LIVE" : "OFFLINE CACHED"} · no LLM in the answer path</footer>
+<footer class="footer"><div class="shell footer-inner"><span>Freshness-Bound Recall · Tatum Sui mainnet GraphQL + Walrus Memory · ${live ? "live evidence" : "offline cached evidence"} · no LLM in the answer path</span><span class="footer-links"><a href="https://github.com/unifyWeb3/freshness-bound-recall">Source</a><a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Reproduce</a></span></div></footer>
 </body></html>`;
 }
 
