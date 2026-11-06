@@ -15,9 +15,19 @@ function staticPage() {
   return page(snapshot);
 }
 
-test("proof page leads with the recorded question, withheld memory, and verified value", () => {
+function capture(html, pattern, description) {
+  const match = html.match(pattern);
+  assert.ok(match, `${description} must be present`);
+  return match[1];
+}
+
+test("homepage leads with the product promise, try-it action, and recorded decision", () => {
   const html = staticPage();
-  assert.match(html, /A stale answer was withheld/);
+  assert.match(html, /A stale memory is not an answer/);
+  assert.match(html, /href="#try-it"/);
+  assert.match(html, /href="#recorded-decision"/);
+  assert.match(html, /Try it in 60 seconds/);
+  assert.match(html, /id="recorded-decision"/);
   assert.match(html, /Is the Sui Clock still at version 1018797298\?/);
   assert.match(html, /obs-sui-clock-341742463/);
   assert.match(html, /WITHHELD/);
@@ -26,11 +36,17 @@ test("proof page leads with the recorded question, withheld memory, and verified
   assert.match(html, /Why it matters:/);
   assert.match(html, /checkpoint-rail/);
   assert.match(html, /rail-stop gate/);
+
+  const gateStep = capture(html,
+    /<article(?=[^>]*class="(?=[^"]*\bflow-step\b)(?=[^"]*\bgate-step\b)[^"]*")[^>]*>([\s\S]*?)<\/article>/,
+    "the recorded gate step");
+  assert.equal((gateStep.match(/class="step-meta"/g) || []).length, 1,
+    "the gate reason must be rendered once");
 });
 
 test("proof page labels static provenance and accepts camel-case checkpoint readAt", () => {
   const html = staticPage();
-  assert.match(html, /CACHED SNAPSHOT · STATIC EXPORT · network off/);
+  assert.match(html, /Cached snapshot · static export · network off/);
   for (const label of [
     "Captured source",
     "Pins at snapshot",
@@ -42,6 +58,37 @@ test("proof page labels static provenance and accepts camel-case checkpoint read
   assert.match(html, /Snapshot age<\/span><span class="capture-value">1m 0s/);
   assert.match(html, /Checkpoint age at render: <code>1m 3s<\/code>/,
     "checkpoint age must use the snapshot's checkpoint.readAt field");
+});
+
+test("homepage exposes the exact credential-free 60-second lifecycle", () => {
+  const html = staticPage();
+  const tryIt = capture(html, /<section(?=[^>]*\bid="try-it")[^>]*>([\s\S]*?)<\/section>/,
+    "the 60-second try-it section");
+
+  assert.match(tryIt, /npm install --ignore-scripts/);
+  assert.match(tryIt, /npm run recall:checked -- --sample sui-clock-revision-lifecycle/);
+  assert.match(tryIt, /goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY/);
+  assert.match(tryIt, /mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY/);
+  assert.match(tryIt, /STALE[\s\S]*FRESH[\s\S]*STALE/);
+  assert.match(tryIt, /117[,.]?242 ms/);
+  assert.match(tryIt, /1[,.]?381 ms/);
+  assert.match(tryIt, /read-only/i);
+  assert.match(tryIt, /network off/i);
+  assert.match(tryIt, /writes?[^<]{0,20}none/i);
+  assert.match(tryIt, /proof-equivalent observation/i);
+  assert.match(tryIt, /not the correction blob/i);
+  assert.match(tryIt,
+    /<button(?=[^>]*\btype="button")(?=[^>]*\baria-label="[^"]*[Cc]opy)[^>]*>/);
+  assert.match(html, /navigator\.clipboard\.writeText/);
+  assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|new WebSocket/);
+});
+
+test("homepage uses the checkpoint signature without a generic FBR tile", () => {
+  const html = staticPage();
+  assert.match(html, /class="brand-mark"/);
+  assert.doesNotMatch(html, />FBR</);
+  assert.match(html, /Recorded Mainnet evidence/);
+  assert.doesNotMatch(html, /EVIDENCE PAGE|CACHED SNAPSHOT|STATIC EXPORT/);
 });
 
 test("proof page keeps dense evidence accessible without widening mobile documents", () => {

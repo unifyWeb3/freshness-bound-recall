@@ -18,6 +18,7 @@ import { credentialSelfTest } from "../src/mainnet.mjs";
 import { SUBJECTS } from "../src/subjects.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
 import { Ledger } from "../src/ledger.mjs";
+import { selectRecordedRevisionLifecycle } from "../src/recorded-lifecycle.mjs";
 
 const args = process.argv.slice(2);
 const has = (n) => args.includes(`--${n}`);
@@ -267,6 +268,9 @@ function correctionList(memories) {
 
 export function page(snapshot) {
   const s = summarize(snapshot);
+  const lifecycle = selectRecordedRevisionLifecycle(snapshot);
+  const persistenceDelay = Date.parse(lifecycle.correction.created_at) - Date.parse(lifecycle.correction.recorded_at);
+  const firstLaterCheckDelay = Date.parse(lifecycle.laterEvent.at) - Date.parse(lifecycle.correction.created_at);
   const live = snapshot.mode === "live";
   const cp = snapshot.checkpoint || {};
   const cpReadAt = cp.read_at ?? cp.readAt;
@@ -284,10 +288,10 @@ export function page(snapshot) {
   const badge = snapshot.live_error
     ? `<span class="status status-warning">Refresh failed · showing the last captured evidence from ${esc(fmtTime(snapshot.generated_at))}</span><div class="reason error-reason">${esc(snapshot.live_error)}</div>`
     : snapshot.exported_at
-    ? `<span class="status status-snapshot">CACHED SNAPSHOT · STATIC EXPORT · network off</span>`
+    ? `<span class="status status-snapshot">Cached snapshot · static export · network off</span>`
     : live
       ? `<span class="status status-live">Live evidence · fetched ${esc(fmtTime(snapshot.generated_at))}</span>`
-      : `<span class="status status-snapshot">CACHED SNAPSHOT · network off</span>`;
+      : `<span class="status status-snapshot">Cached snapshot · network off</span>`;
 
   const decisionRows = (snapshot.ledger || []).filter((e) => e.verdict).slice(-40).reverse().map((e) => `
     <tr>
@@ -365,12 +369,12 @@ export function page(snapshot) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="A static evidence page showing how Freshness-Bound Recall withholds stale memory and verifies the current Sui value before answering."/>
-<meta property="og:title" content="Freshness-Bound Recall · Evidence"/>
-<meta property="og:description" content="See the recorded decision where stale memory was withheld and replaced with a verified Sui value."/>
+<meta name="description" content="Freshness-Bound Recall stops agents from answering with stale on-chain memories. Run the recorded Sui lifecycle in 60 seconds."/>
+<meta property="og:title" content="Freshness-Bound Recall · A stale memory is not an answer"/>
+<meta property="og:description" content="Run the recorded Sui revision lifecycle, then inspect the proof that withheld a stale memory."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://freshness-bound-recall-oxunify.vercel.app/"/>
-<title>Freshness-Bound Recall · Evidence</title>
+<title>Freshness-Bound Recall · Stop stale answers</title>
 <style>
   :root {
     color-scheme: dark;
@@ -393,7 +397,7 @@ export function page(snapshot) {
   body { background: var(--bg); color: var(--ink); font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   a { color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--hairline-strong); transition: color 160ms cubic-bezier(.22,1,.36,1), text-decoration-color 160ms cubic-bezier(.22,1,.36,1); }
   a:hover { color: var(--amber); text-decoration-color: var(--amber); }
-  a:focus-visible, summary:focus-visible, .scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, .scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
   code { max-width: 100%; color: var(--ink); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
   h1, h2, h3, p { margin-top: 0; }
   h1 { max-width: 1040px; margin-bottom: 20px; font-size: clamp(48px, 5vw, 64px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; }
@@ -402,7 +406,9 @@ export function page(snapshot) {
   .shell { width: min(100% - 48px, 1440px); margin: 0 auto; min-width: 0; }
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; border-bottom: 1px solid var(--hairline); }
   .brand { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 15px; font-weight: 500; }
-  .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--hairline-strong); border-radius: 8px; color: var(--amber); font: 500 11px/1 ui-monospace, monospace; }
+  .brand-mark { position: relative; display: block; width: 32px; height: 20px; flex: 0 0 32px; }
+  .brand-mark::before { content: ""; position: absolute; top: 9px; right: 0; left: 0; height: 1px; background: var(--hairline-strong); }
+  .brand-mark::after { content: ""; position: absolute; top: 5px; left: 12px; width: 8px; height: 8px; border: 2px solid var(--bg); background: var(--amber); outline: 1px solid rgba(244,184,96,.5); }
   .nav-links { display: flex; gap: 20px; font-size: 13px; }
   .snapshot-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; padding: 16px 0; border-bottom: 1px solid var(--hairline); }
   .status { display: inline-flex; min-height: 32px; align-items: center; padding: 4px 10px; border: 1px solid var(--hairline-strong); border-radius: 6px; font: 500 12px/1.4 ui-monospace, monospace; }
@@ -411,15 +417,48 @@ export function page(snapshot) {
   .snapshot-note { color: var(--secondary); font-size: 13px; text-align: right; }
   .error-reason { margin-top: 8px; border-color: rgba(239,125,130,.5); }
   main { min-width: 0; padding-bottom: 80px; }
-  .hero { min-height: calc(100vh - 128px); display: grid; align-content: center; gap: 32px; padding: 48px 0; border-bottom: 1px solid var(--hairline); }
+  .hero { min-height: min(680px, calc(100vh - 128px)); display: grid; align-content: center; gap: 32px; padding: 72px 0; border-bottom: 1px solid var(--hairline); }
   .eyebrow { margin-bottom: 16px; color: var(--amber); font: 500 12px/1.4 ui-monospace, monospace; }
   .hero-intro { color: var(--secondary); max-width: 720px; margin-bottom: 0; font-size: 18px; line-height: 1.6; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .action { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border: 1px solid var(--hairline-strong); border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none; }
+  .action-primary { border-color: var(--amber); background: var(--amber); color: var(--amber-ink); }
+  .action-primary:hover { color: var(--amber-ink); }
+  .action-secondary { color: var(--secondary); }
+  .try-it { padding-bottom: 64px; border-bottom: 1px solid var(--hairline); }
+  .try-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 24px; min-width: 0; }
+  .command-card, .lifecycle-card { min-width: 0; border: 1px solid var(--hairline-strong); border-radius: 12px; background: var(--card); }
+  .command-card { align-self: start; overflow: hidden; }
+  .command-head { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 12px 8px 16px; border-bottom: 1px solid var(--hairline); color: var(--secondary); font-size: 12px; }
+  .copy-button { min-height: 32px; padding: 6px 10px; border: 1px solid var(--hairline-strong); border-radius: 6px; background: var(--raised); color: var(--ink); font: inherit; cursor: pointer; }
+  .copy-button:hover { border-color: rgba(244,184,96,.5); color: var(--amber); }
+  pre { max-width: 100%; margin: 0; padding: 20px; overflow-x: auto; background: var(--bg); }
+  pre code { display: block; white-space: pre; overflow-wrap: normal; }
+  .command-note { margin: 0; padding: 16px; color: var(--secondary); font-size: 13px; }
+  .lifecycle-card { padding: 20px; }
+  .sequence { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 20px 0; border: 1px solid var(--hairline); border-radius: 8px; overflow: hidden; }
+  .sequence-step { position: relative; min-width: 0; padding: 14px; color: var(--secondary); font: 500 13px/1.4 ui-monospace, monospace; text-align: center; }
+  .sequence-step + .sequence-step { border-left: 1px solid var(--hairline); }
+  .sequence-step::after { content: "→"; position: absolute; top: 12px; right: -8px; z-index: 1; color: var(--muted); }
+  .sequence-step:last-child::after { content: none; }
+  .sequence-step.fresh { color: var(--green); }
+  .sequence-step.stale { color: var(--amber); }
+  .lineage { display: grid; gap: 12px; margin: 0; }
+  .lineage-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; min-width: 0; padding-top: 12px; border-top: 1px solid var(--hairline); }
+  .lineage-row dt { color: var(--muted); font-size: 12px; }
+  .lineage-row dd { min-width: 0; margin: 0; }
+  .lineage-row strong { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 500; }
+  .lifecycle-timing { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--hairline); color: var(--secondary); font-size: 13px; }
+  .safety-line { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .safety-line span { padding: 5px 8px; border: 1px solid var(--hairline); border-radius: 5px; color: var(--secondary); font: 12px/1.4 ui-monospace, monospace; }
+  .lifecycle-caveat { margin: 16px 0 0; padding: 12px 14px; border-left: 2px solid var(--amber); background: var(--bg); color: var(--secondary); font-size: 12px; }
+  .recorded-decision { scroll-margin-top: 24px; }
   .evidence-panel { min-width: 0; padding: 24px; border: 1px solid var(--hairline-strong); border-radius: 16px; background: var(--card); }
   .checkpoint-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; min-width: 0; margin-bottom: 24px; }
   .checkpoint-rail::before { content: ""; position: absolute; top: 5px; right: 12.5%; left: 12.5%; height: 1px; background: var(--hairline-strong); }
   .rail-stop { position: relative; min-width: 0; padding-top: 20px; color: var(--muted); font: 11px/1.4 ui-monospace, monospace; text-align: center; overflow-wrap: anywhere; }
   .rail-stop::before { content: ""; position: absolute; top: 0; left: calc(50% - 5px); width: 10px; height: 10px; border: 2px solid var(--card); background: var(--secondary); }
-  .rail-stop.gate::before { background: var(--amber); box-shadow: 0 0 0 1px rgba(244,184,96,.4); }
+  .rail-stop.gate::before { background: var(--amber); outline: 1px solid rgba(244,184,96,.4); }
   .decision-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; min-width: 0; }
   .flow-step { position: relative; min-width: 0; min-height: 172px; display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--raised); }
   .flow-step::after { content: "→"; position: absolute; z-index: 2; top: calc(50% - 16px); right: -23px; width: 32px; height: 32px; display: grid; place-items: center; color: var(--muted); font-size: 18px; }
@@ -486,6 +525,7 @@ export function page(snapshot) {
   .footer-inner { display: flex; justify-content: space-between; gap: 24px; }
   .footer-links { display: flex; gap: 16px; }
   @media (max-width: 1080px) {
+    .try-grid { grid-template-columns: minmax(0, 1fr); }
     .capture-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .decision-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .flow-step:nth-child(2)::after { content: none; }
@@ -499,6 +539,9 @@ export function page(snapshot) {
     .hero { min-height: auto; gap: 32px; padding: 48px 0; }
     h1 { font-size: clamp(36px, 11vw, 44px); }
     .hero-intro { font-size: 16px; }
+    .hero-actions { align-items: stretch; flex-direction: column; }
+    .action { width: 100%; }
+    .lineage-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
     .evidence-panel { padding: 16px; border-radius: 12px; }
     .checkpoint-rail { gap: 4px; }
     .rail-stop { font-size: 9px; }
@@ -519,7 +562,7 @@ export function page(snapshot) {
 </head>
 <body>
 <nav class="shell topbar" aria-label="Primary navigation">
-  <div class="brand"><span class="brand-mark" aria-hidden="true">FBR</span><span>Freshness-Bound Recall</span></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Freshness-Bound Recall</span></div>
   <div class="nav-links">
     <a href="https://github.com/unifyWeb3/freshness-bound-recall">GitHub repo</a>
     <a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Judge quickstart</a>
@@ -532,10 +575,46 @@ export function page(snapshot) {
 <main class="shell">
   <section class="hero" aria-labelledby="hero-title">
     <div>
-      <p class="eyebrow">Evidence page · stale-answer gate</p>
-      <h1 id="hero-title">A stale answer was withheld</h1>
-      <p class="hero-intro">This snapshot records the exact memory, checkpoint gate, and Sui value used to stop an old claim from answering.</p>
+      <p class="eyebrow">Recorded Mainnet evidence · replayed offline</p>
+      <h1 id="hero-title">A stale memory is not an answer</h1>
+      <p class="hero-intro">Freshness-Bound Recall checks a memory's checkpoint proof and current on-chain subject before an agent can answer with it. Changed, expired, or unverifiable claims are withheld.</p>
+      <div class="hero-actions">
+        <a class="action action-primary" href="#try-it">Try it in 60 seconds</a>
+        <a class="action action-secondary" href="#recorded-decision">Inspect the recorded decision</a>
+      </div>
     </div>
+  </section>
+
+  <section class="section try-it" id="try-it" aria-labelledby="try-it-title">
+    <div class="section-heading"><div><p class="eyebrow">One credential-free replay</p><h2 id="try-it-title">Run the real revision lifecycle</h2><p class="section-copy">From this repository, install without lifecycle hooks and replay the recorded Sui Clock correction. No wallet, API key, or network access is needed.</p></div></div>
+    <div class="try-grid">
+      <div class="command-card">
+        <div class="command-head"><span>Terminal · about 60 seconds</span><button class="copy-button" type="button" aria-label="Copy the 60-second lifecycle command" data-copy-command>Copy</button></div>
+        <pre><code id="try-command">npm install --ignore-scripts
+npm run recall:checked -- --sample sui-clock-revision-lifecycle</code></pre>
+        <p class="command-note">The command prints the decision sequence, exact Walrus lineage, persistence timing, and the later stale recall.</p>
+      </div>
+      <div class="lifecycle-card" aria-label="Recorded revision lifecycle">
+        <h3>Recorded outcome</h3>
+        <div class="sequence" aria-label="Stale to fresh to stale lifecycle">
+          <span class="sequence-step stale">STALE</span>
+          <span class="sequence-step fresh">FRESH</span>
+          <span class="sequence-step stale">STALE</span>
+        </div>
+        <dl class="lineage">
+          <div class="lineage-row"><dt>Predecessor</dt><dd><strong><code>${esc(lifecycle.predecessor.claim)}</code> · checkpoint ${esc(lifecycle.predecessor.proof.checkpoint_seq)}</strong><code>${esc(lifecycle.predecessor.blob_id)}</code></dd></div>
+          <div class="lineage-row"><dt>Correction</dt><dd><strong><code>${esc(lifecycle.correction.claim)}</code> · checkpoint ${esc(lifecycle.correction.proof.checkpoint_seq)}</strong><code>${esc(lifecycle.correction.blob_id)}</code></dd></div>
+          <div class="lineage-row"><dt>Supersedes</dt><dd><strong><code>${esc(lifecycle.storedReference)}</code> → resolved predecessor blob</strong><code>${esc(lifecycle.resolvedBlobId)}</code></dd></div>
+        </dl>
+        <div class="lifecycle-timing"><span>Persisted <strong>${esc(persistenceDelay.toLocaleString("en-US"))} ms</strong> after proof</span><span>First later check <strong>${esc(firstLaterCheckDelay.toLocaleString("en-US"))} ms</strong> after persistence</span></div>
+        <div class="safety-line" aria-label="Replay safety"><span>read-only</span><span>network off</span><span>Writes: none</span></div>
+        <p class="lifecycle-caveat">Historical precision: the first later event recalled proof-equivalent observation <code>${esc(lifecycle.laterEvent.memory.blob_id)}</code>, not the correction blob. The deterministic replay evaluates the correction itself and withholds it after the subject changes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section recorded-decision" id="recorded-decision" aria-labelledby="recorded-decision-title">
+    <div class="section-heading"><div><p class="eyebrow">Checkpoint gate</p><h2 id="recorded-decision-title">The stale answer that did not escape</h2><p class="section-copy">This captured decision shows the exact recalled claim, gate verdict, and verified Sui value used instead.</p></div></div>
     <div class="evidence-panel" aria-label="Recorded stale memory decision">
       <div class="checkpoint-rail" aria-label="Verification checkpoints">
         <span class="rail-stop">question</span>
@@ -654,6 +733,18 @@ export function page(snapshot) {
   </section>
 </main>
 <footer class="footer"><div class="shell footer-inner"><span>Freshness-Bound Recall · Tatum Sui mainnet GraphQL + Walrus Memory · ${live ? "live evidence" : "offline cached evidence"} · no LLM in the answer path</span><span class="footer-links"><a href="https://github.com/unifyWeb3/freshness-bound-recall">Source</a><a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Reproduce</a></span></div></footer>
+<script>
+  const copyButton = document.querySelector("[data-copy-command]");
+  copyButton?.addEventListener("click", async () => {
+    const command = document.querySelector("#try-command")?.textContent?.trim() || "";
+    try {
+      await navigator.clipboard.writeText(command);
+      copyButton.textContent = "Copied";
+    } catch {
+      copyButton.textContent = "Select command to copy";
+    }
+  });
+</script>
 </body></html>`;
 }
 

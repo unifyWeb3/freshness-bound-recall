@@ -1,14 +1,14 @@
 # Submission draft — FRESHNESS-BOUND RECALL
 
-## Status: **GO** — repo published and snapshot hosted; the author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
+## Status: **GO** — repo and snapshot were published previously; the current acceptance and homepage work remains local. The author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
 
 **Deadline: 2026-11-10 17:00 UTC.** Judging Nov 11–16. Recommended submission: **Nov 10, morning UTC**.
 The submission form itself has **not** been filled or sent. **You** review and send.
 
 | Published item | URL | State |
 |---|---|---|
-| **Repository (public, full history)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05, verified unauthenticated (HTTP 200) |
-| **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, verified unauthenticated (HTTP 200), byte-identical to the deployed export (sha256 `91ebae92b30481f9…`) |
+| **Repository (public, published snapshot)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05 and verified unauthenticated; later acceptance/homepage commits have not been pushed |
+| **Hosted proof page — prior cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | prior Vercel deployment, verified unauthenticated; the current homepage milestone has not been deployed |
 
 > The hosted page is a **static export of a labelled snapshot** — its banner reads
 > `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`. It is not a live service
@@ -16,12 +16,23 @@ The submission form itself has **not** been filled or sent. **You** review and s
 
 Field list below matches the live form (as read read-only on 2026-11-04; **re-verify the form before sending**).
 
-**Verification at 2026-11-05 17:45 UTC (commit `f9ddd6606d40`, clean tree, pushed):** offline tests 65 pass /
-0 fail / 2 skipped (live opt-in skipped); fresh-clone judge path green (67 tests / 63 pass / 0 fail /
-4 skipped → demo → export → proof page on :8801, HTTP 200); secrets audit PASS (working tree) and PASS
-(full git history); freeze bundle written (`freeze/freeze-2026-11-05T145207337Z.json`, 22 memories ·
-306 ledger entries, live checkpoint 341948733); namespace `freshness-recall` lists **22** memories,
-0 deleted, `must_resync=false`.
+**Acceptance review on 2026-11-06, before the homepage milestone:** the CLI installed into a genuinely
+empty consumer folder (31 packages in about five seconds, no lifecycle hooks) and ran with no `.env`.
+The default sample was read-only and returned `STALE/WITHHELD` with zero writes. The recorded revision
+lifecycle returned `STALE → FRESH → STALE`, resolved predecessor blob
+`goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY` to correction blob
+`mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY`, and disclosed that the later historical event recalled
+proof-equivalent blob `zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg`. The correction persisted 117,242 ms after its proof;
+the first post-persistence check 1,381 ms later withheld it as stale. Missing, ambiguous, and invalid
+evidence failed closed. Baseline suite before homepage work: **120 tests / 120 pass / 0 fail / 0 skipped**;
+focused acceptance: **30/30 pass**. The homepage milestone suite is **123 tests / 123 pass / 0 fail /
+0 skipped**; secrets audit: **11 passes / 0 failures**; full-history audit: **0 findings**. Live
+read-only recall confirmed both lineage blobs still exist and semantic recall returns the correction.
+No Mainnet writes, push, deployment, or secrets changes were performed.
+
+The earlier freeze bundle remains `freeze/freeze-2026-11-05T145207337Z.json` (22 memories · 306 ledger
+entries, live checkpoint 341948733); the namespace check recorded 22 memories, 0 deleted, and
+`must_resync=false`.
 
 > **The freeze bundle is git-ignored.** `freeze/` is a local artifact directory (it contains the full
 > ledger copy and the proof snapshot). If the repo is hosted for judges, **either attach

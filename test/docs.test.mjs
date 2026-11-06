@@ -20,3 +20,15 @@ test("published docs describe the current remote and scope deployment/export cla
   assert.doesNotMatch(combined, /byte-identical to `npm run export`/i);
   assert.match(combined, /byte-identical to the deployed export/i);
 });
+
+test("judge quickstart leads with the recorded lifecycle and records the accepted test totals", () => {
+  const judge = read("docs/judge-60s.md");
+  const lifecycle = "npm run recall:checked -- --sample sui-clock-revision-lifecycle";
+
+  assert.match(judge, /real revision proof in 60 seconds/i);
+  assert.ok(judge.indexOf(lifecycle) > -1, "the lifecycle command must be present");
+  assert.ok(judge.indexOf(lifecycle) < judge.indexOf("npm test"),
+    "the lifecycle must precede the broader test and audit path");
+  assert.match(judge, /123 tests, 123 pass, 0 fail, 0 skipped/);
+  assert.match(judge, /120 tests, 120 pass, 0 fail, 0 skipped/);
+});

@@ -1,148 +1,140 @@
-**Requires Node v26.13.0 or newer (`node --version`; `nvm use` picks it up from `.nvmrc`) — an older Node fails at install with a clear `ENOTSUP` message.**
+**Runtime:** Node >=24. The accepted run used Node 26.13.0; `nvm use` selects that version from `.nvmrc`.
 
-# Judge quickstart — fresh clone → proof in 60 seconds
+# Judge quickstart — real revision proof in 60 seconds
 
-Everything below works **without any credentials**. Live paths are optional and marked.
+The shortest useful path is credential-free, offline, read-only, and deterministic. It needs no
+`.env`, wallet, Mainnet access, or write approval.
 
-## 0. Requirements
+## 1. Clone, install, and run the lifecycle
 
-- Node **v26.13.0** or newer — **check `node --version` first**. If it is older, your `npm test` may
-  fail with a cryptic `Cannot find module …/test`; switch Node (nvm: `nvm install 26.13.0 && nvm use 26.13.0`)
-  and retry. `.npmrc` sets `engine-strict=true`, so an older Node fails at install time with a clear message.
-  The repo ships **`.nvmrc` (26.13.0)** — `nvm use` in the clone directory selects it automatically.
-- No secrets, no network needed for the default path.
-- A terminal with `git`.
-- Optional: Docker (see §7).
-
-## 1. Clone and install (~20 s)
+Run this from an otherwise empty working directory:
 
 ```sh
-git clone https://github.com/unifyWeb3/freshness-bound-recall.git freshness-recall && cd freshness-recall
-nvm use                 # reads .nvmrc -> 26.13.0 (the package supports Node >= 24)
-npm install --ignore-scripts
+git clone https://github.com/unifyWeb3/freshness-bound-recall.git freshness-recall
+cd freshness-recall
+nvm use                         # optional; selects the accepted Node 26.13.0 runtime
+npm install --ignore-scripts    # lifecycle scripts never run
+npm run recall:checked -- --sample sui-clock-revision-lifecycle
 ```
 
-> **Already published — the hosted proof page (a cached snapshot):**
-> <https://freshness-bound-recall-oxunify.vercel.app>
-> It is the static export of a labelled snapshot (`STATIC EXPORT · … · network off · ids & stamps from a
-> labelled snapshot` on the page itself), byte-identical to the deployed export
-> (sha256 `91ebae92b30481f9…`). It fetches nothing and needs no credentials. The steps below rebuild
-> the page from the committed snapshot; they are not claimed to reproduce the deployment's old bytes.
+The accepted empty-folder install added 31 packages in about five seconds and ran no lifecycle
+hooks. The product output was:
 
-## 2. Offline tests (~5 s)
+```text
+Freshness-Bound Recall · recorded Mainnet lifecycle · read-only
+STALE → FRESH → STALE
+Predecessor: obs-sui-clock-341742424 · goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY · checkpoint 341742424
+Correction: cor-sui-clock-341742463 · mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY · checkpoint 341742463
+Supersedes: obs-sui-clock-341742424 → goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY
+Timing: persisted 117242 ms after proof · first recorded check 1381 ms later
+At revision proof: FRESH · 0x0000000000000000000000000000000000000000000000000000000000000006 on Sui mainnet: version=1018797298 digest=4vTVNHed9pwSGFSE6xeSqvMyXBMSYv9nJfzXvxdQMqUM. Memory cor-sui-clock-341742463 was written at checkpoint 341742463 (0 checkpoints ago, window 50); subject version/digest unchanged.
+First post-persistence check: STALE/WITHHELD · subject changed (version 1018797298->1018799005, digest changed)
+Provenance: recorded Mainnet evidence · network off · Writes: none
+```
+
+This is the recorded revision lifecycle, not a fabricated fixture:
+
+- Predecessor Walrus blob: `goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY`
+- Correction Walrus blob: `mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY`
+- Stored `supersedes` reference: claim `obs-sui-clock-341742424`, resolved to the predecessor blob
+- First later recorded event: 1,381 ms after persistence, recalling proof-equivalent observation
+  `zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg`
+
+The public replay evaluates the actual correction blob. The historical later event recalled the
+proof-equivalent observation, not that correction blob; the JSON contract discloses this distinction.
+
+## 2. Inspect the machine-readable proof
 
 ```sh
-npm test
+npm run --silent recall:checked -- --sample sui-clock-revision-lifecycle --json
 ```
 
-Expected: `ℹ tests 67 · ℹ pass 63 · ℹ fail 0 · ℹ skipped 4`
-(2 live opt-in tests skip without `RUN_MAINNET=1`; 2 real-`.env` redaction tests skip because a
-judge's clone has no `.env`. With a `.env` present but no `RUN_MAINNET=1` the same suite reports
-`65 pass / 2 skipped`.)
+The stable `recall_checked_lifecycle/v1` document reports:
 
-## 3. The offline demo (~1 s)
+- `read_only: true`
+- `source.network_access: false`
+- `behavior.sequence: ["STALE", "FRESH", "STALE"]`
+- empty `writes` arrays at the top level and in both deterministic replays
+- the two actual blob IDs, resolved lineage, recorded checkpoints, subject pins, and timing above
 
-```sh
-npm run demo:offline
-```
+Missing, ambiguous, or inconsistent lifecycle evidence is rejected rather than converted into a
+verdict. Those fail-closed cases are covered by `test/recorded-lifecycle.test.mjs`.
 
-Expected output (abbreviated):
-
-```
-FRESHNESS-BOUND RECALL · offline demo over cached snapshot (network off)
-…
-offline mode: skipping live self-test; serving cached checkpoint 341944901 read at 2026-11-05T14:36:57.232Z
-chain 4btiuiMPvEENsttpZC7CZ53DruC3MAgfznDbASZ7DR6S (Sui mainnet)
-checkpoint 341944901 (9AmYmYmNUs9V…) source=cache-offline
-Sui Clock (shared object, 0x6) 1019546722  @2026-11-05T14:36:57.402Z
-FAST window = 25 checkpoints (source: store, version 1, reason: MISSED-CHANGE 3 > FALSE-STALE 0: tighten 50 -> 25)
-SLOW window = 20000 checkpoints (source: store, version 2, reason: FALSE-STALE 3 > MISSED-CHANGE 0: widen 10000 -> 20000)
-4) a stale memory is WITHHELD, not answered
-verdict: STALE — subject changed (version 1018789643->1019546722, digest changed)
-answer: WITHHELD — …The stored memory … was not used as the answer.
-6) the adversarial old-but-true memory is re-checked (the loop learns)
-7) memory-off vs memory-on …
-memory-on, gate + policy …  stale-answers 0
-demo complete … 0 stale answers given from memory; 306 decisions recorded
-```
-
-Snapshot source: committed `docs/evidence/proof-snapshot.json` (labelled — snapshot generated
-2026-11-05T14:37Z, cp 341944901, **22** memories, 306 recorded decisions). The demo reads nothing
-live in this mode.
-
-> **The offline demo narrates only what it observed.** Step 6 says what actually happened to the
-> adversarial record's pin (unchanged → `FALSE-STALE`, changed → `STALE`/`CONSISTENT`) — it never
-> claims a pin state it did not read. The `FALSE-STALE` path is reproducible on demand with
-> `node scripts/show-policy-effect.mjs` (needs live credentials).
->
-> The committed snapshot's adversarial record predates the anchor-proof fix, so its body is not
-> evidence that it was already old when written. `test/observer.test.mjs` verifies that new records
-> carry the anchor's real checkpoint, digest, object pin and read time.
-
-## 4. The proof page (~1 s)
+## 3. Open the 60-second proof desk
 
 ```sh
 npm run proof:offline
 ```
 
-Expected: `[proof] OFFLINE (cached) page on http://127.0.0.1:8787` — open it in a browser.
-It shows all **22** memories (blob ids + checkpoint stamps), the lineage graph, the Tatum request log
-(with the plan header and an `x-api-key` badge per row), the decision ledger, and the ablation table.
-The badge says **CACHED SNAPSHOT** and names the generation time; nothing is fetched.
+Open <http://127.0.0.1:8787>. The homepage leads with the same one-command lifecycle and then exposes
+the cached proof desk: memory IDs and checkpoint stamps, lineage, decision ledger, Tatum request log,
+and ablation evidence. It makes no network requests and needs no credentials.
 
-> **Port already in use?** Use another one: `node scripts/proof-page.mjs --offline --port=8801`
-> (the same flag works for the live page). This happened during verification on the build host — an
-> unrelated service was already on 8787 — and the fix is a flag, not a code change.
-
-Static alternative (no server at all):
+If port 8787 is occupied:
 
 ```sh
-npm run export   # writes ./site/index.html (+ export.json fingerprints)
+node scripts/proof-page.mjs --offline --port=8801
 ```
 
-`./site/index.html` is a single self-contained page (no requests fire). The export scans the HTML
-against `.env` values (none exist in a judge's clone) and refuses to write if any leak.
-
-## 5. Optional — live mainnet path
-
-Requires a `.env` with `TATUM_API_KEY`, `MEMWAL_ACCOUNT_ID` (the MemWalAccount **object id**, never a
-wallet address), `MEMWAL_AGENT_ID`, `MEMWAL_PRIVATE_KEY`. Never commit it.
+For a serverless copy:
 
 ```sh
-npm run prewarm        # warm Tatum + relayer; credential self-test (on-chain check of the account id)
-npm run demo           # live answers, ~25 s, read-only — no Walrus writes
-RUN_MAINNET=1 npm run test:live   # 2 opt-in live tests (both write 1 seed blob each)
+npm run export
 ```
 
-Live budget note: the steady observer (`node scripts/observer.mjs --live --interval=300 --budget=0`)
-makes ~3 Tatum calls per 5 minutes and writes nothing. Do not run the live proof page unattended.
+This writes the self-contained `site/index.html`. The export scans for `.env` values before writing
+and fires no browser requests. The previously hosted URL is an older labelled cached snapshot; this
+homepage milestone has not been deployed.
 
-## 6. Optional — one-command container (Docker)
+## 4. Run the tests and audits
+
+```sh
+npm test
+npm run audit:secrets
+node scripts/audit-history.mjs
+```
+
+Current homepage milestone suite: **123 tests, 123 pass, 0 fail, 0 skipped**. The acceptance baseline
+before homepage work was **120 tests, 120 pass, 0 fail, 0 skipped**; focused milestone acceptance was
+**30/30 pass**. Secrets audit: **11 passes, 0 failures**; full-history audit: **0 findings**.
+
+## 5. Verify the write boundary without writing
+
+Recorded samples are always offline and read-only. This invalid opt-in fails before any network use:
+
+```sh
+npm run --silent recall:checked -- --allow-mainnet-writes
+```
+
+Expected: exit code 2 and
+`--allow-mainnet-writes is valid only with --live. The recorded sample is always read-only.` Live
+mode also defaults to read-only. Without credentials it exits before network access and names all four required keys.
+`--allow-mainnet-writes` can incur Mainnet cost and must not be used without the account owner's
+separate approval.
+
+## 6. Optional deeper offline demo
+
+```sh
+npm run demo:offline
+```
+
+This runs the longer cached-snapshot narrative over 22 memories and 306 recorded decisions. It ends
+with zero stale answers from memory. The committed source is `docs/evidence/proof-snapshot.json`.
+
+## 7. Optional container path
 
 ```sh
 docker build -t freshness-bound-recall .
 docker run --rm freshness-bound-recall
 ```
 
-The image runs the offline tests, the offline demo and `npm run export`, then prints the path of the
-static proof page. It contains **no credentials**: `.env` is excluded by `.dockerignore` and no
-command in the image touches the live path.
+**Verification status: UNKNOWN.** The Docker path could not be executed in the build environment:
+there was no Docker binary or socket. Its native command sequence was verified, but the image itself
+must still be treated as unverified.
 
-> **Verification status: UNKNOWN — the Docker path could not be executed in the build environment**
-> (no `docker` binary and no Docker socket were available on the build host, 2026-11-05).
-> What *was* verified natively, from a fresh clone, with the exact command sequence the image runs
-> (`npm ci --ignore-scripts` → `npm test` → `npm run demo:offline` → `npm run export`, no `.env`
-> present): all four steps succeed — 67 tests, 63 pass, 0 fail, 4 skipped; the demo completes with
-> 0 stale answers; the export writes `site/index.html` and scans 0 env values. The Docker image
-> itself is therefore **written but UNVERIFIED**; please treat `npm test` on the host as the
-> authoritative check.
+## 8. Troubleshooting
 
-## 7. If something fails
-
-- `no snapshot found` — the repo ships `docs/evidence/proof-snapshot.json`; if it was deleted, run
-  `npm run proof` live once to regenerate it (needs live credentials), or ask the author for it.
-- `EADDRINUSE … 127.0.0.1:8787` — something else is on the default port; run
-  `node scripts/proof-page.mjs --offline --port=8801` instead.
-- `429 rate limited` — Tatum free plan is 3 rps shared; wait a minute; retry.
-- `Cannot find module …/test` — your Node is older than 26.13.0; run `nvm use` (reads `.nvmrc`).
-- Anything else — run `npm run audit:secrets`; it prints AUDIT: PASS/FAIL honestly.
+- `EADDRINUSE … 127.0.0.1:8787` — use `--port=8801` as shown above.
+- `Cannot find module …/test` — use Node >=24; `nvm use` selects the accepted version.
+- `no snapshot found` — restore the committed `docs/evidence/proof-snapshot.json`.
+- Live `429` responses — Tatum's shared limit may be exhausted; the 60-second path never calls it.
