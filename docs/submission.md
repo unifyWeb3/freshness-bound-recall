@@ -8,7 +8,7 @@ The submission form itself has **not** been filled or sent. **You** review and s
 | Published item | URL | State |
 |---|---|---|
 | **Repository (public, full history)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05, verified unauthenticated (HTTP 200) |
-| **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, verified unauthenticated (HTTP 200), byte-identical to `npm run export` (sha256 `91ebae92b30481f9…`) |
+| **Hosted proof page — a cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, verified unauthenticated (HTTP 200), byte-identical to the deployed export (sha256 `91ebae92b30481f9…`) |
 
 > The hosted page is a **static export of a labelled snapshot** — its banner reads
 > `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`. It is not a live service

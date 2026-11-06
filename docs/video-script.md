@@ -28,8 +28,8 @@ gate onto the answer path and make the tolerance a memory."*
 | 1:28 | demo output step 6 | “The adversarial record gets re-checked against the chain — the demo tells you what actually happened, pin changed or not. New specimens carry the anchor's real old proof; the committed historical specimen predates that fix.” |
 | 1:42 | demo output step 7 (ablation table) | “Over three hundred decisions recorded with checkpoint stamps: without the gate, two hundred and thirty-four of them would have been served stale. With it — zero.” |
 | 1:52 | demo output step 8 (lineage) | “Every correction links the blob it superseded — lineage is on-chain, not implied.” |
-| 2:02 | proof page detail: Tatum request log (plan header) | “Both integrations are real: every request goes through Tatum GraphQL with the API key and logs the plan header; every memory is on Walrus.” |
-| 2:12 | terminal: `npm run audit:secrets` (optional) | “Nothing secret in the repo; `.env` is ignored; no remote configured.” |
+| 2:02 | proof page detail: Tatum request log (plan header) | “Both integrations are real: every request goes through Tatum GraphQL with the API key and logs the plan header; recalled memories are on Walrus.” |
+| 2:12 | terminal: `npm run audit:secrets` (optional) | “Nothing secret is tracked; `.env` is ignored; the public remote is the authorised GitHub repository.” |
 | 2:18 | closing card: product name + “Submit by 10 Nov 17:00 UTC” | “A memory you cannot re-verify is not an answer. It's a rumor.” |
 
 ## Re-take checklist

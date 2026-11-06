@@ -20,8 +20,9 @@ Sui position between sessions).
 | Pre-submission report (GO, with the open items) | [`reports/pre-submit.md`](reports/pre-submit.md) |
 
 > The hosted page is the **static export of a labelled snapshot** (the banner on it says
-> `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`). It is the same bytes as
-> `npm run export` — sha256 `91ebae92b30481f9…` — and it makes **no network requests**. It is a
+> `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`). It is byte-identical to
+> the deployed export artifact — sha256 `91ebae92b30481f9…` — and makes **no network requests**. A new
+> `npm run export` rebuilds from the current tree and is not claimed to reproduce those old bytes. It is a
 > snapshot, not a live service: the live proof page is a local process and is never hosted.
 
 ## 1. The product in one paragraph
@@ -51,7 +52,7 @@ already built. The factual differences here are:
 ## 2. Quickstart (offline, no network)
 
 ```sh
-node --version         # requires >= 26.13.0 (pinned; .nvmrc + engines + README)
+node --version         # supports >= 24; .nvmrc pins the published verification runtime (26.13.0)
 nvm use                # if you use nvm: reads .nvmrc -> 26.13.0
 npm install --ignore-scripts   # deterministic install; never runs lifecycle scripts
 npm test                     # offline suite, no network
@@ -93,8 +94,8 @@ npm run freeze               # timestamped evidence bundle for the video / submi
 7. **Ablation over the recorded decision ledger** — memory-off vs memory-on vs memory-on-with-gate.
 8. **Lineage** — correction memories vs the observations/claims they supersede.
 
-The **proof page** (`npm run proof`, `--offline` twin) shows for every one of the **22 mainnet
-memories**: blob id, claim, class/state, checkpoint + object version pins at write, recorded decisions,
+The **proof page** (`npm run proof`, `--offline` twin) shows the **recalled memories** in its snapshot:
+blob id, claim, class/state, checkpoint + object version pins at write, recorded decisions,
 the Tatum request log with the plan header **and an `x-api-key` badge on every row**, and the policy
 state. It renders with the network down from `data/cache/proof-snapshot.json` and says so
 (`CACHED SNAPSHOT`).
@@ -363,7 +364,7 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 | Product + demo | `scripts/demo.mjs`, `src/answer.mjs` | works (live & offline) |
 | Proof page | `scripts/proof-page.mjs` (`npm run proof[:offline]`) | live & offline verified |
 | Static export | `npm run export` → `./site` | verified (labelled snapshot, env-scan clean) |
-| **Hosted static export (a cached snapshot)** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, HTTP 200 unauthenticated, byte-identical to `npm run export` |
+| **Hosted static export (a cached snapshot)** | <https://freshness-bound-recall-oxunify.vercel.app> | Vercel production deployment, HTTP 200 unauthenticated, byte-identical to the deployed export (sha256 `91ebae92b30481f9…`) |
 | **Public repository** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed with the full history; HTTP 200 unauthenticated |
 | Observed mainnet memories | namespace `freshness-recall` (22) | ids in `reports/build-phase2.md` §2 + `reports/pre-submit.md` |
 | Decision ledger | `data/ledger.jsonl` (git-ignored) | ≥306 entries |
@@ -383,7 +384,8 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 ## 10. Security & secrets
 
 * Secrets live in `.env` (mode 0600, git-ignored; `git check-ignore -v .env` re-verified).
-* Nothing is pushed; no remote is configured.
+* The public remote is <https://github.com/unifyWeb3/freshness-bound-recall>; tree and history audits
+  verify that no `.env` or runtime artifact is tracked.
 * The startup credential self-test proves `MEMWAL_ACCOUNT_ID` is the MemWalAccount object id
   (not the wallet) on-chain, and that the relayer is reached with ≥30 s timeouts and retries.
 * `src/redact.mjs` scrubs secret-shaped strings from everything the ledger writes; `audit-secrets.mjs`
