@@ -72,6 +72,30 @@ test("packed CLI installs in an empty directory and runs without credentials", (
   assert.deepEqual(result.writes, []);
   assert.match(result.memory.blob_id, /^[A-Za-z0-9_-]{40,}$/);
 
+  const lifecycleRun = run(bin, ["--sample", "sui-clock-revision-lifecycle", "--json"], { cwd: consumer, env });
+  const lifecycle = JSON.parse(lifecycleRun.stdout);
+  assert.equal(lifecycle.schema, "recall_checked_lifecycle/v1");
+  assert.equal(lifecycle.read_only, true);
+  assert.equal(lifecycle.source.network_access, false);
+  assert.deepEqual(lifecycle.behavior.sequence, ["STALE", "FRESH", "STALE"]);
+  assert.deepEqual(lifecycle.writes, []);
+  assert.deepEqual(lifecycle.behavior.at_revision_proof.result.writes, []);
+  assert.deepEqual(lifecycle.behavior.first_post_persistence_check.result.writes, []);
+
+  const imported = run(process.execPath, [
+    "--input-type=module",
+    "--eval",
+    [
+      "import { recallCheckedLifecycleSample, RECORDED_LIFECYCLE_SAMPLE_NAME } from 'freshness-bound-recall';",
+      "const result = await recallCheckedLifecycleSample();",
+      "process.stdout.write(JSON.stringify({ name: RECORDED_LIFECYCLE_SAMPLE_NAME, sequence: result.behavior.sequence }));",
+    ].join("\n"),
+  ], { cwd: consumer, env });
+  assert.deepEqual(JSON.parse(imported.stdout), {
+    name: "sui-clock-revision-lifecycle",
+    sequence: ["STALE", "FRESH", "STALE"],
+  });
+
   const installedPackage = JSON.parse(readFileSync(
     join(consumer, "node_modules", "freshness-bound-recall", "package.json"),
     "utf8",

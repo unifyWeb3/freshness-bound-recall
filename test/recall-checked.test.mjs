@@ -83,7 +83,7 @@ test("recorded Mainnet sample is stable, labelled, and read-only", async () => {
 test("recorded sample rejects unknown sample names", async () => {
   await assert.rejects(
     recallCheckedSample({ sample: "invented" }),
-    /unknown sample "invented"; available: sui-clock-changed/,
+    /unknown sample "invented"; available: sui-clock-changed, sui-clock-revision-lifecycle/,
   );
 });
 

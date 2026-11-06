@@ -11,11 +11,19 @@
 import { readFileSync } from "node:fs";
 import { answer } from "./answer.mjs";
 import { PolicyEngine } from "./policy.mjs";
+import { selectRecordedRevisionLifecycle } from "./recorded-lifecycle.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "./tatum.mjs";
 
 export const RECALL_CHECKED_SCHEMA = "recall_checked/v1";
+export const RECALL_CHECKED_LIFECYCLE_SCHEMA = "recall_checked_lifecycle/v1";
 export const DEFAULT_SAMPLE_QUERY = "Is the Sui Clock object still at the recorded version?";
+export const DEFAULT_LIFECYCLE_QUERY = "Is the recorded Sui Clock correction still current?";
 export const RECORDED_SAMPLE_NAME = "sui-clock-changed";
+export const RECORDED_LIFECYCLE_SAMPLE_NAME = "sui-clock-revision-lifecycle";
+export const AVAILABLE_RECORDED_SAMPLES = Object.freeze([
+  RECORDED_SAMPLE_NAME,
+  RECORDED_LIFECYCLE_SAMPLE_NAME,
+]);
 
 const SNAPSHOT_URL = new URL("../docs/evidence/proof-snapshot.json", import.meta.url);
 
@@ -62,7 +70,7 @@ function hit(memory) {
 }
 
 class RecordedSnapshotStore {
-  constructor({ claim, policies }) {
+  constructor({ claim, policies = [] }) {
     this.claim = claim;
     this.policies = policies;
     this.kind = "recorded-mainnet";
@@ -70,7 +78,7 @@ class RecordedSnapshotStore {
   }
 
   async recall({ query = "" } = {}) {
-    if (/policy\s+window|claim\s+class/i.test(query)) {
+    if (query === "FR-v1 policy window checkpoints claim class") {
       return { results: this.policies.map(hit), total: this.policies.length };
     }
     return { results: [hit(this.claim)], total: 1 };
@@ -92,6 +100,144 @@ class RecordedSnapshotStore {
   async waitFor() {
     throw new Error("the recorded Mainnet sample is read-only");
   }
+}
+
+function unknownSample(sample) {
+  return new Error(`unknown sample "${sample}"; available: ${AVAILABLE_RECORDED_SAMPLES.join(", ")}`);
+}
+
+function policiesAvailableAt(evidence, cutoff = null) {
+  const policies = (evidence.memories || []).filter((memory) => memory.state === "policy");
+  if (cutoff === null) return policies;
+  return policies.filter((memory) => Number.isFinite(Date.parse(memory.created_at)) && Date.parse(memory.created_at) <= cutoff);
+}
+
+async function replayRecordedClaim({
+  evidence,
+  claim,
+  checkpoint,
+  subject,
+  query,
+  now,
+  source,
+  policyCutoff = null,
+}) {
+  const store = new RecordedSnapshotStore({
+    claim,
+    policies: policiesAvailableAt(evidence, policyCutoff),
+  });
+  const tatum = new RecordedSnapshotTatum({ checkpoint, subject });
+  const policy = new PolicyEngine({ store });
+  const result = await recallChecked(query, {
+    store,
+    tatum,
+    policy,
+    now,
+    allowWrites: false,
+    mode: "recorded-mainnet",
+    source,
+  });
+  if (store.writeAttempts !== 0 || result.writes.length !== 0) {
+    throw new Error("read-only sample attempted a write");
+  }
+  return result;
+}
+
+function memoryEvidence(memory) {
+  return {
+    blob_id: memory.blob_id ?? null,
+    claim: memory.claim ?? null,
+    state: memory.state ?? null,
+    class: memory.class ?? null,
+    subject: memory.subject ?? null,
+    predicate: memory.predicate ?? null,
+    value_at_write: memory.value_at_write ?? null,
+    proof: {
+      chain_id: memory.proof?.chain_id ?? null,
+      checkpoint_seq: memory.proof?.checkpoint_seq ?? null,
+      checkpoint_digest: memory.proof?.checkpoint_digest ?? null,
+      object_version: memory.proof?.object_version ?? null,
+      object_digest: memory.proof?.object_digest ?? null,
+      read_at: memory.proof?.read_at ?? null,
+    },
+    recorded_at: memory.recorded_at ?? null,
+    created_at: memory.created_at ?? null,
+  };
+}
+
+function recordedTriggerEvidence(trigger, predecessor) {
+  return {
+    decision_kind: "recorded-mainnet-decision",
+    at: trigger.at ?? null,
+    round: trigger.round ?? null,
+    verdict: trigger.verdict ?? null,
+    withheld: trigger.verdict !== "FRESH",
+    signal: trigger.signal ?? null,
+    reason: trigger.reason ?? null,
+    memory: {
+      claim: trigger.memory?.claim ?? null,
+      blob_id_at_decision: trigger.memory?.blob_id ?? null,
+      resolved_blob_id: predecessor.blob_id ?? null,
+    },
+    verification: {
+      checkpoint: {
+        checkpoint_seq: trigger.live?.checkpoint_seq ?? null,
+        checkpoint_digest: trigger.live?.checkpoint_digest ?? null,
+        read_at: trigger.live?.read_at ?? null,
+      },
+      subject: {
+        version: trigger.pin?.version ?? null,
+        digest: trigger.pin?.digest ?? null,
+        read_at: trigger.pin?.read_at ?? null,
+      },
+      subject_changed: true,
+      reads: {
+        checkpoint: trigger.reads?.checkpoint ?? 0,
+        pin: trigger.reads?.pin ?? 0,
+        budget_max: trigger.reads?.budget_max ?? null,
+      },
+    },
+  };
+}
+
+function checkpointFromProof(proof) {
+  return {
+    checkpointSeq: Number(proof.checkpoint_seq),
+    checkpointDigest: proof.checkpoint_digest,
+    checkpointTimestamp: null,
+    readAt: proof.read_at,
+  };
+}
+
+function subjectFromProof(memory) {
+  return {
+    subject: { address: memory.subject },
+    pin: {
+      version: String(memory.proof.object_version),
+      digest: memory.proof.object_digest,
+      readAt: memory.proof.read_at,
+    },
+  };
+}
+
+function checkpointFromEvent(event) {
+  return {
+    checkpointSeq: Number(event.live.checkpoint_seq),
+    checkpointDigest: event.live.checkpoint_digest,
+    checkpointTimestamp: null,
+    readAt: event.live.read_at,
+  };
+}
+
+function subjectFromEvent(event, address) {
+  return {
+    subject: { address },
+    pin: {
+      version: String(event.pin.version),
+      digest: event.pin.digest,
+      readAt: event.pin.read_at,
+    },
+  };
 }
 
 class RecordedSnapshotTatum {
@@ -220,7 +366,7 @@ export async function recallCheckedSample({
   snapshot = null,
 } = {}) {
   if (sample !== RECORDED_SAMPLE_NAME) {
-    throw new Error(`unknown sample "${sample}"; available: ${RECORDED_SAMPLE_NAME}`);
+    throw unknownSample(sample);
   }
   const evidence = snapshot || JSON.parse(readFileSync(SNAPSHOT_URL, "utf8"));
   const subject = evidence.subjects?.FAST;
@@ -233,18 +379,13 @@ export async function recallCheckedSample({
   // previously carried forward through Walrus lineage, then became stale too.
   const claim = candidates.find((memory) => memory.claim?.startsWith("cor-sui-clock-")) || candidates[0];
   if (!claim) throw new Error("recorded sample contains no answerable FAST claim");
-  const policies = (evidence.memories || []).filter((memory) => memory.state === "policy");
-  const store = new RecordedSnapshotStore({ claim, policies });
-  const tatum = new RecordedSnapshotTatum({ checkpoint: evidence.checkpoint, subject });
-  const policy = new PolicyEngine({ store });
-
-  const result = await recallChecked(query, {
-    store,
-    tatum,
-    policy,
+  return replayRecordedClaim({
+    evidence,
+    claim,
+    checkpoint: evidence.checkpoint,
+    subject,
+    query,
     now: Date.parse(evidence.generated_at),
-    allowWrites: false,
-    mode: "recorded-mainnet",
     source: {
       sample,
       evidence_file: "docs/evidence/proof-snapshot.json",
@@ -253,8 +394,128 @@ export async function recallCheckedSample({
       actual_walrus_blob_id: claim.blob_id,
     },
   });
-  if (store.writeAttempts !== 0 || result.writes.length !== 0) {
-    throw new Error("read-only sample attempted a write");
+}
+
+/**
+ * Replay one real Mainnet revision from its stale predecessor through the
+ * correction's first later proof-equivalent check. No network or write occurs.
+ */
+export async function recallCheckedLifecycleSample({
+  query = DEFAULT_LIFECYCLE_QUERY,
+  sample = RECORDED_LIFECYCLE_SAMPLE_NAME,
+  snapshot = null,
+} = {}) {
+  if (sample !== RECORDED_LIFECYCLE_SAMPLE_NAME) throw unknownSample(sample);
+  const evidence = snapshot || JSON.parse(readFileSync(SNAPSHOT_URL, "utf8"));
+  const lifecycle = selectRecordedRevisionLifecycle(evidence);
+  const { correction, predecessor, trigger, laterEvent } = lifecycle;
+
+  const revisionAt = Date.parse(correction.proof.read_at);
+  const persistedAt = Date.parse(correction.created_at);
+  const atRevisionProof = await replayRecordedClaim({
+    evidence,
+    claim: correction,
+    checkpoint: checkpointFromProof(correction.proof),
+    subject: subjectFromProof(correction),
+    query,
+    now: revisionAt,
+    policyCutoff: revisionAt,
+    source: {
+      sample,
+      stage: "at_revision_proof",
+      evidence: "deterministic replay at the correction's recorded proof time",
+      network_access: false,
+      actual_walrus_blob_id: correction.blob_id,
+    },
+  });
+
+  const laterAt = Date.parse(laterEvent.at);
+  const subsequent = await replayRecordedClaim({
+    evidence,
+    claim: correction,
+    checkpoint: checkpointFromEvent(laterEvent),
+    subject: subjectFromEvent(laterEvent, correction.subject),
+    query,
+    now: laterAt,
+    policyCutoff: laterAt,
+    source: {
+      sample,
+      stage: "first_post_persistence_check",
+      evidence: "deterministic replay over a later recorded proof-equivalent check",
+      network_access: false,
+      actual_walrus_blob_id: correction.blob_id,
+      recorded_event_at: laterEvent.at,
+      proof_equivalent_memory_blob_id: laterEvent.memory?.blob_id ?? null,
+    },
+  });
+
+  if (atRevisionProof.verdict !== "FRESH" || atRevisionProof.withheld) {
+    throw new Error("recorded lifecycle: correction was not fresh at its revision proof");
   }
-  return result;
+  if (subsequent.verdict !== "STALE" || !subsequent.withheld || subsequent.verification.subject_changed !== true) {
+    throw new Error("recorded lifecycle: correction was not withheld at the later check");
+  }
+
+  return {
+    schema: RECALL_CHECKED_LIFECYCLE_SCHEMA,
+    mode: "recorded-mainnet",
+    read_only: true,
+    source: {
+      sample,
+      evidence_file: "docs/evidence/proof-snapshot.json",
+      generated_at: evidence.generated_at ?? null,
+      network_access: false,
+      decision_kind: "one recorded trigger plus deterministic replays of recorded Mainnet evidence",
+      actual_walrus_blob_ids: {
+        predecessor: predecessor.blob_id,
+        correction: correction.blob_id,
+        later_proof_equivalent_memory: laterEvent.memory?.blob_id ?? null,
+      },
+    },
+    query,
+    subject: {
+      class: correction.class,
+      address: correction.subject,
+      predicate: correction.predicate,
+    },
+    revision: {
+      predecessor: memoryEvidence(predecessor),
+      trigger: recordedTriggerEvidence(trigger, predecessor),
+      correction: {
+        ...memoryEvidence(correction),
+        persisted_at: correction.created_at,
+        persistence_delay_ms: persistedAt - revisionAt,
+        supersedes: {
+          stored_reference: lifecycle.storedReference,
+          stored_reference_kind: lifecycle.storedReferenceKind,
+          resolved_blob_id: lifecycle.resolvedBlobId,
+          resolved_claim: predecessor.claim,
+        },
+      },
+    },
+    behavior: {
+      sequence: [trigger.verdict, atRevisionProof.verdict, subsequent.verdict],
+      before_revision: recordedTriggerEvidence(trigger, predecessor),
+      at_revision_proof: {
+        decision_kind: "deterministic-replay-at-correction-proof",
+        result: atRevisionProof,
+      },
+      first_post_persistence_check: {
+        decision_kind: "deterministic-replay-over-first-post-persistence-check",
+        recorded_event: {
+          at: laterEvent.at,
+          round: laterEvent.round ?? null,
+          milliseconds_after_persistence: laterAt - persistedAt,
+          actually_recalled_correction_blob: lifecycle.laterEventActuallyRecalledCorrection,
+          proof_equivalent_memory_blob_id: laterEvent.memory?.blob_id ?? null,
+          proof_equivalent_memory_claim: laterEvent.memory?.claim ?? null,
+          note: lifecycle.laterEventActuallyRecalledCorrection
+            ? "the recorded event recalled the correction blob"
+            : "the recorded event recalled a proof-equivalent observation, not the correction blob",
+        },
+        result: subsequent,
+      },
+    },
+    writes: [],
+  };
 }

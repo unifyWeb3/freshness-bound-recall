@@ -57,6 +57,7 @@ nvm use                # if you use nvm: reads .nvmrc -> 26.13.0
 npm install --ignore-scripts   # deterministic install; never runs lifecycle scripts
 npm test                     # offline suite, no network
 node scripts/recall-checked.mjs --sample sui-clock-changed --json
+node scripts/recall-checked.mjs --sample sui-clock-revision-lifecycle --json
 npm run demo:offline         # cached-snapshot demo (no network)
 npm run proof:offline        # proof page over cached snapshot: http://127.0.0.1:8787
 npm run export               # or a fully static copy of the proof page at ./site
@@ -70,7 +71,17 @@ the packed package, the equivalent command is:
 
 ```sh
 recall_checked --sample sui-clock-changed --json
+recall_checked --sample sui-clock-revision-lifecycle --json
 ```
+
+The lifecycle sample resolves a real correction to the observation it supersedes, then shows the
+same recorded Mainnet evidence as `STALE → FRESH → STALE`: the predecessor was withheld, the actual
+correction is fresh at its revision proof, and that correction is withheld at a later recorded
+post-persistence check. The FRESH and final STALE verdicts are deterministic replays over recorded
+checkpoints and pins, not a claim that the historical ledger recalled the correction blob itself.
+The contract exposes the observed timing too: this correction reached Walrus 117,242 ms after its
+proof, and the first recorded proof-equivalent check 1,381 ms later already found it stale. Its
+stable JSON schema is `recall_checked_lifecycle/v1`.
 
 Live recall is also read-only unless writes are explicitly enabled. It reads credentials from the
 process environment and from `.env` in the **current working directory** (not from inside the
@@ -88,9 +99,14 @@ The same contract is available as a library. `recallChecked()` is dependency-inj
 to zero writes; only `allowWrites: true` opts in. The recorded sample needs no dependencies:
 
 ```js
-import { recallChecked, recallCheckedSample } from "freshness-bound-recall";
+import {
+  recallChecked,
+  recallCheckedLifecycleSample,
+  recallCheckedSample,
+} from "freshness-bound-recall";
 
 const sample = await recallCheckedSample();
+const lifecycle = await recallCheckedLifecycleSample();
 const live = await recallChecked("Is this still true?", { store, tatum });
 // Explicit write opt-in: recallChecked(query, { store, tatum, allowWrites: true })
 ```
@@ -144,7 +160,7 @@ question
   │     ├─ subject pin          version/digest re-read    P3
   │     └─ wall-clock backstop  P1 (last resort)
   ├─ 3. FRESH → answer from the memory (template, no LLM)
-  │     STALE  → WITHHELD + live value; optionally write correction (supersedes=old blob)
+  │     STALE  → WITHHELD + live value; optionally write correction (supersedes=old reference)
   └─ 4. learned policy (per class)
         FALSE-STALE  → widen   MISSED-CHANGE → tighten
         bounded ×2 / ÷2, min 3 actionable samples since last change,
@@ -309,6 +325,7 @@ credits per call      : UNKNOWN - no credit header is returned by Tatum; compare
 | Learned SLOW window 5000→10000→20000 from 3 live FALSE-STALE samples, persisted | VERIFIED (live learning; memory written later, learned_at ≠ written_at) | `fc-policy-SLOW-v2` blob `Zne2mnjAy6u…`; ledger entries 2026-11-05 01:55–02:05 UTC |
 | Both learning directions persisted as Walrus Memory and read back at startup | VERIFIED (live) | `scripts/show-policy-effect.mjs` part A (`source=store`) |
 | The persisted SLOW policy changes a gate verdict (recorded mainnet decision) | VERIFIED (replay of a recorded mainnet decision) | `scripts/show-policy-effect.mjs` part B: window 5000 → STALE, window 20000 → FRESH |
+| A real correction has visible revision and subsequent behavior | VERIFIED (recorded trigger + deterministic replays of recorded Mainnet evidence) | `recall_checked --sample sui-clock-revision-lifecycle --json`: STALE → FRESH at proof → STALE at first post-persistence check |
 | A later SLOW window (40000) was learned live but is **not** persisted | VERIFIED (disclosed) | `fc-policy-SLOW-v2` body; ledger 2026-11-05 02:25:24 UTC |
 | One policy memory per change (when the budget allows) | VERIFIED | `test/answer.test.mjs` |
 | `x-api-key` was sent on every Tatum request | VERIFIED | `TatumClient.apiKeyProof()` → 21/21 in the credits run, 7/7 in the final proof snapshot (2,208/2,208 in a longer earlier page run); `test/tatum.test.mjs` |
@@ -368,6 +385,10 @@ Dockerfile    offline tests + offline demo + export, no secrets in the image
 
 * **Memory has no delete/update** — revision is by `supersedes` lineage and `epoch` semantics. Judges
   can recover older generations by blob id, which is by design.
+* **A correction can age during persistence** — the recorded lifecycle sample shows one FAST
+  correction reaching Walrus 117,242 ms after its proof and already being stale at the first
+  proof-equivalent check 1,381 ms later. The sample does not claim that blob was ever recalled fresh
+  after persistence; it labels the FRESH step as a replay at the correction's proof time.
 * **22 mainnet memories** (8 test seeds · 7 observer observations · 4 corrections · 2 policy records ·
   1 adversarial). “Over 10+ writes” satisfied by blob count.
 * **Learning stability** — the tightened FAST window (25 checkpoints ≈ 6 s) is below the observer

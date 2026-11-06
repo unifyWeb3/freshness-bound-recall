@@ -1,4 +1,14 @@
-import { recallChecked, recallCheckedSample, DEFAULT_SAMPLE_QUERY, RECORDED_SAMPLE_NAME } from "./recall-checked.mjs";
+import {
+  AVAILABLE_RECORDED_SAMPLES,
+  DEFAULT_LIFECYCLE_QUERY,
+  DEFAULT_SAMPLE_QUERY,
+  RECALL_CHECKED_LIFECYCLE_SCHEMA,
+  RECORDED_LIFECYCLE_SAMPLE_NAME,
+  RECORDED_SAMPLE_NAME,
+  recallChecked,
+  recallCheckedLifecycleSample,
+  recallCheckedSample,
+} from "./recall-checked.mjs";
 import { createRuntime } from "./runtime.mjs";
 import { credentialSelfTest } from "./mainnet.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "./tatum.mjs";
@@ -7,7 +17,7 @@ import { resolve } from "node:path";
 export const HELP = `Freshness-Bound Recall
 
 Usage:
-  recall_checked [--sample ${RECORDED_SAMPLE_NAME}] [--query <text>] [--json]
+  recall_checked [--sample <name>] [--query <text>] [--json]
   recall_checked --live --query <text> [--json]
   recall_checked --live --allow-mainnet-writes --query <text> [--json]
 
@@ -15,6 +25,7 @@ Modes:
   --sample [name]            Run labelled recorded Mainnet evidence with no
                              wallet, API key, network access, or writes.
                              Default sample: ${RECORDED_SAMPLE_NAME}
+                             Available: ${AVAILABLE_RECORDED_SAMPLES.join(", ")}
   --live                     Recall from Walrus Memory and verify through
                              Tatum Sui Mainnet GraphQL. Reads credentials from
                              process env or .env in the current directory.
@@ -26,7 +37,8 @@ Safety:
                              must not be used without the account owner's approval.
 
 Output:
-  --json                     Print the stable recall_checked/v1 JSON contract.
+  --json                     Print the stable recall_checked/v1 or
+                             recall_checked_lifecycle/v1 JSON contract.
   --help, -h                 Show this help.
 `;
 
@@ -43,9 +55,12 @@ function parseArgs(args) {
   const allowWrites = args.includes("--allow-mainnet-writes");
   const json = args.includes("--json");
   const help = args.includes("--help") || args.includes("-h");
-  const query = valueAfter(args, "--query") || DEFAULT_SAMPLE_QUERY;
   const sampleFlag = args.includes("--sample") || args.some((arg) => arg.startsWith("--sample="));
   const sample = valueAfter(args, "--sample") || RECORDED_SAMPLE_NAME;
+  const defaultQuery = sample === RECORDED_LIFECYCLE_SAMPLE_NAME
+    ? DEFAULT_LIFECYCLE_QUERY
+    : DEFAULT_SAMPLE_QUERY;
+  const query = valueAfter(args, "--query") || defaultQuery;
   const known = new Set(["--live", "--allow-mainnet-writes", "--json", "--help", "-h", "--sample", "--query"]);
   const booleans = new Set(["--live", "--allow-mainnet-writes", "--json", "--help", "-h"]);
   const unknown = args.filter((arg, index) => {
@@ -62,6 +77,25 @@ function parseArgs(args) {
 }
 
 function printHuman(result, write) {
+  if (result.schema === RECALL_CHECKED_LIFECYCLE_SCHEMA) {
+    const predecessor = result.revision?.predecessor || {};
+    const correction = result.revision?.correction || {};
+    const atRevision = result.behavior?.at_revision_proof?.result || {};
+    const postPersistence = result.behavior?.first_post_persistence_check?.result || {};
+    const predecessorCheckpoint = predecessor.proof?.checkpoint_seq ?? predecessor.checkpoint?.sequence ?? "—";
+    const correctionCheckpoint = correction.proof?.checkpoint_seq ?? correction.checkpoint?.sequence ?? "—";
+
+    write(`Freshness-Bound Recall · recorded Mainnet lifecycle · ${result.read_only ? "read-only" : "writes enabled"}\n`);
+    write(`${(result.behavior?.sequence || ["STALE", "FRESH", "STALE"]).join(" → ")}\n`);
+    write(`Predecessor: ${predecessor.claim || "unknown"} · ${predecessor.blob_id || "no blob"} · checkpoint ${predecessorCheckpoint}\n`);
+    write(`Correction: ${correction.claim || "unknown"} · ${correction.blob_id || "no blob"} · checkpoint ${correctionCheckpoint}\n`);
+    write(`Supersedes: ${correction.supersedes?.stored_reference || "unknown"} → ${correction.supersedes?.resolved_blob_id || "unresolved"}\n`);
+    write(`Timing: persisted ${correction.persistence_delay_ms ?? "—"} ms after proof · first recorded check ${result.behavior?.first_post_persistence_check?.recorded_event?.milliseconds_after_persistence ?? "—"} ms later\n`);
+    write(`At revision proof: ${atRevision.verdict || "unknown"} · ${atRevision.answer || atRevision.reason || "no result"}\n`);
+    write(`First post-persistence check: ${postPersistence.verdict || "unknown"}${postPersistence.withheld ? "/WITHHELD" : ""} · ${postPersistence.reason || "no reason"}\n`);
+    write(`Provenance: recorded Mainnet evidence · network off · Writes: ${result.writes?.length ? "present" : "none"}\n`);
+    return;
+  }
   write(`Freshness-Bound Recall · ${result.mode} · ${result.read_only ? "read-only" : "writes enabled"}\n`);
   write(`${result.verdict}\n`);
   write(`${result.answer}\n`);
@@ -97,7 +131,9 @@ export async function runRecallCheckedCli(args = process.argv.slice(2), {
   try {
     let result;
     if (!opts.live) {
-      result = await recallCheckedSample({ query: opts.query, sample: opts.sample });
+      result = opts.sample === RECORDED_LIFECYCLE_SAMPLE_NAME
+        ? await recallCheckedLifecycleSample({ query: opts.query, sample: opts.sample })
+        : await recallCheckedSample({ query: opts.query, sample: opts.sample });
     } else {
       const log = (line) => stderr(`${line}\n`);
       const rt = createRuntime({

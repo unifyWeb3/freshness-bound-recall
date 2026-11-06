@@ -16,7 +16,7 @@ minute. An answer from a memory written minutes ago can already be wrong.
 **FRESHNESS-BOUND RECALL** is a memory agent that treats freshness as a *precondition of answering*,
 not as a footnote. Every answer is routed through a gate before it can reach the user; if the gate
 fails, the agent withholds the memory, says why, and (optionally) writes a correction that supersedes
-the old blob.
+the old record.
 
 ## What it does
 
@@ -68,7 +68,9 @@ Three honest caveats:
   4 corrections, 2 learned-policy memories, 1 historical adversarial specimen that predates the
   anchor-proof fix, 8 test seeds (4 live-test runs × 2 seeds).
 * **Lineage, not deletion.** The production SDK (0.1.13) exposes no delete/update, so revision is by
-  `supersedes=<blob_id>`; the proof page renders the lineage chain.
+  `supersedes=<blob_id or exact claim fallback>`; the proof snapshot resolves either form to the
+  predecessor blob before rendering the lineage chain. Two historical corrections used the claim
+  fallback because their observation writes were still in flight.
 * **Semantic recall for answers** — claims carry `FR-v1` checkpoint + object version stamps, so the
   gate can reject them without trusting the client’s clock.
 
@@ -90,7 +92,7 @@ Three honest caveats:
 Deterministic 60–90 s: startup self-test → live chain pins → policy loaded **from Walrus Memory**
 (FAST window 25, SLOW window 20000) → a seeded claim is **WITHHELD** (“subject changed… the memory was
 not used as the answer”) → live value shown instead → same question same verdict → the FALSE-STALE case
-→ the ablation table over ≥306 recorded decisions → lineage `old blob → correction blob`.
+→ the ablation table over ≥306 recorded decisions → resolved lineage `old observation → correction`.
 
 Every number and blob id is in the repo; every correctness claim maps to a command or an id.
 

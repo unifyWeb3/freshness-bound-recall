@@ -16,6 +16,7 @@ import { evaluateGate, VERDICT } from "../src/gate.mjs";
 import { newState } from "../src/policy.mjs";
 import { SUBJECTS } from "../src/subjects.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "../src/tatum.mjs";
+import { resolveSupersededMemory } from "../src/recorded-lifecycle.mjs";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -267,13 +268,17 @@ emit("note", `memory-off (always live)      ${String(0).padStart(3)}        ${St
 emit("note", `memory-on, no gate            ${String(total).padStart(3)}        ${String(0).padStart(3)}      ${String(stale + unverified).padStart(3)}     (all asked; ${stale + unverified} would be served stale)`);
 emit("note", `memory-on, gate + policy      ${String(fresh).padStart(3)}        ${String(total * 2).padStart(3)}      ${String(0).padStart(3)}     (${fresh} answered from memory, ${stale + unverified} withheld)`);
 
-// ---------------- step 8: lineage (existing correction)
+// ---------------- step 8: recorded correction lineage
 line();
-emit("h", "8) lineage of the correction seen at step 4");
+emit("h", "8) recorded correction lineage");
 if (offline) {
-  emit("note", "correction cor-sui-clock-341742463 (blob mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY) supersedes obs-sui-clock-341742463 (blob zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg)");
-  emit("note", "correction cor-sui-clock-341742424 (blob 1JJVQ71R1t6lnnmbWRXfZVOpDshsDsgZ9ME-KV4EL-k) supersedes obs-sui-clock-341742424 (blob goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY)");
-  emit("note", "correction cor-sui-clock-341742383 (blob _RswBPgo7eksTyWBiqLv0xDdqMY3nYbmOiUIGecnrXI) supersedes obs-sui-clock-341742383 (blob FMBYgzs4O6_Z5YKCZlA5DCYHrzc4h5yVTtHeGcWpavY)");
+  const corrections = (snapshot?.memories || [])
+    .filter((memory) => memory.claim?.startsWith("cor-") && memory.supersedes)
+    .sort((a, b) => Number(b.proof?.checkpoint_seq || 0) - Number(a.proof?.checkpoint_seq || 0));
+  for (const correction of corrections) {
+    const predecessor = resolveSupersededMemory(correction, snapshot.memories);
+    emit("note", `correction ${correction.claim} (blob ${correction.blob_id}) supersedes ${predecessor.claim} (blob ${predecessor.blob_id})`);
+  }
 } else {
   emit("note", "recalling the corrections from Walrus Memory…");
   const rec = await rt.store.recall({ query: "correction sui clock supersedes object version", limit: 5, sort: "recent" });

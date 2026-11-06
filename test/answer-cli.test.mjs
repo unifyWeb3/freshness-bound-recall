@@ -36,6 +36,47 @@ test("installable CLI defaults to the read-only recorded Mainnet sample", () => 
   assert.match(body.memory.blob_id, /^[A-Za-z0-9_-]{40,}$/);
 });
 
+test("CLI exposes the recorded Mainnet revision lifecycle as stable JSON", () => {
+  const result = run(["--sample", "sui-clock-revision-lifecycle", "--json"], INSTALLABLE_SCRIPT);
+  assert.equal(result.status, 0, result.stderr);
+  const body = JSON.parse(result.stdout);
+
+  assert.equal(body.schema, "recall_checked_lifecycle/v1");
+  assert.equal(body.read_only, true);
+  assert.equal(body.source.network_access, false);
+  assert.deepEqual(body.behavior.sequence, ["STALE", "FRESH", "STALE"]);
+  assert.equal(body.revision.predecessor.blob_id, "goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY");
+  assert.equal(body.revision.correction.blob_id, "mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY");
+  assert.equal(body.behavior.first_post_persistence_check.recorded_event.actually_recalled_correction_blob, false);
+  assert.deepEqual(body.writes, []);
+});
+
+test("CLI human output makes revision and later withholding visible", () => {
+  const result = run(["--sample", "sui-clock-revision-lifecycle"], INSTALLABLE_SCRIPT);
+  assert.equal(result.status, 0, result.stderr);
+
+  assert.match(result.stdout, /STALE → FRESH → STALE/);
+  assert.match(result.stdout, /Predecessor: obs-sui-clock-341742424 · goZjQJ36/);
+  assert.match(result.stdout, /Correction: cor-sui-clock-341742463 · mjxZQ1X2/);
+  assert.match(result.stdout, /Timing: persisted 117242 ms after proof · first recorded check 1381 ms later/);
+  assert.match(result.stdout, /At revision proof: FRESH/);
+  assert.match(result.stdout, /First post-persistence check: STALE\/WITHHELD/);
+  assert.match(result.stdout, /network off · Writes: none/);
+});
+
+test("CLI rejects unknown samples and lists both recorded choices", () => {
+  const result = run(["--sample", "invented", "--json"], INSTALLABLE_SCRIPT);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /unknown sample "invented"/);
+  assert.match(result.stderr, /sui-clock-changed, sui-clock-revision-lifecycle/);
+});
+
+test("recorded lifecycle sample cannot be combined with live mode", () => {
+  const result = run(["--live", "--sample", "sui-clock-revision-lifecycle"], INSTALLABLE_SCRIPT);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /Choose either --live or --sample/);
+});
+
 test("CLI makes the Mainnet write switch explicit and refuses it outside live mode", () => {
   const help = run(["--help"], INSTALLABLE_SCRIPT);
   assert.equal(help.status, 0, help.stderr);

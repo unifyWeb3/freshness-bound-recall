@@ -66,7 +66,8 @@ Field list below matches the live form (as read read-only on 2026-11-04; **re-ve
 > answer is routed through a **freshness gate on the answer path**: checkpoint window (Tatum Sui
 > mainnet GraphQL, 1 cached read) ∧ subject version/digest pin (1 read) ∧ wall-clock backstop, failing
 > closed with a visible reason. Stale memories are never answers; when a claim is re-verified
-> differently, a correction memory supersedes the old blob (lineage chain) and the tolerance itself —
+> differently, a correction memory supersedes the old record (blob id when available, exact claim
+> fallback while a write is still in flight; the proof view resolves both) and the tolerance itself —
 > a per-class policy memory (`fc-policy-FAST-v1`, `fc-policy-SLOW-v2`) — is rewritten by the system
 > from observed decay (FALSE-STALE widens, MISSED-CHANGE tightens; one policy memory per change).
 >
