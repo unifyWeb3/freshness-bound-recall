@@ -1,6 +1,6 @@
 # Submission draft — FRESHNESS-BOUND RECALL
 
-## Status: **GO** — repo and snapshot were published previously; the current acceptance and homepage work remains local. The author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
+## Status: **GO** — repo and snapshot were published previously; the current milestone work remains local. The author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
 
 **Deadline: 2026-11-10 17:00 UTC.** Judging Nov 11–16. Recommended submission: **Nov 10, morning UTC**.
 The submission form itself has **not** been filled or sent. **You** review and send.
@@ -8,7 +8,7 @@ The submission form itself has **not** been filled or sent. **You** review and s
 | Published item | URL | State |
 |---|---|---|
 | **Repository (public, published snapshot)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05 and verified unauthenticated; later acceptance/homepage commits have not been pushed |
-| **Hosted proof page — prior cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | prior Vercel deployment, verified unauthenticated; the current homepage milestone has not been deployed |
+| **Hosted proof page — prior cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | prior Vercel deployment, verified unauthenticated; the current Milestone 3 homepage has not been deployed |
 
 > The hosted page is a **static export of a labelled snapshot** — its banner reads
 > `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`. It is not a live service
@@ -25,8 +25,9 @@ lifecycle returned `STALE → FRESH → STALE`, resolved predecessor blob
 proof-equivalent blob `zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg`. The correction persisted 117,242 ms after its proof;
 the first post-persistence check 1,381 ms later withheld it as stale. Missing, ambiguous, and invalid
 evidence failed closed. Baseline suite before homepage work: **120 tests / 120 pass / 0 fail / 0 skipped**;
-focused acceptance: **30/30 pass**. The homepage milestone suite is **123 tests / 123 pass / 0 fail /
-0 skipped**; secrets audit: **11 passes / 0 failures**; full-history audit: **0 findings**. Live
+focused acceptance: **30/30 pass**. The homepage milestone suite was **123 tests / 123 pass / 0 fail /
+0 skipped**; the current Milestone 3 suite is **126 tests / 126 pass / 0 fail / 0 skipped**. Secrets
+audit: **11 passes / 0 failures**; full-history audit: **0 findings**. Live
 read-only recall confirmed both lineage blobs still exist and semantic recall returns the correction.
 No Mainnet writes, push, deployment, or secrets changes were performed.
 

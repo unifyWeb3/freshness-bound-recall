@@ -29,7 +29,7 @@ test("judge quickstart leads with the recorded lifecycle and records the accepte
   assert.ok(judge.indexOf(lifecycle) > -1, "the lifecycle command must be present");
   assert.ok(judge.indexOf(lifecycle) < judge.indexOf("npm test"),
     "the lifecycle must precede the broader test and audit path");
-  assert.match(judge, /123 tests, 123 pass, 0 fail, 0 skipped/);
+  assert.match(judge, /126 tests, 126 pass, 0 fail, 0 skipped/);
   assert.match(judge, /120 tests, 120 pass, 0 fail, 0 skipped/);
 });
 
@@ -46,4 +46,23 @@ test("README leads with the exact quickstart, architecture, and honest integrati
   assert.match(readme, /Live read-only CLI end to end \| \*\*UNVERIFIED\*\*/);
   assert.match(readme, /MCP tool \/ agent adapter \| \*\*NOT DELIVERED\*\*/);
   assert.match(readme, /older published state/);
+});
+
+test("blog and three-minute script preserve the recorded learning and outcome numbers", () => {
+  const blog = read("docs/blog.md");
+  const video = read("docs/video-script.md");
+  const combined = `${blog}\n${video}`;
+
+  assert.match(blog, /## What Tatum does/);
+  assert.match(blog, /## What Walrus Memory does/);
+  assert.match(blog, /## How the policy learned over time/);
+  assert.match(video, /Three-minute video script/);
+  assert.match(video, /## Shot list and voice-over/);
+  for (const value of ["214 changed", "16 unchanged-but-old", "4 unverified"]) {
+    assert.match(combined, new RegExp(value));
+  }
+  assert.match(combined, /5,000[\s\S]*STALE[\s\S]*FALSE-STALE/);
+  assert.match(combined, /20,000[\s\S]*FRESH[\s\S]*CONSISTENT/);
+  assert.match(combined, /UNVERIFIED end to end/);
+  assert.doesNotMatch(video, /Live now|nothing staged/i);
 });

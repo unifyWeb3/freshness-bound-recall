@@ -94,7 +94,7 @@ npm run audit:secrets
 node scripts/audit-history.mjs
 ```
 
-Current homepage milestone suite: **123 tests, 123 pass, 0 fail, 0 skipped**. The acceptance baseline
+Current Milestone 3 suite: **126 tests, 126 pass, 0 fail, 0 skipped**. The acceptance baseline
 before homepage work was **120 tests, 120 pass, 0 fail, 0 skipped**; focused milestone acceptance was
 **30/30 pass**. Secrets audit: **11 passes, 0 failures**; full-history audit: **0 findings**.
 
