@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { replay, ablation, readEvents } from "../src/replay.mjs";
 import { evaluateGate, VERDICT, SIGNAL } from "../src/gate.mjs";
 import { page, summarize } from "../scripts/proof-page.mjs";
+import { evidencePage } from "../scripts/site/evidence.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const events = readEvents(resolve(ROOT, "fixtures/event-log.json"));
@@ -134,7 +135,7 @@ test("proof-page ablation reports the recorded 214 changed / 16 still-true old /
   assert.equal(noGate.unverified_answers, 4);
   assert.equal("stale_answers" in noGate, false);
 
-  const html = page(snapshot);
+  const html = evidencePage(snapshot);
   assert.match(html, /changed answers/);
   assert.match(html, /still-true old/);
   assert.match(html, /unverified/);

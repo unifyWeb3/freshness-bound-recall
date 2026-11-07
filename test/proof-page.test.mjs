@@ -1,177 +1,201 @@
+// Site tests: the four generated pages (home, MCP, evidence, docs).
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { page } from "../scripts/proof-page.mjs";
+import { page, pages } from "../scripts/proof-page.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const recorded = JSON.parse(readFileSync(resolve(ROOT, "docs/evidence/proof-snapshot.json"), "utf8"));
 
-function staticPage() {
+function staticSite() {
   const snapshot = structuredClone(recorded);
   snapshot.mode = "offline";
   snapshot.exported_at = new Date(Date.parse(snapshot.generated_at) + 60_000).toISOString();
-  return page(snapshot);
+  return pages(snapshot);
 }
+const home = (site) => site["/index.html"];
+const mcp = (site) => site["/mcp.html"];
+const evidence = (site) => site["/evidence.html"];
+const docs = (site) => site["/docs.html"];
 
-function capture(html, pattern, description) {
-  const match = html.match(pattern);
-  assert.ok(match, `${description} must be present`);
-  return match[1];
-}
+const skipLink = '<a class="skip-link" href="#main-content">Skip to main content</a>';
 
-test("homepage leads with the product promise, try-it action, and recorded decision", () => {
-  const html = staticPage();
-  assert.match(html, /A stale memory is not an answer/);
-  assert.match(html, /href="#try-it"/);
-  assert.match(html, /href="#recorded-decision"/);
-  assert.match(html, /Try it in 60 seconds/);
-  assert.match(html, /id="recorded-decision"/);
-  assert.match(html, /Is the Sui Clock still at version 1018797298\?/);
-  assert.match(html, /obs-sui-clock-341742463/);
+test("every page leads with a working skip link and the brand mark", () => {
+  for (const [name, html] of Object.entries(staticSite())) {
+    assert.ok(html.includes(skipLink), `${name} must carry the skip link`);
+    assert.ok(html.indexOf(skipLink) < html.indexOf("<nav"), `${name}: skip link must come first`);
+    assert.match(html, /class="brand-mark"/);
+    assert.match(html, /<main class="shell" id="main-content" tabindex="-1">/);
+    assert.match(html, /<meta property="og:title"/);
+    assert.match(html, /<meta name="description"/);
+    assert.doesNotMatch(html, /setTimeout|location\.reload/);
+  }
+});
+
+test("homepage answers what-is-this in five seconds: name, promise, actions", () => {
+  const html = home(staticSite());
+  assert.match(html, /Your agent remembers\./);
+  assert.match(html, /RecallGuard checks whether it&rsquo;s still true/);
+  assert.match(html, /href="\/mcp\.html"/);
+  assert.match(html, /Add it to your agent via MCP/);
+  assert.match(html, /Run the 60-second replay/);
   assert.match(html, /WITHHELD/);
-  assert.match(html, /version 1019267077/);
-  assert.match(html, /checkpoint 341868687/);
-  assert.match(html, /Why it matters:/);
-  assert.match(html, /checkpoint-rail/);
-  assert.match(html, /rail-stop gate/);
-
-  const gateStep = capture(html,
-    /<article(?=[^>]*class="(?=[^"]*\bflow-step\b)(?=[^"]*\bgate-step\b)[^"]*")[^>]*>([\s\S]*?)<\/article>/,
-    "the recorded gate step");
-  assert.equal((gateStep.match(/class="step-meta"/g) || []).length, 1,
-    "the gate reason must be rendered once");
+  assert.match(html, /Walrus-backed recall/);
+  assert.match(html, /Tatum Sui Mainnet GraphQL/);
 });
 
-test("proof page labels static provenance and accepts camel-case checkpoint readAt", () => {
-  const html = staticPage();
-  assert.match(html, /Cached snapshot · static export · network off/);
-  for (const label of [
-    "Captured source",
-    "Pins at snapshot",
-    "Requests captured in snapshot",
-    "Evidence captured",
-    "Static page exported",
-    "Snapshot age",
-  ]) assert.match(html, new RegExp(label));
-  assert.match(html, /Snapshot age<\/span><span class="capture-value">1m 0s/);
-  assert.match(html, /Checkpoint age at render: <code>1m 3s<\/code>/,
-    "checkpoint age must use the snapshot's checkpoint.readAt field");
+test("homepage WITHHELD hero card shows the real recorded evidence", () => {
+  const html = home(staticSite());
+  assert.match(html, /cor-sui-clock-341742463/);
+  assert.match(html, /RECORDED MAINNET DECISION/);
+  assert.match(html, /subject changed/);
 });
 
-test("homepage exposes the exact credential-free 60-second lifecycle", () => {
-  const html = staticPage();
-  const tryIt = capture(html, /<section(?=[^>]*\bid="try-it")[^>]*>([\s\S]*?)<\/section>/,
-    "the 60-second try-it section");
-
-  assert.match(tryIt, /npm install --ignore-scripts/);
-  assert.match(tryIt, /npm run recall:checked -- --sample sui-clock-revision-lifecycle/);
-  assert.match(tryIt, /goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY/);
-  assert.match(tryIt, /mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY/);
-  assert.match(tryIt, /STALE[\s\S]*FRESH[\s\S]*STALE/);
-  assert.match(tryIt, /117[,.]?242 ms/);
-  assert.match(tryIt, /1[,.]?381 ms/);
-  assert.match(tryIt, /read-only/i);
-  assert.match(tryIt, /network off/i);
-  assert.match(tryIt, /writes?[^<]{0,20}none/i);
-  assert.match(tryIt, /proof-equivalent observation/i);
-  assert.match(tryIt, /not the correction blob/i);
-  assert.match(tryIt,
-    /<button(?=[^>]*\btype="button")(?=[^>]*\baria-label="[^"]*[Cc]opy)[^>]*>/);
-  assert.match(html, /navigator\.clipboard\.writeText/);
+test("homepage interactive demo embeds the recorded lifecycle and works offline", () => {
+  const html = home(staticSite());
+  const demo = html.match(/<script type="application\/json" id="demo-data">([\s\S]*?)<\/script>/)[1];
+  const data = JSON.parse(demo);
+  assert.equal(data.predecessor.claim, "obs-sui-clock-341742424");
+  assert.equal(data.correction.claim, "cor-sui-clock-341742463");
+  assert.equal(data.verification.verdict, "WITHHELD");
+  assert.match(html, /id="demo-next"/);
+  assert.match(html, /id="demo-prev"/);
+  assert.match(html, /id="demo-tabs"/);
+  assert.match(html, /ArrowLeft/);
+  assert.match(html, /aria-live="polite"/);
   assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|new WebSocket/);
 });
 
-test("homepage shows a Walrus policy memory changing the same recorded verdict", () => {
-  const html = staticPage();
-  const learning = capture(html, /<section(?=[^>]*\bid="learning-loop")[^>]*>([\s\S]*?)<\/section>/,
-    "the recorded learning-loop section");
-
-  assert.match(learning, /Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4/,
-    "the persisted SLOW policy blob must be named");
-  assert.match(learning, /Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g/,
-    "the observation replayed under both policies must be named");
-  assert.match(learning, /same recorded inputs/i);
-  assert.match(learning, /18[,.]?155/);
-  assert.match(learning, /5[,.]?000[\s\S]*STALE[\s\S]*FALSE-STALE/);
-  assert.match(learning, /20[,.]?000[\s\S]*FRESH[\s\S]*CONSISTENT/);
-  assert.match(learning, /10[,.]?000\s*(?:→|-&gt;|to)\s*20[,.]?000/i,
-    "the stored policy's actual learning step must be disclosed");
-  assert.match(learning, /2026-11-05(?:T| )02:05:19\.054Z/,
-    "the recorded learning time must be visible");
-  assert.match(learning, /2026-11-05(?:T| )09:23:05\.105Z/,
-    "the later Walrus write time must be visible");
-  assert.match(learning, /offline/i);
-  assert.match(learning, /read-only/i);
-  assert.match(learning, /writes?[^<]{0,20}none/i);
+test("homepage carries the exact credential-free 60-second replay command", () => {
+  const html = home(staticSite());
+  assert.match(html, /npm install --ignore-scripts/);
+  assert.match(html, /npm run recall:checked -- --sample sui-clock-revision-lifecycle/);
+  assert.match(html, /git clone https:\/\/github\.com\/unifyWeb3\/freshness-bound-recall/);
+  assert.match(html, /STALE/);
+  assert.match(html, /FRESH/);
+  assert.match(html, /navigator\.clipboard\.writeText/);
 });
 
-test("homepage uses the checkpoint signature without a generic FBR tile", () => {
-  const html = staticPage();
-  assert.match(html, /class="brand-mark"/);
-  assert.doesNotMatch(html, />FBR</);
-  assert.match(html, /Recorded Mainnet evidence/);
-  assert.doesNotMatch(html, /EVIDENCE PAGE|CACHED SNAPSHOT|STATIC EXPORT/);
-  assert.match(html, /--amber: #f4b860/);
-  assert.doesNotMatch(html, /gradient|box-shadow|--green|--red|--focus|--amber-ink/,
-    "the page must use one amber accent without gradients or haze");
+test("homepage explains the comparison and the modeled counterfactual, labelled", () => {
+  const html = home(staticSite());
+  assert.match(html, /A vector hit is not a fresh fact/);
+  assert.match(html, /WITHHELD_UNVERIFIED/);
+  assert.match(html, /supersedes/);
+  assert.match(html, /modelled counterfactual|Modeled counterfactual|Modelled counterfactual/i);
+  assert.match(html, /not production incidents/i);
 });
 
-test("proof page keeps dense evidence accessible without widening mobile documents", () => {
-  const html = staticPage();
-  assert.match(html, /\.grid > \*, \.decision-flow > \*, \.capture-grid > \* \{ min-width: 0; \}/);
-  assert.match(html, /\.address, \.address-line, \.address-line code \{ overflow-wrap: anywhere;/);
-  assert.match(html, /html, body \{ width: 100%; max-width: 100%;/);
-  assert.match(html, /@media \(max-width: 720px\)/);
-  assert.doesNotMatch(html, /<div class="scroll"(?! tabindex="0" role="region" aria-label=)/);
+test("evidence page labels every number: recorded, offline, live, modeled", () => {
+  const html = evidence(staticSite());
+  assert.match(html, /Recorded evidence/);
+  assert.match(html, /Offline replay/);
+  assert.match(html, /Live verification/);
+  assert.match(html, /Modelled counterfactual|Modelled|counterfactual/i);
+  assert.match(html, /Unverified end-to-end/i);
+  assert.match(html, /existence, not current truth|not a claim that any fact is still true/i);
 });
 
-test("proof page starts keyboard navigation with a visible skip link", () => {
-  const html = staticPage();
-  const skipLink = '<a class="skip-link" href="#main-content">Skip to main content</a>';
-  assert.match(html, new RegExp(skipLink));
-  assert.ok(html.indexOf(skipLink) < html.indexOf("<nav"),
-    "the skip link must be the first navigable element");
-  assert.match(html, /<main class="shell" id="main-content" tabindex="-1">/);
-  assert.match(html, /\.skip-link \{[^}]*transform: translateY\(-200%\);[^}]*\}/);
-  assert.match(html, /\.skip-link:hover, \.skip-link:focus \{[^}]*color: var\(--bg\);[^}]*transform: translateY\(0\);[^}]*\}/);
+test("evidence page preserves blob ids, the learned policy replay and the outcome split", () => {
+  const html = evidence(staticSite());
+  assert.match(html, /Zne2mnjAy6uOtOhJ6o5QAxH963EqXQaMMtYWOPBkK_4/);
+  assert.match(html, /Pk3CAi9A0vLueqT8LGWS1zHoicYNSl7cUbXeAQFtF0g/);
+  assert.match(html, /fc-policy-SLOW-v2/);
+  assert.match(html, /10[,.]?000\s*(?:→|-&gt;|to)\s*20[,.]?000/i);
+  assert.match(html, />214</);
+  assert.match(html, />16</);
+  assert.match(html, />4</);
+  assert.match(html, /deterministic policy evaluation, not autonomous learning/i);
 });
 
-test("proof page shows only connected correction pairs and the recorded outcome split", () => {
-  const html = staticPage();
-  assert.doesNotMatch(html, /<svg\b/);
-  assert.match(html, /Observation → correction chain/);
+test("evidence page shows connected correction pairs only, inventories collapsed", () => {
+  const html = evidence(staticSite());
+  const correctionsSection = html.split('aria-labelledby="corrections-title"')[1].split('aria-labelledby="pins-title"')[0];
+  assert.doesNotMatch(correctionsSection, /smoke-seed/);
   assert.match(html, /class="correction-list"/);
   assert.match(html, /Recalled observation/);
   assert.match(html, /Recorded correction/);
-  const correctionSection = html.split('<section class="section" aria-labelledby="corrections-title">')[1]
-    .split('<section class="section" aria-labelledby="records-title">')[0];
-  assert.doesNotMatch(correctionSection, /smoke-seed/);
-  assert.match(html, /<span class="split-number">214<\/span><span class="split-label">changed<\/span>/);
-  assert.match(html, /<span class="split-number">16<\/span><span class="split-label">unchanged-but-old<\/span>/);
-  assert.match(html, /<span class="split-number">4<\/span><span class="split-label">unverified<\/span>/);
-});
-
-test("proof page collapses inventories and links the complete ledger", () => {
-  const html = staticPage();
-  assert.equal((html.match(/<details>/g) || []).length, 2);
   assert.match(html, /Latest 40 of 306 decisions/);
-  assert.match(html, /https:\/\/github\.com\/unifyWeb3\/freshness-bound-recall\/blob\/main\/docs\/evidence\/proof-snapshot\.json/);
-  assert.equal((html.match(/<caption>/g) || []).length, 4);
-  assert.doesNotMatch(html, /<th\b(?! scope="col")/);
+  assert.match(html, /blob/i);
   assert.match(html, /tabindex="0" role="region" aria-label="Memory inventory table"/);
   assert.match(html, /tabindex="0" role="region" aria-label="Latest decision ledger table"/);
+  assert.match(html, /tabindex="0" role="region" aria-label="Tatum request log table"/);
+  assert.match(html, /https:\/\/github\.com\/unifyWeb3\/freshness-bound-recall\/blob\/main\/docs\/evidence\/proof-snapshot\.json/);
+  assert.match(html, /x-api-key/);
+  assert.doesNotMatch(html, /<th\b(?! scope="col")/);
 });
 
-test("proof page includes project links and static share metadata without auto reload", () => {
-  const html = staticPage();
-  assert.match(html, /https:\/\/github\.com\/unifyWeb3\/freshness-bound-recall"/);
-  assert.match(html, /https:\/\/github\.com\/unifyWeb3\/freshness-bound-recall\/blob\/main\/docs\/judge-60s\.md/);
-  assert.match(html, /<meta name="description"/);
-  assert.match(html, /<meta property="og:title"/);
-  assert.match(html, /<meta property="og:description"/);
-  assert.match(html, /<meta property="og:type" content="website"/);
-  assert.match(html, /<meta property="og:url"/);
-  assert.doesNotMatch(html, /setTimeout|location\.reload|auto-refresh/);
+test("evidence page uses one amber accent without gradients or haze", () => {
+  const html = evidence(staticSite());
+  assert.match(html, /--amber: #e5a83d/);
+  assert.doesNotMatch(html, /gradient|box-shadow|--green|--red|backdrop-filter/i);
+  const homeHtml = home(staticSite());
+  assert.doesNotMatch(homeHtml, /gradient|box-shadow|--green|--red|backdrop-filter/i);
+});
+
+test("MCP page documents all six tools with read-only defaults and gating", () => {
+  const html = mcp(staticSite());
+  for (const tool of ["recall_checked", "explain_decision", "list_revisions", "get_evidence", "propose_correction", "store_correction"]) {
+    assert.match(html, new RegExp(`<code>${tool}</code>`), `${tool} must be documented`);
+  }
+  assert.match(html, /RECALLGUARD_ENABLE_WRITES=true/);
+  assert.match(html, /STORE-CORRECTION/);
+  assert.match(html, /read-only by default/i);
+  assert.match(html, /no wallet/i);
+  assert.match(html, /untrusted data/i);
+  assert.match(html, /withheld/i);
+  assert.match(html, /Fail closed/i);
+});
+
+test("MCP page carries tested client configs for Claude Code and Codex", () => {
+  const html = mcp(staticSite());
+  assert.match(html, /claude mcp add recallguard/);
+  assert.match(html, /v2\.1\.318/);
+  assert.match(html, /codex-cli 0\.167\.0/);
+  assert.match(html, /mcp_servers\.recallguard/);
+  assert.match(html, /\.mcp\.json/);
+  assert.match(html, /recallguard-mcp/);
+  assert.match(html, /npm run mcp:smoke/);
+  assert.match(html, /Troubleshooting/i);
+  assert.match(html, /Claude Desktop and other clients.*not exercised/i);
+});
+
+test("docs page covers quickstart, CLI, API, architecture, security and honest limits", () => {
+  const html = docs(staticSite());
+  assert.match(html, /60 seconds/i);
+  assert.match(html, /recallguard/);
+  assert.match(html, /--allow-mainnet-writes/);
+  assert.match(html, /--sample sui-clock-revision-lifecycle/);
+  assert.match(html, /recallChecked/);
+  assert.match(html, /recall_checked\/v1/);
+  assert.match(html, /no LLM in the answer path/i);
+  assert.match(html, /untrusted data/i);
+  assert.match(html, /Signatures are <strong>not<\/strong> verified/);
+  assert.match(html, /Live read-only CLI is unverified end-to-end/);
+  assert.match(html, /Tatum AI Builder was not used/);
+  assert.match(html, /fc-policy-SLOW-v2/);
+  assert.match(html, /deterministic policy evaluation, not autonomous learning/i);
+});
+
+test("MCP and docs pages never print secrets and link the repo snapshot", () => {
+  const site = staticSite();
+  const all = Object.values(site).join("\n");
+  assert.doesNotMatch(all, /suiprivkey1[0-9a-z]{32,}/i);
+  assert.doesNotMatch(all, /PRIVATE KEY-----/);
+  assert.match(all, /github\.com\/unifyWeb3\/freshness-bound-recall/);
+});
+
+test("pages render with 390px-ready rules and keyboard-accessible scroll regions", () => {
+  for (const [name, html] of Object.entries(staticSite())) {
+    assert.match(html, /html, body \{ width: 100%; max-width: 100%;/, name);
+    assert.match(html, /@media \(max-width: 720px\)/, name);
+    assert.doesNotMatch(html, /<div class="scroll"(?! tabindex="0" role="region" aria-label=)/);
+    assert.match(html, /\.skip-link \{[^}]*translateY\(-220%\)/, name);
+  }
+});
+
+test("back-compat page() export still renders the home page", () => {
+  const html = page(structuredClone(recorded));
+  assert.match(html, /Your agent remembers\./);
 });
