@@ -26,7 +26,7 @@ proof-equivalent blob `zAji1w8p4REMzUF2o1V7IfgfQlpN7np7Qs8ehtNVXHg`. The correct
 the first post-persistence check 1,381 ms later withheld it as stale. Missing, ambiguous, and invalid
 evidence failed closed. Baseline suite before homepage work: **120 tests / 120 pass / 0 fail / 0 skipped**;
 focused acceptance: **30/30 pass**. The homepage milestone suite was **123 tests / 123 pass / 0 fail /
-0 skipped**; the current Milestone 3 suite is **126 tests / 126 pass / 0 fail / 0 skipped**. Secrets
+0 skipped**; the current Milestone 3 suite is **127 tests / 127 pass / 0 fail / 0 skipped**. Secrets
 audit: **11 passes / 0 failures**; full-history audit: **0 findings**. Live
 read-only recall confirmed both lineage blobs still exist and semantic recall returns the correction.
 No Mainnet writes, push, deployment, or secrets changes were performed.
