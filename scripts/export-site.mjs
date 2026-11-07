@@ -76,7 +76,7 @@ mkdirSync(outDir, { recursive: true });
 for (const file of readdirSync(outDir)) {
   if (file.endsWith(".html") || file === "export.json") rmSync(resolve(outDir, file), { force: true });
 }
-const fingerprints = { pages: {}, source_snapshot: snapPath, exported_at: snapshot.exported_at, scanned_env_values: scanned };
+const fingerprints = { pages: {}, source_snapshot: snapPath.split("/").slice(-1)[0], snapshot_relpath: snapPath.includes(ROOT) ? snapPath.slice(ROOT.length).replace(/^\//, "") : "snapshot", exported_at: snapshot.exported_at, scanned_env_values: scanned };
 for (const [file, html] of Object.entries(rendered)) {
   const name = file.replace(/^\//, "");
   writeFileSync(resolve(outDir, name), html);
