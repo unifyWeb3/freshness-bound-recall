@@ -86,7 +86,7 @@ test("packed CLI installs in an empty directory and runs without credentials", (
     "--input-type=module",
     "--eval",
     [
-      "import { recallCheckedLifecycleSample, RECORDED_LIFECYCLE_SAMPLE_NAME } from 'freshness-bound-recall';",
+      "import { recallCheckedLifecycleSample, RECORDED_LIFECYCLE_SAMPLE_NAME } from 'recallguard';",
       "const result = await recallCheckedLifecycleSample();",
       "process.stdout.write(JSON.stringify({ name: RECORDED_LIFECYCLE_SAMPLE_NAME, sequence: result.behavior.sequence }));",
     ].join("\n"),
@@ -97,7 +97,7 @@ test("packed CLI installs in an empty directory and runs without credentials", (
   });
 
   const installedPackage = JSON.parse(readFileSync(
-    join(consumer, "node_modules", "freshness-bound-recall", "package.json"),
+    join(consumer, "node_modules", "recallguard", "package.json"),
     "utf8",
   ));
   for (const hook of ["preinstall", "install", "postinstall", "prepare"]) {
