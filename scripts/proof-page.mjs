@@ -404,6 +404,8 @@ export function page(snapshot) {
   a { color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--hairline-strong); transition: color 160ms cubic-bezier(.22,1,.36,1), text-decoration-color 160ms cubic-bezier(.22,1,.36,1); }
   a:hover { color: var(--amber); text-decoration-color: var(--amber); }
   a:focus-visible, button:focus-visible, summary:focus-visible, .scroll:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+  .skip-link { position: fixed; z-index: 10; top: 12px; left: 12px; padding: 8px 12px; border-radius: 6px; background: var(--amber); color: var(--bg); text-decoration: none; transform: translateY(-200%); }
+  .skip-link:hover, .skip-link:focus { color: var(--bg); transform: translateY(0); }
   code { max-width: 100%; color: var(--ink); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
   h1, h2, h3, p { margin-top: 0; }
   h1 { max-width: 1040px; margin-bottom: 20px; font-size: clamp(48px, 5vw, 64px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; }
@@ -577,6 +579,7 @@ export function page(snapshot) {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <nav class="shell topbar" aria-label="Primary navigation">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Freshness-Bound Recall</span></div>
   <div class="nav-links">
@@ -588,7 +591,7 @@ export function page(snapshot) {
   <div>${badge}</div>
   <div class="snapshot-note">Read-only evidence · chain <code>${esc(snapshot.chain_id || SUI_MAINNET_CHAIN_ID)}</code></div>
 </header>
-<main class="shell">
+<main class="shell" id="main-content" tabindex="-1">
   <section class="hero" aria-labelledby="hero-title">
     <div>
       <p class="eyebrow">Recorded Mainnet evidence · replayed offline</p>

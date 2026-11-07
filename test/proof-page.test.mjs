@@ -127,6 +127,17 @@ test("proof page keeps dense evidence accessible without widening mobile documen
   assert.doesNotMatch(html, /<div class="scroll"(?! tabindex="0" role="region" aria-label=)/);
 });
 
+test("proof page starts keyboard navigation with a visible skip link", () => {
+  const html = staticPage();
+  const skipLink = '<a class="skip-link" href="#main-content">Skip to main content</a>';
+  assert.match(html, new RegExp(skipLink));
+  assert.ok(html.indexOf(skipLink) < html.indexOf("<nav"),
+    "the skip link must be the first navigable element");
+  assert.match(html, /<main class="shell" id="main-content" tabindex="-1">/);
+  assert.match(html, /\.skip-link \{[^}]*transform: translateY\(-200%\);[^}]*\}/);
+  assert.match(html, /\.skip-link:hover, \.skip-link:focus \{[^}]*color: var\(--bg\);[^}]*transform: translateY\(0\);[^}]*\}/);
+});
+
 test("proof page shows only connected correction pairs and the recorded outcome split", () => {
   const html = staticPage();
   assert.doesNotMatch(html, /<svg\b/);
