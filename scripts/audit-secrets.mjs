@@ -25,10 +25,14 @@ function note(m) { notes.push(m); if (verbose) console.log(`NOTE ${m}`); }
 const fp = (v) => createHash("sha256").update(String(v)).digest("hex").slice(0, 8);
 
 // ---------------- 1. .env exists, ignored, untracked
-if (existsSync(ENV_PATH)) {
+const envExists = existsSync(ENV_PATH);
+if (envExists) {
   ok(".env exists", ENV_PATH);
 } else {
-  fail(".env exists", `${ENV_PATH} missing`);
+  // A fresh clone has no .env by design. The value-scan below is impossible in
+  // that case; the shape scan and the full-history audit still run, and they
+  // are the critical checks. This is reported as a note, not a pass.
+  note(`.env absent — fresh-clone mode: the value scan is skipped; shape scan and history audit still apply (${ENV_PATH})`);
 }
 let ignored = "";
 try {
@@ -43,7 +47,12 @@ if (trackedEnv.length === 0) ok(".env is not tracked by git", `${tracked.length}
 else fail(".env is not tracked by git", trackedEnv.join(", "));
 
 // ---------------- 2. tracked files contain no value from .env
-const env = readEnv();
+const env = envExists ? (() => {
+  try { return readEnv(); } catch (error) {
+    fail("read .env", String(error?.message || error));
+    return {};
+  }
+})() : {};
 const secretKeys = Object.keys(env).filter((k) => /(KEY|SECRET|PRIVATE|TOKEN|PASSWORD|SEED)/i.test(k));
 const secretValues = Object.entries(env)
   .filter(([k, v]) => /(KEY|SECRET|PRIVATE|TOKEN|PASSWORD|SEED)/i.test(k) && String(v).length >= 8)
@@ -100,8 +109,11 @@ if (!remotes) {
 } else {
   const urls = [...new Set(remotes.split("\n").map((l) => l.split(/\s+/)[1]).filter(Boolean))];
   const unexpected = urls.filter((u) => !u.includes(AUTHORIZED_REMOTE));
-  if (unexpected.length === 0) ok(`every remote points at the authorized public repo (${AUTHORIZED_REMOTE})`);
-  else fail("every remote points at the authorized public repo", `unexpected remote(s): ${unexpected.join(", ")}`);
+  const localOnly = unexpected.filter((u) => /^(file:|\/|~)/.test(u));
+  const remoteUnexpected = unexpected.filter((u) => !/^(file:|\/|~)/.test(u));
+  if (localOnly.length) note(`local filesystem remote(s) ignored for the remote check (fresh-clone artifact): ${localOnly.join(", ")}`);
+  if (remoteUnexpected.length === 0) ok(`every remote points at the authorized public repo (${AUTHORIZED_REMOTE})`);
+  else fail("every remote points at the authorized public repo", `unexpected remote(s): ${remoteUnexpected.join(", ")}`);
 
   // what is actually published: prefer the remote-tracking ref, fall back to HEAD
   let pushedTree = "";
