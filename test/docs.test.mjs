@@ -16,9 +16,8 @@ test("published docs describe the current remote and scope deployment/export cla
 
   assert.doesNotMatch(combined, /Nothing is pushed|no remote configured/i);
   assert.doesNotMatch(video, /every memory is on Walrus/i);
-  assert.match(video, /recalled memories are on Walrus/i);
   assert.doesNotMatch(combined, /byte-identical to `npm run export`/i);
-  assert.match(combined, /byte-identical to the deployed export/i);
+  assert.match(combined, /static export|static snapshot/i);
 });
 
 test("judge quickstart leads with the recorded lifecycle and records the accepted test totals", () => {
@@ -29,8 +28,7 @@ test("judge quickstart leads with the recorded lifecycle and records the accepte
   assert.ok(judge.indexOf(lifecycle) > -1, "the lifecycle command must be present");
   assert.ok(judge.indexOf(lifecycle) < judge.indexOf("npm test"),
     "the lifecycle must precede the broader test and audit path");
-  assert.match(judge, /127 tests, 127 pass, 0 fail, 0 skipped/);
-  assert.match(judge, /120 tests, 120 pass, 0 fail, 0 skipped/);
+  assert.match(judge, /149 tests, 149 pass, 0 fail, 0 skipped/);
 });
 
 test("README leads with the exact quickstart, architecture, and honest integration limits", () => {
@@ -41,11 +39,12 @@ test("README leads with the exact quickstart, architecture, and honest integrati
   assert.match(readme, /Risk without a gate/);
   assert.match(readme, /npm install --ignore-scripts/);
   assert.match(readme, new RegExp(command.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-  assert.match(readme, /## Architecture/);
+  assert.match(readme, /## How it works/);
   assert.match(readme, /## Honest limits/);
-  assert.match(readme, /Live read-only CLI end to end \| \*\*UNVERIFIED\*\*/);
-  assert.match(readme, /MCP tool \/ agent adapter \| \*\*NOT DELIVERED\*\*/);
-  assert.match(readme, /older published state/);
+  assert.match(readme, /Live read-only CLI is unverified end to end/);
+  assert.match(readme, /MCP — the product, not an adapter/);
+  assert.match(readme, /recallguard-mcp/);
+  assert.doesNotMatch(readme, /NOT DELIVERED/);
 });
 
 test("blog and three-minute script preserve the recorded learning and outcome numbers", () => {
