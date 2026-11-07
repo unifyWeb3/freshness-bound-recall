@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// FRESHNESS-BOUND RECALL — the deterministic demo.
+// RECALLGUARD — the deterministic demo.
 //
 //   node scripts/demo.mjs            # live mainnet (read-only; no writes)
 //   node scripts/demo.mjs --offline  # same code path over the cached snapshot (no network)
@@ -95,8 +95,8 @@ rt.tatum.cachePath = resolve(CACHE_DIR, "tatum-cache.json");
 
 line();
 emit("h", offline
-  ? "FRESHNESS-BOUND RECALL · offline demo over cached snapshot (network off)"
-  : "FRESHNESS-BOUND RECALL · live mainnet demo (read-only, no writes)");
+  ? "RECALLGUARD · offline demo over cached snapshot (network off)"
+  : "RECALLGUARD · live mainnet demo (read-only, no writes)");
 line();
 
 // ---------------- step 1: credential self-test / offline note

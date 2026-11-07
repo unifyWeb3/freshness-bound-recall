@@ -21,7 +21,7 @@ The accepted empty-folder install added 31 packages in about five seconds and ra
 hooks. The product output was:
 
 ```text
-Freshness-Bound Recall · recorded Mainnet lifecycle · read-only
+RecallGuard · recorded Mainnet lifecycle · read-only
 STALE → FRESH → STALE
 Predecessor: obs-sui-clock-341742424 · goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY · checkpoint 341742424
 Correction: cor-sui-clock-341742463 · mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY · checkpoint 341742463

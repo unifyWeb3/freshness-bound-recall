@@ -1,4 +1,4 @@
-# Submission draft — FRESHNESS-BOUND RECALL
+# Submission draft — RECALLGUARD
 
 ## Status: **GO** — repo and snapshot were published previously; the current milestone work remains local. The author fills the remaining fields and submits. Nothing has been submitted to the portal, posted, or registered.
 
@@ -74,7 +74,7 @@ entries, live checkpoint 341948733); the namespace check recorded 22 memories, 0
 
 > Track 02 — Smart Agents for Real Life
 >
-> FRESHNESS-BOUND RECALL is a Walrus Memory agent that will never answer from a stale memory. Every
+> RECALLGUARD is a Walrus Memory agent that will never answer from a stale memory. Every
 > answer is routed through a **freshness gate on the answer path**: checkpoint window (Tatum Sui
 > mainnet GraphQL, 1 cached read) ∧ subject version/digest pin (1 read) ∧ wall-clock backstop, failing
 > closed with a visible reason. Stale memories are never answers; when a claim is re-verified

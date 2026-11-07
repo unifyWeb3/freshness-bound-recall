@@ -379,12 +379,12 @@ export function page(snapshot) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="Freshness-Bound Recall stops agents from answering with stale on-chain memories. Run the recorded Sui lifecycle in 60 seconds."/>
-<meta property="og:title" content="Freshness-Bound Recall · A stale memory is not an answer"/>
+<meta name="description" content="RecallGuard stops agents from answering with stale on-chain memories. Run the recorded Sui lifecycle in 60 seconds."/>
+<meta property="og:title" content="RecallGuard · A stale memory is not an answer"/>
 <meta property="og:description" content="Run the recorded Sui revision lifecycle, then inspect the proof that withheld a stale memory."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://freshness-bound-recall-oxunify.vercel.app/"/>
-<title>Freshness-Bound Recall · Stop stale answers</title>
+<title>RecallGuard · Stop stale answers</title>
 <style>
   :root {
     color-scheme: dark;
@@ -581,7 +581,7 @@ export function page(snapshot) {
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <nav class="shell topbar" aria-label="Primary navigation">
-  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Freshness-Bound Recall</span></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>RecallGuard</span></div>
   <div class="nav-links">
     <a href="https://github.com/unifyWeb3/freshness-bound-recall">GitHub repo</a>
     <a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Judge quickstart</a>
@@ -596,7 +596,7 @@ export function page(snapshot) {
     <div>
       <p class="eyebrow">Recorded Mainnet evidence · replayed offline</p>
       <h1 id="hero-title">A stale memory is not an answer</h1>
-      <p class="hero-intro">Freshness-Bound Recall checks a memory's checkpoint proof and current on-chain subject before an agent can answer with it. Changed, expired, or unverifiable claims are withheld.</p>
+      <p class="hero-intro">RecallGuard checks a memory's checkpoint proof and current on-chain subject before an agent can answer with it. Changed, expired, or unverifiable claims are withheld.</p>
       <div class="hero-actions">
         <a class="action action-primary" href="#try-it">Try it in 60 seconds</a>
         <a class="action action-secondary" href="#recorded-decision">Inspect the recorded decision</a>
@@ -775,7 +775,7 @@ npm run recall:checked -- --sample sui-clock-revision-lifecycle</code></pre>
     </div>
   </section>
 </main>
-<footer class="footer"><div class="shell footer-inner"><span>Freshness-Bound Recall · Tatum Sui mainnet GraphQL + Walrus Memory · ${live ? "live evidence" : "offline cached evidence"} · no LLM in the answer path</span><span class="footer-links"><a href="https://github.com/unifyWeb3/freshness-bound-recall">Source</a><a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Reproduce</a></span></div></footer>
+<footer class="footer"><div class="shell footer-inner"><span>RecallGuard · Tatum Sui mainnet GraphQL + Walrus Memory · ${live ? "live evidence" : "offline cached evidence"} · no LLM in the answer path</span><span class="footer-links"><a href="https://github.com/unifyWeb3/freshness-bound-recall">Source</a><a href="https://github.com/unifyWeb3/freshness-bound-recall/blob/main/docs/judge-60s.md">Reproduce</a></span></div></footer>
 <script>
   const copyButton = document.querySelector("[data-copy-command]");
   copyButton?.addEventListener("click", async () => {

@@ -14,7 +14,7 @@ import { credentialSelfTest } from "./mainnet.mjs";
 import { SUI_MAINNET_CHAIN_ID } from "./tatum.mjs";
 import { resolve } from "node:path";
 
-export const HELP = `Freshness-Bound Recall
+export const HELP = `RecallGuard
 
 Usage:
   recall_checked [--sample <name>] [--query <text>] [--json]
@@ -85,7 +85,7 @@ function printHuman(result, write) {
     const predecessorCheckpoint = predecessor.proof?.checkpoint_seq ?? predecessor.checkpoint?.sequence ?? "—";
     const correctionCheckpoint = correction.proof?.checkpoint_seq ?? correction.checkpoint?.sequence ?? "—";
 
-    write(`Freshness-Bound Recall · recorded Mainnet lifecycle · ${result.read_only ? "read-only" : "writes enabled"}\n`);
+    write(`RecallGuard · recorded Mainnet lifecycle · ${result.read_only ? "read-only" : "writes enabled"}\n`);
     write(`${(result.behavior?.sequence || ["STALE", "FRESH", "STALE"]).join(" → ")}\n`);
     write(`Predecessor: ${predecessor.claim || "unknown"} · ${predecessor.blob_id || "no blob"} · checkpoint ${predecessorCheckpoint}\n`);
     write(`Correction: ${correction.claim || "unknown"} · ${correction.blob_id || "no blob"} · checkpoint ${correctionCheckpoint}\n`);
@@ -96,7 +96,7 @@ function printHuman(result, write) {
     write(`Provenance: recorded Mainnet evidence · network off · Writes: ${result.writes?.length ? "present" : "none"}\n`);
     return;
   }
-  write(`Freshness-Bound Recall · ${result.mode} · ${result.read_only ? "read-only" : "writes enabled"}\n`);
+  write(`RecallGuard · ${result.mode} · ${result.read_only ? "read-only" : "writes enabled"}\n`);
   write(`${result.verdict}\n`);
   write(`${result.answer}\n`);
   write(`Memory: ${result.memory?.claim || "none"} · ${result.memory?.blob_id || "no blob"}\n`);

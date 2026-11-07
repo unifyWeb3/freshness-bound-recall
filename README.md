@@ -1,6 +1,6 @@
-# Freshness-Bound Recall
+# RecallGuard
 
-Freshness-Bound Recall prevents an agent from answering with an on-chain memory it can no longer
+RecallGuard prevents an agent from answering with an on-chain memory it can no longer
 prove fresh. A recalled Walrus record is checked against a checkpoint window, the current Sui object
 version and digest, and a wall-clock backstop before it can become an answer.
 
@@ -8,7 +8,7 @@ The critical path is deterministic: there is no LLM between recall and the gate.
 
 ## The problem
 
-| Recalled state | Risk without a gate | Freshness-Bound Recall |
+| Recalled state | Risk without a gate | RecallGuard |
 |---|---|---|
 | The subject changed | An old value is returned as current | `STALE`; memory is withheld and the verified live value is shown |
 | The subject is unchanged but the memory is old | A fixed timeout produces false staleness | `FALSE-STALE`; the learned window can widen |
@@ -29,7 +29,7 @@ The replay needs no wallet, API key, `.env`, or Mainnet write permission. The re
 no network calls and writes nothing.
 
 ```text
-Freshness-Bound Recall · recorded Mainnet lifecycle · read-only
+RecallGuard · recorded Mainnet lifecycle · read-only
 STALE → FRESH → STALE
 Predecessor: obs-sui-clock-341742424 · goZjQJ36yLVBG6oPyHqR6wgYQ9HbmISoe-3HWkVB1AY
 Correction: cor-sui-clock-341742463 · mjxZQ1X2xn5Xlvd-gBsBAIrD5rkUDwFCAn1NEX0gbWY

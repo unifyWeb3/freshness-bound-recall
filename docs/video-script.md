@@ -1,4 +1,4 @@
-# Three-minute video script — Freshness-Bound Recall
+# Three-minute video script — RecallGuard
 
 Audience: hackathon judges and reviewers.
 
@@ -26,7 +26,7 @@ recording. Those paths can write to Mainnet and require separate approval and a 
 
 | Time | Screen and action | Voice-over |
 |---|---|---|
-| 0:00–0:15 | Homepage hero. Keep the “Cached snapshot · network off” label visible. | “A memory is useful only while it is still true. Freshness-Bound Recall puts a verification gate between an agent’s memory and its answer. This recording uses committed Mainnet evidence, replayed offline and read-only.” |
+| 0:00–0:15 | Homepage hero. Keep the “Cached snapshot · network off” label visible. | “A memory is useful only while it is still true. RecallGuard puts a verification gate between an agent’s memory and its answer. This recording uses committed Mainnet evidence, replayed offline and read-only.” |
 | 0:15–0:35 | Terminal. Run or reveal `npm run recall:checked -- --sample sui-clock-revision-lifecycle`. Pause on `STALE → FRESH → STALE`. | “The sixty-second path needs no credentials. A real Sui Clock observation became stale, its correction is fresh at the recorded revision proof, and the same proof becomes stale again after the subject changes. The sequence is stale, fresh, stale.” |
 | 0:35–0:52 | Point to the predecessor and correction lines, then the timing line. | “The lineage uses actual Walrus blob IDs. The correction took 117,242 milliseconds to persist. The first recorded proof-equivalent check came 1,381 milliseconds later and withheld it. The historical event recalled a proof-equivalent observation, not the correction blob itself; the contract says that explicitly.” |
 | 0:52–1:15 | Browser: scroll to “The stale answer that did not escape.” Trace question → recalled memory → gate → verified value. | “Here is the answer path. Recall supplies a candidate. The gate compares its checkpoint proof with the current checkpoint and the subject’s version and digest. This recorded memory is withheld because the Sui Clock changed. The old value never becomes the answer; the verified value is shown instead.” |

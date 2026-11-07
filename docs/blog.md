@@ -5,7 +5,7 @@
 Agents are useful because they remember. That same strength creates a quiet failure mode: a memory
 can remain perfectly retrievable after the world it describes has changed.
 
-Freshness-Bound Recall puts a verification gate between recall and answer. It retrieves an on-chain
+RecallGuard puts a verification gate between recall and answer. It retrieves an on-chain
 claim from Walrus Memory, checks the claim's proof against current Sui state through Tatum, and only
 lets the memory answer when the evidence is still fresh. A stale or unverifiable memory is withheld;
 the system explains why and shows the verified live value instead.
@@ -16,7 +16,7 @@ The gate is deterministic. There is no LLM deciding whether a proof is good enou
 
 The project started with five cases that a fixed cache timeout does not handle well:
 
-| Recorded state | Failure without a gate | Freshness-Bound Recall |
+| Recorded state | Failure without a gate | RecallGuard |
 |---|---|---|
 | The subject changed | An old value is presented as current | `STALE`; withhold the memory |
 | The subject is unchanged but the record is old | A fixed timeout rejects a true claim | `FALSE-STALE`; learn to widen the window |
