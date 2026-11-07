@@ -191,10 +191,10 @@ inventory, decision ledger, and recorded Tatum request metadata.
 ## Honest limits
 
 - The live read-only installable CLI remains **UNVERIFIED end to end** against Mainnet.
-- The delivered integration surfaces are the CLI, the JavaScript API, and an MCP server (six tools,
-  stdio, read-only by default; `recall_checked` enforces the same gate). The MCP path is verified
-  by 16 protocol-level tests and a real stdio smoke client; its live mode inherits the same
-  unverified status as the CLI.
+- The MCP path is verified by 16 protocol-level tests and a real stdio smoke client; its live mode
+  inherits the same unverified status as the CLI, and remains read-only by default.
+- The observer later learned a SLOW window of 40,000, but that later value was not persisted. The
+  stored 20,000-checkpoint policy is tighter and more conservative.
 - The observer later learned a SLOW window of 40,000, but that later value was not persisted. The
   stored 20,000-checkpoint policy is tighter and more conservative.
 - The FAST window of 25 checkpoints is shorter than the historical observer cadence, so that learning
@@ -203,8 +203,9 @@ inventory, decision ledger, and recorded Tatum request metadata.
 - Exact Walrus blob retention is unknown because the recorded blobs' `end_epoch` was not available
   through the tools used for this project. The committed snapshot remains reproducible offline.
 - No real user study has validated the proposed operations-analyst persona.
-- The current milestone has not been pushed or deployed. The public repository and hosted proof page
-  remain older published snapshots until the owner approves those actions.
+- The RecallGuard release (rebrand, MCP, four-page site) is pushed and live as a labelled static
+  export; deployed bytes are hash-verified against `npm run export`. It is a snapshot, not a live
+  freshness oracle, and it makes no network requests.
 
 No new Mainnet write was required for this demonstration. The learning-loop view is built entirely
 from recorded Mainnet evidence and the existing persisted policy blob IDs.

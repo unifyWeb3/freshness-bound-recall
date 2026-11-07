@@ -7,12 +7,11 @@ The submission form itself has **not** been filled or sent. **You** review and s
 
 | Published item | URL | State |
 |---|---|---|
-| **Repository (public, published snapshot)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed 2026-11-05 and verified unauthenticated; later acceptance/homepage commits have not been pushed |
-| **Hosted proof page — prior cached snapshot** | <https://freshness-bound-recall-oxunify.vercel.app> | prior Vercel deployment, verified unauthenticated; the current Milestone 3 homepage has not been deployed |
+| **Repository (public)** | <https://github.com/unifyWeb3/freshness-bound-recall> | pushed through `7486bb2` (2026-11-07) and verified unauthenticated; full history preserved |
+| **Hosted page — RecallGuard release** | <https://freshness-bound-recall-oxunify.vercel.app> | four-page static export (`dpl_4QSJ9SSQXE66BifF4itzpPS78td8`, READY), deployed 2026-11-07, verified unauthenticated and hash-identical to local `npm run export` output |
 
-> The hosted page is a **static export of a labelled snapshot** — its banner reads
-> `STATIC EXPORT · … · network off · ids & stamps from a labelled snapshot`. It is not a live service
-> and makes no network requests. The live proof page stays a local process.
+> The hosted page is a **static export of a labelled snapshot** — not a live service; it makes no
+> network requests. The live proof page stays a local process.
 
 Field list below matches the live form (as read read-only on 2026-11-04; **re-verify the form before sending**).
 
@@ -74,8 +73,8 @@ entries, live checkpoint 341948733); the namespace check recorded 22 memories, 0
 | memwalAgentId ("public key from delegate keys") | `[the delegate public key from .env MEMWAL_AGENT_ID — public]` | you |
 | description | see below | agent-drafted, you review |
 | demoVideoUrl | `[upload the 60–90 s recording, then paste]` | you |
-| repoUrl | `https://github.com/unifyWeb3/freshness-bound-recall` — **public, pushed 2026-11-05, full commit history** (the hashes cited in the reports, e.g. `f9832ac`, resolve on GitHub) | **done** — paste as-is |
-| additionalDocs | `reports/build-phase1.md` … `build-phase4.md` (in the public repo) · hosted proof page (**cached snapshot**): `https://freshness-bound-recall-oxunify.vercel.app` · freeze bundle `freeze/freeze-2026-11-05T145207337Z.json` (local — attach the file if the form takes an upload) | you/agent |
+| repoUrl | `https://github.com/unifyWeb3/freshness-bound-recall` — **public, pushed through `7486bb2` (2026-11-07), full commit history** (every hash cited in the reports and docs resolves on GitHub) | **done** — paste as-is |
+| additionalDocs | `reports/build-phase1.md` … `build-phase4.md` + `reports/takeover-2026-11-07.md` (in the public repo) · hosted four-page static export: `https://freshness-bound-recall-oxunify.vercel.app` · freeze bundle `freeze/freeze-2026-11-05T145207337Z.json` (local — attach the file if the form takes an upload) | you/agent |
 | walrusExperience | "Built with `@mysten-incubation/memwal@0.1.13` on mainnet; 22 memories written in namespace `freshness-recall`; `restore()` round-trip verified; lineage by `supersedes`/epoch because the production SDK exposes no delete/update." | agent-drafted |
 | tatumAiBuilderExperience | "Tatum AI Builder was NOT used. The project uses Tatum's Sui Mainnet GraphQL gateway only (read-only): `x-api-key` on every request (proven from the request log: 21/21 in the controlled measurement run, 7/7 in the final proof snapshot, 2,208/2,208 in a longer page run) + `x-ttm-plan` logged, 1 s cached checkpoint, ≤2 reads per answer, backoff on 429/timeout, fail-closed gate." | agent-drafted |
 | walrusFriction | "Production SDK (0.1.13) has no delete/update; semantic recall needed substring matching to hit exact claims; index lag after writes; blob retention is not verified in a disposable namespace (availability vs epochs); 5 s default preflight timeout and ~18 s write latency needed explicit timeouts/retries/queueing." | agent-drafted |
