@@ -44,6 +44,21 @@ does not degrade into “answer anyway”; it produces a withheld result with a 
 Correction and policy writes are optional and separately gated. Recorded mode never writes. Live mode
 also defaults to read-only, and a write requires the explicit `--allow-mainnet-writes` flag.
 
+## The MCP integration
+
+The same gate is the product's agent surface. RecallGuard speaks the Model Context Protocol over
+stdio; an MCP-compatible agent calls `recall_checked` and receives the `recall_checked/v1` freshness
+decision as structured content — withheld when the evidence disagrees. The server ships six tools
+(`recall_checked`, `explain_decision`, `list_revisions`, `get_evidence`, `propose_correction`,
+`store_correction`), all read-only except a triple-gated write. Recalled memory content is treated
+as untrusted data: parsed fields only, never instructions, never raw bodies.
+
+```sh
+npm run mcp:smoke   # spawns the stdio server, exercises the tools with a real MCP client
+```
+
+Claude Code and Codex configurations in the docs are tested, not asserted.
+
 ## What Tatum does
 
 Tatum supplies the chain truth used by the gate:
@@ -160,6 +175,7 @@ The reproducible path is offline, read-only, and credential-free:
 
 ```sh
 npm install --ignore-scripts
+npm run mcp:smoke
 npm run recall:checked -- --sample sui-clock-revision-lifecycle
 ```
 
@@ -175,8 +191,10 @@ inventory, decision ledger, and recorded Tatum request metadata.
 ## Honest limits
 
 - The live read-only installable CLI remains **UNVERIFIED end to end** against Mainnet.
-- The delivered integration surfaces are a CLI and JavaScript API; an MCP tool/agent adapter is not
-  implemented.
+- The delivered integration surfaces are the CLI, the JavaScript API, and an MCP server (six tools,
+  stdio, read-only by default; `recall_checked` enforces the same gate). The MCP path is verified
+  by 16 protocol-level tests and a real stdio smoke client; its live mode inherits the same
+  unverified status as the CLI.
 - The observer later learned a SLOW window of 40,000, but that later value was not persisted. The
   stored 20,000-checkpoint policy is tighter and more conservative.
 - The FAST window of 25 checkpoints is shorter than the historical observer cadence, so that learning
